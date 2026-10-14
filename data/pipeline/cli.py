@@ -8,6 +8,7 @@ from .emit import characters_json, entries_json
 from .model import Entry
 from .overrides import apply_overrides, load_overrides
 from .parse import parse_book, reference_text
+from .review import review_html, review_rows
 from .source import load_source
 from .split import assign_ids, split_entries
 from .validate import Problem, validate
@@ -34,12 +35,16 @@ def run_pipeline(data_dir: Path) -> PipelineRun:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pipeline")
-    parser.add_argument("command", choices=["build", "report"])
+    parser.add_argument("command", choices=["build", "report", "review"])
     parser.add_argument("--strict", action="store_true", help="treat warnings as errors")
     parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
     args = parser.parse_args(argv)
     run = run_pipeline(args.data_dir)
-    return _build(run, args.data_dir, args.strict) if args.command == "build" else _report(run)
+    if args.command == "build":
+        return _build(run, args.data_dir, args.strict)
+    if args.command == "review":
+        return _review(run, args.data_dir)
+    return _report(run)
 
 
 def _build(run: PipelineRun, data_dir: Path, strict: bool) -> int:
@@ -63,6 +68,16 @@ def _report(run: PipelineRun) -> int:
         first = " ".join(e.text().split())[:80]
         print(f"{e.id}\t{e.date}\t{first}")
     print(f"{len(missing)} entries without a time")
+    return 0
+
+
+def _review(run: PipelineRun, data_dir: Path) -> int:
+    overrides = load_overrides((data_dir / "overrides.yaml").read_text(encoding="utf-8"))
+    out = data_dir / "out"
+    out.mkdir(exist_ok=True)
+    page = out / "review.html"
+    page.write_bytes(review_html(review_rows(run.entries, run.chars, overrides)).encode("utf-8"))
+    print(f"wrote {page.resolve()} - open it in a browser")
     return 0
 
 

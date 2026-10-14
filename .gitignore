@@ -33,3 +33,7 @@ __pycache__/
 
 # Superpowers plan workspaces
 .superpowers/
+
+# Local Claude Code config
+.claude/
+data/out/review.html
