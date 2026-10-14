@@ -53,3 +53,16 @@ def test_demeter_log_is_split_by_day(run):
 
 def test_finis_is_not_part_of_a_header(run):
     assert [e.id for e in run.entries if e.header and "FINIS" in e.header] == []
+
+
+from pipeline.emit import characters_json, entries_json
+
+
+def test_no_problems_at_all(run):
+    assert run.problems == []
+
+
+def test_committed_output_is_fresh(run):
+    out = DATA_DIR / "out"
+    assert (out / "entries.json").read_text(encoding="utf-8") == entries_json(run.entries)
+    assert (out / "characters.json").read_text(encoding="utf-8") == characters_json(run.chars)

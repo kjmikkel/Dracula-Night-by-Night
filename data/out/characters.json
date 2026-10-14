@@ -1,0 +1,87 @@
+[
+  {
+    "id": "arthur_holmwood",
+    "name": "Arthur Holmwood",
+    "short": "Arthur"
+  },
+  {
+    "id": "billington_and_son",
+    "name": "Samuel F. Billington & Son",
+    "short": "Billington"
+  },
+  {
+    "id": "carter_paterson",
+    "name": "Carter, Paterson & Co.",
+    "short": "Carter, Paterson"
+  },
+  {
+    "id": "dailygraph",
+    "name": "The Dailygraph",
+    "short": "Dailygraph"
+  },
+  {
+    "id": "demeter_captain",
+    "name": "Captain of the Demeter",
+    "short": "Demeter"
+  },
+  {
+    "id": "john_seward",
+    "name": "Dr. John Seward",
+    "short": "Seward"
+  },
+  {
+    "id": "jonathan_harker",
+    "name": "Jonathan Harker",
+    "short": "Jonathan"
+  },
+  {
+    "id": "lucy_westenra",
+    "name": "Lucy Westenra",
+    "short": "Lucy"
+  },
+  {
+    "id": "mina_harker",
+    "name": "Mina Harker",
+    "short": "Mina"
+  },
+  {
+    "id": "mitchell_sons_candy",
+    "name": "Mitchell, Sons & Candy",
+    "short": "Mitchell"
+  },
+  {
+    "id": "pall_mall_gazette",
+    "name": "The Pall Mall Gazette",
+    "short": "Pall Mall Gazette"
+  },
+  {
+    "id": "patrick_hennessey",
+    "name": "Dr. Patrick Hennessey",
+    "short": "Hennessey"
+  },
+  {
+    "id": "quincey_morris",
+    "name": "Quincey P. Morris",
+    "short": "Quincey"
+  },
+  {
+    "id": "rufus_smith",
+    "name": "Rufus Smith",
+    "short": "Rufus Smith"
+  },
+  {
+    "id": "sister_agatha",
+    "name": "Sister Agatha",
+    "short": "Sister Agatha"
+  },
+  {
+    "id": "van_helsing",
+    "name": "Abraham Van Helsing",
+    "short": "Van Helsing"
+  },
+  {
+    "id": "westminster_gazette",
+    "name": "The Westminster Gazette",
+    "short": "Westminster Gazette"
+  }
+]

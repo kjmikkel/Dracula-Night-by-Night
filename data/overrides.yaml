@@ -1,14 +1,235 @@
 # Hand-curated editorial decisions, keyed by entry id.
 # Keys: time ("HH:MM"), estimated (bool), date ("1893-MM-DD"), type, author,
 #       recipient, place, split_after (block index), merge_with_next (bool), note (free text).
+#
+# Time rules (plan, Task 10): 1) a time stated in the entry -> exact; 2) a context cue -> estimate
+# with the cue quoted in `note`; 3) letters 10:00, telegrams 12:00; 4) diaries 21:00, ship's log 20:00;
+# 5) a "Later." entry is always after the entry it follows.
+
+# --- Chapters I-IV: Jonathan Harker in Transylvania ---
+1893-05-03-jonathan_harker-01: {time: "22:00", estimated: true, note: "Reached Bistritz after nightfall; written at the Golden Krone"}
+1893-05-04-jonathan_harker-01: {time: "14:45", estimated: true, note: "'Here comes the coach!' - the diligence starts at three"}
+1893-05-05-jonathan_harker-01: {time: "10:00", estimated: true, note: "'The grey of the morning has passed, and the sun is high'"}
+1893-05-05-jonathan_harker-02: {time: "12:00", estimated: true, note: "Continues the morning's entry"}
+1893-05-07-jonathan_harker-01: {time: "06:00", estimated: true, note: "'It is again early morning'"}
+1893-05-08-jonathan_harker-01: {time: "20:00", estimated: true, note: "Before the 'Midnight.' entry of the same day"}
+1893-05-08-jonathan_harker-02: {time: "21:00", estimated: true, note: "Chapter III continues the evening's entry"}
+1893-05-12-jonathan_harker-01: {time: "21:00", estimated: true, note: "Diary default; recounts 'last evening'"}
+1893-05-12-jonathan_harker-02: {time: "23:00", estimated: true, note: "'Later.' - after his night walk in the castle"}
+1893-05-15-jonathan_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-05-16-jonathan_harker-02: {time: "09:00", estimated: true, note: "'I awoke in my own bed' - after the 'Morning of 16 May' entry"}
+1893-05-18-jonathan_harker-01: {time: "14:00", estimated: true, note: "'I have been down to look at that room again in daylight'"}
+1893-05-19-jonathan_harker-01: {time: "09:00", estimated: true, note: "Recounts 'last night' - written next morning"}
+1893-05-28-jonathan_harker-01: {time: "22:00", estimated: true, note: "Ends with going to bed"}
+1893-05-31-jonathan_harker-01: {time: "10:00", estimated: true, note: "'This morning when I woke'"}
+1893-06-17-jonathan_harker-01: {time: "11:00", estimated: true, note: "'This morning, as I was sitting on the edge of my bed'"}
+1893-06-25-jonathan_harker-02: {time: "14:00", estimated: true, note: "'Same day, later' - back from climbing the castle wall by day"}
+1893-06-29-jonathan_harker-01: {time: "23:00", estimated: true, note: "'To-morrow! to-morrow!' - late at night"}
+
+# --- Chapters V-VI: letters, Seward, Whitby ---
+1893-05-09-mina_harker-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-05-09-lucy_westenra-01: {time: "22:00", estimated: true, note: "Signs off 'Good-night again'"}
+1893-05-24-lucy_westenra-01: {time: "16:00", estimated: true, note: "Three proposals by the afternoon; her postscript is headed 'Evening'"}
+1893-05-25-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-05-25-quincey_morris-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-05-26-arthur_holmwood-01: {time: "12:00", estimated: true, note: "Telegram default"}
+1893-07-24-mina_harker-01: {time: "17:00", estimated: true, note: "Lucy and her mother out on afternoon calls - 'They will be home by this'"}
+1893-08-01-mina_harker-01: {time: "16:00", estimated: true, note: "On the East Cliff seat with Lucy in the afternoon"}
+1893-08-01-mina_harker-02: {time: "19:30", estimated: true, note: "'The same day. I came up here alone' - towards sunset"}
+1893-06-05-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-06-18-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-07-01-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-07-08-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-07-19-john_seward-01: {time: "21:00", estimated: true, note: "Before the '10 p. m.' entry of the same day"}
+1893-07-20-john_seward-01: {time: "07:00", estimated: true, note: "'Visited Renfield very early, before the attendant went his rounds'"}
+1893-07-26-mina_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-07-27-mina_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-08-03-mina_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-08-06-mina_harker-01: {time: "17:00", estimated: true, note: "On the cliff watching the storm gather"}
+
+# --- Chapter VII: the Demeter ---
+1893-08-08-dailygraph-01: {time: "07:00", estimated: true, note: "Morning paper"}
+1893-08-09-dailygraph-01: {time: "07:00", estimated: true, note: "Morning paper"}
+1893-08-09-dailygraph-02: {time: "14:00", estimated: true, note: "'Later.' - after reading the log-book with the inspector"}
 1893-08-09-demeter_captain-01:
   date: "1893-07-18"
+  time: "20:00"
+  estimated: true
   note: "Captain's preface is headed 'Written 18 July'; it inherited the cutting's date"
+1893-07-06-demeter_captain-01: {time: "12:00", estimated: false, note: "'At noon set sail'"}
+1893-07-11-demeter_captain-01: {time: "16:00", estimated: false, note: "'Under way at 4 p. m.'"}
+1893-07-12-demeter_captain-01: {time: "21:00", estimated: true, note: "'At dark passed into Archipelago'"}
+1893-07-13-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-14-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-16-demeter_captain-01: {time: "08:00", estimated: true, note: "'Mate reported in the morning'"}
+1893-07-17-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-22-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-24-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-28-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-07-29-demeter_captain-01: {time: "04:30", estimated: true, note: "'When morning watch came on deck' (4-8 a.m. watch)"}
+1893-07-30-demeter_captain-01: {time: "06:00", estimated: true, note: "Woken by the mate after a night's sleep"}
+1893-08-01-demeter_captain-01: {time: "20:00", estimated: true, note: "Log default"}
+1893-08-03-demeter_captain-01: {time: "06:00", estimated: true, note: "Recounts the midnight watch - written in the early morning"}
+1893-08-04-demeter_captain-01:
+  split_after: 0
+  time: "05:00"
+  estimated: true
+  note: "'Still fog, which the sunrise cannot pierce'; the paragraphs after it are the Dailygraph's report"
+1893-08-04-demeter_captain-01-b:
+  type: newspaper
+  author: dailygraph
+  date: "1893-08-09"
+  time: "18:00"
+  estimated: true
+  note: "Dailygraph report of the inquest, after the log; 'To-morrow will see the funeral' (10 August)"
+
+# --- Chapters VIII-IX: Whitby, Buda-Pesth, Renfield ---
+1893-08-08-mina_harker-01: {time: "10:00", estimated: true, note: "'Early in the morning we both got up and went to the harbour'"}
+1893-08-10-mina_harker-01: {time: "18:00", estimated: true, note: "After the funeral; before the '11 o'clock p. m.' entry"}
+1893-08-12-mina_harker-01: {time: "09:00", estimated: true, note: "Recounts the night; 'I woke with the dawn'"}
+1893-08-13-mina_harker-01: {time: "23:30", estimated: true, note: "Recounts waking in the night"}
+1893-08-14-mina_harker-01: {time: "22:00", estimated: true, note: "Recounts 'this afternoon' and the evening"}
+1893-08-15-mina_harker-01: {time: "11:00", estimated: true, note: "'Rose later than usual... at breakfast'"}
+1893-08-17-mina_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-08-17-billington_and_son-01: {time: "10:00", estimated: true, note: "Letter default; goods leave 'at 9:30 to-night'"}
+1893-08-21-carter_paterson-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-08-18-mina_harker-01: {time: "21:00", estimated: true, note: "Ends with 'a very happy evening together'"}
+1893-08-19-mina_harker-01: {time: "21:00", estimated: true, note: "'I am to leave in the morning'"}
+1893-08-12-sister_agatha-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-08-19-john_seward-01: {time: "20:00", estimated: true, note: "'If need be, to-night shall be sleepless'"}
+1893-08-19-john_seward-02: {time: "23:45", estimated: true, note: "'Later.' - after the night chase to Carfax"}
+1893-08-24-mina_harker-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-08-30-lucy_westenra-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-08-20-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-08-23-john_seward-01: {time: "20:00", estimated: true, note: "Interrupted: 'I am called; the patient has once more escaped'"}
+1893-08-23-john_seward-02: {time: "23:30", estimated: true, note: "'Later. - Another night adventure'"}
+1893-08-24-lucy_westenra-01: {time: "21:00", estimated: true, note: "'I wonder if I could sleep in mother's room to-night'"}
+1893-08-25-lucy_westenra-01: {time: "10:00", estimated: true, note: "'This morning I am horribly weak'"}
+1893-08-31-arthur_holmwood-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-01-arthur_holmwood-01: {time: "12:00", estimated: true, note: "Telegram default"}
+1893-09-02-john_seward-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-02-van_helsing-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-03-john_seward-01: {time: "20:00", estimated: true, note: "'Van Helsing has come and gone'"}
+1893-09-04-john_seward-01: {time: "13:30", estimated: true, note: "'It is now after the dinner-hour of the asylum'"}
+1893-09-04-john_seward-02: {time: "18:00", estimated: true, note: "'Later.' - 'At five o'clock I looked in on him'"}
+1893-09-04-john_seward-04: {time: "12:00", estimated: true, note: "Telegram default"}
+1893-09-05-john_seward-01: {time: "12:00", estimated: true, note: "Telegram default"}
+1893-09-06-john_seward-01: {time: "12:00", estimated: true, note: "Telegram default"}
+1893-09-06-john_seward-02: {time: "14:00", estimated: true, note: "'Lucy this morning had gone back a bit... In haste'"}
+1893-09-07-john_seward-01: {time: "23:00", estimated: true, note: "Long day ending with the night watch"}
+1893-09-08-john_seward-01: {time: "22:00", estimated: true, note: "Van Helsing 'leaving by the night mail'"}
+1893-09-09-john_seward-01: {time: "23:00", estimated: true, note: "Ends lying down on the sofa"}
+1893-09-09-lucy_westenra-01: {time: "22:00", estimated: true, note: "'I feel so happy to-night'"}
+
+# --- Chapters X-XIII: Lucy's illness and death ---
+1893-09-10-john_seward-01: {time: "23:30", estimated: true, note: "'Set this down whilst waiting for sleep'"}
+1893-09-11-john_seward-01: {time: "22:00", estimated: true, note: "'This afternoon I went over to Hillingham'"}
+1893-09-12-lucy_westenra-01: {time: "22:30", estimated: true, note: "'Here I am to-night, hoping for sleep'"}
+1893-09-13-john_seward-01: {time: "21:00", estimated: true, note: "Diary default; the day began at Hillingham at eight"}
+1893-09-17-lucy_westenra-01: {time: "20:00", estimated: true, note: "'To-night Dr. Van Helsing is going away'; before her 'Night.' memorandum"}
+1893-09-18-pall_mall_gazette-01: {time: "17:00", estimated: true, note: "Evening paper"}
+1893-09-17-john_seward-01: {time: "22:00", estimated: true, note: "'I was engaged after dinner in my study'"}
+1893-09-17-van_helsing-01: {time: "09:00", estimated: true, note: "Sent from Antwerp; delivered twenty-two hours late"}
+1893-09-18-john_seward-01: {time: "08:30", estimated: true, note: "'Just off for train to London'"}
+1893-09-18-john_seward-02: {time: "23:00", estimated: true, note: "Recounts the whole day at Hillingham"}
+1893-09-19-john_seward-01: {time: "22:00", estimated: true, note: "'In the afternoon she asked for Arthur'"}
+1893-09-17-mina_harker-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-20-patrick_hennessey-01: {time: "21:00", estimated: true, note: "Reports 'this afternoon' and 'after dinner'"}
+1893-09-18-mina_harker-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-20-john_seward-01: {time: "22:00", estimated: true, note: "'Only resolution and habit can let me make an entry to-night'"}
+1893-09-20-john_seward-02: {time: "23:00", estimated: true, note: "Chapter XIII continues the night's entry"}
+1893-09-22-mina_harker-01: {time: "15:00", estimated: true, note: "'In the train to Exeter'"}
+1893-09-22-mina_harker-02: {time: "20:00", estimated: true, note: "'Later. - A sad home-coming'"}
+1893-09-22-john_seward-01: {time: "21:00", estimated: true, note: "'It is all over'"}
+1893-09-25-westminster_gazette-01: {time: "17:00", estimated: true, note: "Evening paper"}
+1893-09-25-westminster_gazette-02: {time: "19:00", estimated: true, note: "'Extra Special' - a later edition"}
+
+# --- Chapters XIII-XVI: Van Helsing's proof ---
+1893-09-23-mina_harker-01: {time: "10:00", estimated: true, note: "Jonathan away 'all day till late'; housework done"}
+1893-09-24-mina_harker-01: {time: "11:00", estimated: true, note: "'I hadn't the heart to write last night'"}
+1893-09-24-van_helsing-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-25-mina_harker-01: {time: "08:00", estimated: true, note: "'Come to-day by quarter-past ten train'"}
+1893-09-25-mina_harker-02: {time: "12:00", estimated: true, note: "'As the time draws near for the visit of Dr. Van Helsing'"}
+1893-09-25-mina_harker-03: {time: "16:00", estimated: true, note: "'Later. - He has come and gone'"}
+1893-09-26-jonathan_harker-01: {time: "11:00", estimated: true, note: "After seeing Van Helsing off at the station"}
+1893-09-26-john_seward-01: {time: "19:00", estimated: true, note: "Van Helsing arrived 'at about half-past five o'clock'"}
+1893-09-26-john_seward-02: {time: "23:30", estimated: true, note: "Chapter XV continues; 'Van Helsing is to call for me at noon'"}
+1893-09-27-john_seward-01: {time: "23:30", estimated: true, note: "Ends driving back to Piccadilly after the churchyard"}
+1893-09-27-van_helsing-01: {time: "17:00", estimated: true, note: "Written before watching 'all the night from sunset'"}
+1893-09-28-john_seward-01: {time: "10:00", estimated: true, note: "'It is wonderful what a good night's sleep will do'"}
+1893-09-29-john_seward-02: {time: "09:00", estimated: true, note: "Chapter XVI recounts last night; after the 'morning' entry"}
+1893-09-29-john_seward-04: {time: "22:30", estimated: true, note: "Chapter XVII continues the 'night' entry"}
+1893-09-29-mina_harker-01: {time: "17:00", estimated: true, note: "Arrived at Purfleet and went down to Dr. Seward's study"}
+1893-09-29-john_seward-05: {time: "19:00", estimated: true, note: "'When the maid came to announce dinner'"}
+1893-09-29-mina_harker-02: {time: "21:00", estimated: true, note: "'After dinner I came with Dr. Seward to his study'"}
+1893-09-30-john_seward-01: {time: "10:00", estimated: true, note: "'Mr. Harker arrived at nine o'clock'"}
+1893-09-30-john_seward-02: {time: "15:00", estimated: true, note: "'Later. - After lunch'"}
+1893-09-29-jonathan_harker-01: {time: "15:00", estimated: true, note: "'In train to London'"}
+1893-09-30-jonathan_harker-01: {time: "13:00", estimated: true, note: "'When I arrived there in the morning'"}
+1893-09-30-jonathan_harker-02: {time: "18:00", estimated: true, note: "'Later. - Mina and I have worked all day'"}
+1893-09-30-mina_harker-01: {time: "16:00", estimated: true, note: "'Everything in order for to-night'"}
+1893-09-30-mina_harker-02: {time: "18:00", estimated: true, note: "'Later. - Lord Godalming and Mr. Morris arrived earlier than we expected'"}
+1893-09-30-john_seward-03: {time: "18:30", estimated: true, note: "'I got home at five o'clock'"}
+1893-09-30-mina_harker-03: {time: "23:30", estimated: true, note: "The council met 'two hours after dinner, which had been at six'"}
+
+# --- Chapters XIX-XXIII: the hunt in London ---
+1893-10-01-jonathan_harker-02: {time: "11:00", estimated: true, note: "'1 October, later. - we should have all overslept'"}
+1893-10-01-john_seward-02: {time: "14:00", estimated: true, note: "'It was towards noon when I was awakened'"}
+1893-10-01-mina_harker-01: {time: "21:00", estimated: true, note: "'It will give me a good night's sleep'"}
+1893-10-01-john_seward-03: {time: "17:00", estimated: true, note: "Renfield visited 'this morning'"}
+1893-10-01-john_seward-04: {time: "20:00", estimated: true, note: "'Later. - we must watch him to-night'"}
+1893-10-01-mitchell_sons_candy-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-10-02-john_seward-01: {time: "12:00", estimated: true, note: "'This morning the man on duty reported'"}
+1893-10-02-john_seward-02: {time: "23:30", estimated: true, note: "'Later.' - Renfield found bleeding; 'I must go at once'"}
+1893-10-03-john_seward-01: {time: "06:00", estimated: true, note: "Recounts the night; 'the sun rises to-day on no more miserable house'"}
+1893-10-03-jonathan_harker-01: {time: "06:00", estimated: false, note: "'It is now six o'clock'"}
+1893-10-03-john_seward-02: {time: "23:30", estimated: true, note: "Ends 'I, too, shall go to bed'"}
+1893-10-03-jonathan_harker-04: {time: "23:58", estimated: true, note: "'Later.' - after the 'close to midnight' entry"}
+1893-10-04-jonathan_harker-02: {time: "15:00", estimated: false, note: "'It is now three o'clock'"}
+1893-10-05-john_seward-01: {time: "09:00", estimated: true, note: "'When we met at early breakfast'"}
+1893-10-05-john_seward-02: {time: "11:00", estimated: true, note: "'Later.' - before the meeting"}
+1893-10-05-john_seward-03: {time: "13:00", estimated: true, note: "'Later. - At the very outset of our meeting'"}
+1893-10-05-jonathan_harker-02: {time: "20:00", estimated: true, note: "'As the evening drew on'"}
+1893-10-06-jonathan_harker-02: {time: "17:15", estimated: true, note: "'It is now drawing towards the sunset'"}
+
+# --- Chapters XXIV-XXVII: the pursuit ---
+1893-10-15-jonathan_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-10-16-jonathan_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-10-17-jonathan_harker-01: {time: "21:00", estimated: true, note: "Diary default"}
+1893-10-24-jonathan_harker-01: {time: "21:00", estimated: true, note: "After Mina's 'morning and evening hypnotic answer'"}
 1893-10-24-jonathan_harker-02:
   type: telegram
   author: rufus_smith
   recipient: arthur_holmwood
-  note: "Lloyd's telegram quoted in Harker's journal"
+  time: "12:00"
+  estimated: true
+  note: "Lloyd's telegram quoted in Harker's journal; 'reported this morning from Dardanelles'"
+1893-10-25-john_seward-01: {time: "00:30", estimated: true, note: "The book dates it 25 October and it precedes the 'Noon' entry; written around midnight"}
+1893-10-25-john_seward-03: {time: "18:00", estimated: true, note: "'At sunset she made the usual hypnotic report'"}
+1893-10-26-john_seward-01: {time: "09:00", estimated: true, note: "'Hypnotic report at sunrise was still the same'"}
+1893-10-28-john_seward-01: {time: "14:00", estimated: true, note: "'Reported entering Galatz at one o'clock to-day'"}
+1893-10-28-john_seward-02: {time: "22:00", estimated: true, note: "Recounts the day after the telegram"}
+1893-10-29-john_seward-01: {time: "10:00", estimated: true, note: "'Written in the train from Varna to Galatz'"}
+1893-10-29-john_seward-02: {time: "17:30", estimated: true, note: "'Later. - Sunset has come and gone'"}
+1893-10-30-mina_harker-01: {time: "09:00", estimated: true, note: "Arrived at the hotel in Galatz"}
+1893-10-30-mina_harker-02: {time: "11:00", estimated: true, note: "'Later. - Lord Godalming has returned'"}
+1893-10-30-jonathan_harker-01: {time: "12:00", estimated: true, note: "'At nine o'clock' they called on the agents"}
+1893-10-30-mina_harker-04: {time: "19:30", estimated: true, note: "Her memorandum, written after the 'evening' entry"}
+1893-10-30-mina_harker-05: {time: "20:00", estimated: true, note: "'When I had done reading'"}
+1893-10-30-mina_harker-06: {time: "22:00", estimated: true, note: "'Later.' - 'leave by the 11:40 train to-night'"}
+1893-10-30-mina_harker-07: {time: "23:00", estimated: true, note: "'Later.' - saying good-bye before the train"}
+1893-10-31-jonathan_harker-01: {time: "08:00", estimated: true, note: "'The day has come... The morning is bitterly cold'"}
+1893-11-02-john_seward-01: {time: "20:00", estimated: true, note: "Diary default"}
+1893-11-03-john_seward-01: {time: "20:00", estimated: true, note: "Diary default"}
+1893-11-04-john_seward-01: {time: "20:00", estimated: true, note: "Diary default"}
+1893-10-31-mina_harker-01: {time: "13:00", estimated: true, note: "'Arrived at Veresti at noon'"}
+1893-10-31-mina_harker-02: {time: "18:00", estimated: true, note: "'Later.' - dinner, then 'start in an hour'"}
+1893-11-01-mina_harker-01: {time: "19:00", estimated: true, note: "'At sunset time he hypnotised me... we are off shortly'"}
+1893-11-04-van_helsing-01: {time: "08:00", estimated: true, note: "'It is morning, and I write by a fire'"}
+1893-11-05-john_seward-01: {time: "07:00", estimated: true, note: "'With the dawn we saw the body of Szgany'"}
+1893-11-06-mina_harker-01: {time: "19:00", estimated: true, note: "After the sunset fight at the castle"}
 1893-11-06-unknown-01:
   author: jonathan_harker
+  time: "23:59"
+  estimated: true
   note: "Closing NOTE signed by Jonathan Harker, written seven years later; unlocks last"
