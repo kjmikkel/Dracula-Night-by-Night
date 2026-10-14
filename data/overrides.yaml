@@ -6,6 +6,15 @@
 # with the cue quoted in `note`; 3) letters 10:00, telegrams 12:00; 4) diaries 21:00, ship's log 20:00;
 # 5) a "Later." entry is always after the entry it follows.
 
+# --- Preface ---
+undated-unknown-01:
+  type: memo
+  author: bram_stoker
+  date: "1893-05-03"
+  time: "00:00"
+  estimated: true
+  note: "The author's preface ('How these papers have been placed in sequence...'); unlocks with the story, before Harker's first entry"
+
 # --- Chapters I-IV: Jonathan Harker in Transylvania ---
 1893-05-03-jonathan_harker-01: {time: "22:00", estimated: true, note: "Reached Bistritz after nightfall; written at the Golden Krone"}
 1893-05-04-jonathan_harker-01: {time: "14:45", estimated: true, note: "'Here comes the coach!' - the diligence starts at three"}

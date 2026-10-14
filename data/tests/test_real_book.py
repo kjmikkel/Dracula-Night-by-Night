@@ -20,7 +20,8 @@ def test_no_structural_errors(run):
 
 
 def test_first_entry_is_harker_in_bistritz(run):
-    first = run.entries[0]
+    # Book order: the preface (order 0), then Harker's first entry.
+    first = run.entries[1]
     assert (first.id, first.type, first.place) == ("1893-05-03-jonathan_harker-01", "diary", "Bistritz")
 
 
@@ -96,3 +97,9 @@ def test_lucys_wednesday_letter_is_on_a_wednesday(run):
 
 def test_no_entry_is_placed_in_a_document_kind(run):
     assert [e.id for e in run.entries if e.place in ("Telegram", "Letter")] == []
+
+
+def test_preface_comes_first(run):
+    first = min(run.entries, key=lambda e: (e.date, e.time, e.order))
+    assert first.text().startswith("How these papers have been placed in sequence")
+    assert (first.author, first.type, first.date, first.order) == ("bram_stoker", "memo", date(1893, 5, 3), 0)

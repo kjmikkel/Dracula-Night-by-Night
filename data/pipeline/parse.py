@@ -8,6 +8,7 @@ _CHAP_ID = re.compile(r"^chap(\d+)$")
 _WS = re.compile(r"[ \t\r\n\u00a0]+")
 _AROUND_NL = re.compile(r" *\n *")
 _END = "THE END"
+_PREFACE_START = "How these papers have been placed in sequence"
 
 
 def parse_book(html: str) -> list[Block]:
@@ -60,11 +61,17 @@ def reference_text(html: str) -> str:
 
 
 def _story_divs(soup: BeautifulSoup) -> list[tuple[Tag, Tag | None]]:
-    """Chapter divs from CHAPTER I onwards, with their chapNN anchor (None for e.g. the closing NOTE)."""
+    """Chapter divs from the preface (or CHAPTER I) onwards, with their chapNN anchor.
+
+    Un-numbered divs (the preface, the closing NOTE) count only if they hold text paragraphs,
+    which leaves out the "D R A C U L A" title page between the preface and chapter I.
+    """
     out: list[tuple[Tag, Tag | None]] = []
     for div in soup.select("div.chapter"):
         anchor = div.find("a", id=_CHAP_ID)
-        if anchor is not None or out:
+        has_text = any(p.get_text(strip=True) for p in div.find_all("p"))
+        is_preface = any(p.get_text(" ", strip=True).startswith(_PREFACE_START) for p in div.find_all("p"))
+        if anchor is not None or (has_text and (out or is_preface)):
             out.append((div, anchor))
     return out
 

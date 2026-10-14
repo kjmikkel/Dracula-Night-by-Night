@@ -10,6 +10,11 @@
     "short": "Billington"
   },
   {
+    "id": "bram_stoker",
+    "name": "Bram Stoker",
+    "short": "Stoker"
+  },
+  {
     "id": "carter_paterson",
     "name": "Carter, Paterson & Co.",
     "short": "Carter, Paterson"
