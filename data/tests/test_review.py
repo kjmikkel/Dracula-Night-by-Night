@@ -52,3 +52,10 @@ def test_cli_review_writes_page_even_with_missing_times(tmp_path, capsys):
     page = (d / "out" / "review.html").read_text(encoding="utf-8")
     assert "1893-05-04-jonathan_harker-01" in page
     assert "review.html" in capsys.readouterr().out
+
+
+def test_rows_carry_other_override_fields_for_export():
+    entries = [entry("t", 0, time(12, 0))]
+    rows = review_rows(entries, CHARS, {"t": {"time": "12:00", "estimated": True, "note": "n",
+                                              "type": "telegram", "author": "rufus_smith"}})
+    assert rows[0]["override"] == {"type": "telegram", "author": "rufus_smith"}

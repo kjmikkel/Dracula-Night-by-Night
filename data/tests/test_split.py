@@ -155,3 +155,9 @@ def test_log_days_split_on_plain_paragraphs(chars):
         ("log", date(1893, 7, 6)),
         ("log", date(1893, 7, 11)),
     ]
+
+
+def test_unmatched_headers_are_collected(chars):
+    unmatched: list[str] = []
+    split_entries([H("Jonathan Harker’s Journal"), P("—a.", "8 May."), H("“FINIS.”")], chars, unmatched)
+    assert unmatched == ["“FINIS.”"]

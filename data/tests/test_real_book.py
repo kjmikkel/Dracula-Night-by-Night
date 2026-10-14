@@ -66,3 +66,33 @@ def test_committed_output_is_fresh(run):
     out = DATA_DIR / "out"
     assert (out / "entries.json").read_text(encoding="utf-8") == entries_json(run.entries)
     assert (out / "characters.json").read_text(encoding="utf-8") == characters_json(run.chars)
+
+
+def _starting(run, text):
+    return [e for e in run.entries if " ".join("".join(b.text for b in e.blocks).split()).startswith(text)]
+
+
+def test_van_helsing_phonograph_message_is_his(run):
+    [message] = _starting(run, "THIS to Jonathan Harker")
+    assert (message.author, message.type) == ("van_helsing", "memo")
+
+
+def test_lloyds_telegrams_are_telegrams_from_rufus_smith(run):
+    lloyds = [e for e in run.entries if "Rufus Smith" in e.text() and "Czarina Catherine reported" in e.text()]
+    assert len(lloyds) == 2
+    assert {(e.type, e.author, e.recipient) for e in lloyds} == {("telegram", "rufus_smith", "arthur_holmwood")}
+
+
+def test_van_helsing_replies_after_mina_invites_him(run):
+    by_id = {e.id: e for e in run.entries}
+    invite, reply = by_id["1893-09-25-mina_harker-01"], by_id["1893-09-25-van_helsing-01"]
+    assert reply.time > invite.time
+
+
+def test_lucys_wednesday_letter_is_on_a_wednesday(run):
+    [letter] = [e for e in run.entries if e.type == "letter" and "Wednesday" in e.text()[:120]]
+    assert letter.date.strftime("%A") == "Wednesday"
+
+
+def test_no_entry_is_placed_in_a_document_kind(run):
+    assert [e.id for e in run.entries if e.place in ("Telegram", "Letter")] == []

@@ -28,7 +28,7 @@
 
 # --- Chapters V-VI: letters, Seward, Whitby ---
 1893-05-09-mina_harker-01: {time: "10:00", estimated: true, note: "Letter default"}
-1893-05-09-lucy_westenra-01: {time: "22:00", estimated: true, note: "Signs off 'Good-night again'"}
+1893-05-09-lucy_westenra-01: {date: "1893-05-10", time: "22:00", estimated: true, note: "Headed only 'Wednesday' - 10 May 1893; signs off 'Good-night again'"}
 1893-05-24-lucy_westenra-01: {time: "16:00", estimated: true, note: "Three proposals by the afternoon; her postscript is headed 'Evening'"}
 1893-05-25-john_seward-01: {time: "21:00", estimated: true, note: "Diary default"}
 1893-05-25-quincey_morris-01: {time: "10:00", estimated: true, note: "Letter default"}
@@ -148,6 +148,7 @@
 1893-09-23-mina_harker-01: {time: "10:00", estimated: true, note: "Jonathan away 'all day till late'; housework done"}
 1893-09-24-mina_harker-01: {time: "11:00", estimated: true, note: "'I hadn't the heart to write last night'"}
 1893-09-24-van_helsing-01: {time: "10:00", estimated: true, note: "Letter default"}
+1893-09-25-van_helsing-01: {time: "18:00", estimated: true, note: "'25 September, 6 o'clock' - evening: he writes after his afternoon visit, and Mina replies at 6:30"}
 1893-09-25-mina_harker-01: {time: "08:00", estimated: true, note: "'Come to-day by quarter-past ten train'"}
 1893-09-25-mina_harker-02: {time: "12:00", estimated: true, note: "'As the time draws near for the visit of Dr. Van Helsing'"}
 1893-09-25-mina_harker-03: {time: "16:00", estimated: true, note: "'Later. - He has come and gone'"}
@@ -185,6 +186,7 @@
 1893-10-03-jonathan_harker-01: {time: "06:00", estimated: false, note: "'It is now six o'clock'"}
 1893-10-03-john_seward-02: {time: "23:30", estimated: true, note: "Ends 'I, too, shall go to bed'"}
 1893-10-03-jonathan_harker-04: {time: "23:58", estimated: true, note: "'Later.' - after the 'close to midnight' entry"}
+1893-10-04-van_helsing-01: {time: "07:00", estimated: true, note: "Phonograph message recorded before setting out; Jonathan plays it to Mina that day"}
 1893-10-04-jonathan_harker-02: {time: "15:00", estimated: false, note: "'It is now three o'clock'"}
 1893-10-05-john_seward-01: {time: "09:00", estimated: true, note: "'When we met at early breakfast'"}
 1893-10-05-john_seward-02: {time: "11:00", estimated: true, note: "'Later.' - before the meeting"}
@@ -201,13 +203,14 @@
   type: telegram
   author: rufus_smith
   recipient: arthur_holmwood
+  place: null
   time: "12:00"
   estimated: true
   note: "Lloyd's telegram quoted in Harker's journal; 'reported this morning from Dardanelles'"
 1893-10-25-john_seward-01: {time: "00:30", estimated: true, note: "The book dates it 25 October and it precedes the 'Noon' entry; written around midnight"}
 1893-10-25-john_seward-03: {time: "18:00", estimated: true, note: "'At sunset she made the usual hypnotic report'"}
 1893-10-26-john_seward-01: {time: "09:00", estimated: true, note: "'Hypnotic report at sunrise was still the same'"}
-1893-10-28-john_seward-01: {time: "14:00", estimated: true, note: "'Reported entering Galatz at one o'clock to-day'"}
+1893-10-28-john_seward-01: {type: telegram, author: rufus_smith, recipient: arthur_holmwood, time: "14:00", estimated: true, note: "Lloyd's telegram quoted in Seward's diary; 'entering Galatz at one o'clock to-day'"}
 1893-10-28-john_seward-02: {time: "22:00", estimated: true, note: "Recounts the day after the telegram"}
 1893-10-29-john_seward-01: {time: "10:00", estimated: true, note: "'Written in the train from Varna to Galatz'"}
 1893-10-29-john_seward-02: {time: "17:30", estimated: true, note: "'Later. - Sunset has come and gone'"}

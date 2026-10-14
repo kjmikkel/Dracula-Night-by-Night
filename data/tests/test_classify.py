@@ -48,6 +48,8 @@ def test_load_characters_records_sorted():
         ("Telegram, October 24th.\nRufus Smith, Lloyd’s, London, to Lord Godalming, care of H. B. M. Vice-Consul, Varna.",
          HeaderInfo("telegram", None, "arthur_holmwood", date(1893, 10, 24))),
         ("LOG OF THE “DEMETER.”\nVarna to Whitby.", HeaderInfo("log", "demeter_captain", None, None)),
+        ("DR. SEWARD’S PHONOGRAPH DIARY, SPOKEN BY VAN HELSING",
+         HeaderInfo("memo", "van_helsing", None, None)),
         ("CUTTING FROM “THE DAILYGRAPH,” 8 AUGUST",
          HeaderInfo("newspaper", "dailygraph", None, date(1893, 8, 8))),
         ("“The Pall Mall Gazette,” 18 September.\nTHE ESCAPED WOLF.",

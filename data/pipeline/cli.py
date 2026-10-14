@@ -11,7 +11,7 @@ from .parse import parse_book, reference_text
 from .review import review_html, review_rows
 from .source import load_source
 from .split import assign_ids, split_entries
-from .validate import Problem, validate
+from .validate import Problem, fingerprint_of_json, unmatched_header_problems, validate
 
 DATA_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,10 +26,12 @@ class PipelineRun:
 def run_pipeline(data_dir: Path) -> PipelineRun:
     html = load_source(data_dir / "source")
     chars = load_characters((data_dir / "characters.yaml").read_text(encoding="utf-8"))
-    entries = split_entries(parse_book(html), chars)
+    unmatched: list[str] = []
+    entries = split_entries(parse_book(html), chars, unmatched)
     assign_ids(entries)
     entries = apply_overrides(entries, load_overrides((data_dir / "overrides.yaml").read_text(encoding="utf-8")))
-    problems = validate(entries, chars.ids, reference_text(html), _previous_ids(data_dir))
+    problems = validate(entries, chars.ids, reference_text(html), _previous_fingerprints(data_dir))
+    problems += unmatched_header_problems(unmatched)
     return PipelineRun(entries, problems, chars)
 
 
@@ -81,8 +83,8 @@ def _review(run: PipelineRun, data_dir: Path) -> int:
     return 0
 
 
-def _previous_ids(data_dir: Path) -> set[str]:
+def _previous_fingerprints(data_dir: Path) -> dict[str, str]:
     path = data_dir / "out" / "entries.json"
     if not path.exists():
-        return set()
-    return {e["id"] for e in json.loads(path.read_text(encoding="utf-8"))}
+        return {}
+    return {e["id"]: fingerprint_of_json(e) for e in json.loads(path.read_text(encoding="utf-8"))}

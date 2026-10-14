@@ -36,6 +36,7 @@ def review_rows(entries: list[Entry], chars: Characters, overrides: dict[str, di
             "recipient": names.get(e.recipient, e.recipient),
             "header": e.header,
             "note": overrides.get(e.id, {}).get("note"),
+            "override": {k: v for k, v in overrides.get(e.id, {}).items() if k not in ("time", "estimated", "note")},
             "text": "\n\n".join(" ".join(b.text.split()) for b in e.blocks),
             "orderIssue": e.id in flagged,
         }
@@ -216,7 +217,11 @@ document.addEventListener("keydown", e => {
 document.getElementById("export").onclick = () => {
   const fixes = rows.filter(r => marks[r.id]?.time);
   const yq = s => '"' + String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
-  const lines = fixes.map(r => `${r.id}: {time: ${yq(marks[r.id].time)}, estimated: true, note: ${yq(marks[r.id].note || "Corrected in review")}}`);
+  const yv = v => typeof v === "string" ? yq(v) : String(v);
+  const lines = fixes.map(r => {
+    const keep = Object.entries(r.override || {}).map(([k, v]) => `${k}: ${yv(v)}, `).join("");
+    return `${r.id}: {${keep}time: ${yq(marks[r.id].time)}, estimated: true, note: ${yq(marks[r.id].note || "Corrected in review")}}`;
+  });
   const approved = rows.filter(r => marks[r.id]?.ok).length;
   document.getElementById("yaml").value = `# ${fixes.length} correction(s), ${approved} approved as-is\n` + lines.join("\n") + "\n";
   document.getElementById("dlg").showModal();
