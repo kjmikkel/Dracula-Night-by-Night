@@ -16,8 +16,27 @@ class Problem:
     message: str
 
 
+# Header-styled lines that are legitimately not document headers; matched as prefixes after normalising.
+ALLOWED_UNMATCHED_HEADERS = (
+    "FINIS.",  # ornament closing Seward's diary in chapter XIII
+    "DRACULA.",  # signature line
+    "Rufus Smith, Lloyd's, London, to Lord Godalming",  # address of the quoted 24 October telegram
+)
+
+
+def fingerprint(e: Entry) -> str:
+    """First 40 normalised characters of an entry: what an id is expected to keep pointing at."""
+    return _normalise(e.text())[:40]
+
+
+def unmatched_header_problems(headers: list[str]) -> list[Problem]:
+    allowed = [_normalise(a) for a in ALLOWED_UNMATCHED_HEADERS]
+    return [Problem("warning", "*", f"unmatched header '{h}'") for h in headers
+            if not any(_normalise(h).startswith(a) for a in allowed)]
+
+
 def validate(entries: list[Entry], character_ids: set[str], reference: str,
-             previous_ids: set[str]) -> list[Problem]:
+             previous: dict[str, str]) -> list[Problem]:
     problems: list[Problem] = []
 
     def error(eid: str, message: str) -> None:
@@ -52,10 +71,19 @@ def validate(entries: list[Entry], character_ids: set[str], reference: str,
         error("*", f"text differs from book at character {at}: "
                    f"entries '...{ours[max(0, at - 30):at + 30]}...' vs book '...{book[max(0, at - 30):at + 30]}...'")
 
-    current = {e.id for e in entries}
-    for eid in sorted(previous_ids - current):
+    current = {e.id: fingerprint(e) for e in entries}
+    for eid in sorted(set(previous) - set(current)):
         problems.append(Problem("warning", eid, "id from previous build no longer exists"))
+    for eid, was in sorted(previous.items()):
+        if eid in current and current[eid] != was:
+            problems.append(Problem("warning", eid, f"id now points at different text (was '{was[:20]}...')"))
     return problems
+
+
+def fingerprint_of_json(entry: dict) -> str:
+    """fingerprint() for an entry read back from entries.json."""
+    text = (entry.get("header") or "") + "".join(s["text"] for b in entry["body"] for s in b["spans"])
+    return _normalise(text)[:40]
 
 
 def _normalise(text: str) -> str:

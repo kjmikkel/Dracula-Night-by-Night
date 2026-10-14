@@ -10,6 +10,7 @@ _OWNED = re.compile(r"^(?P<a>.+?)'s (?P<kind>diary|journal|memorandum)\b")
 _NOTE_LEFT = re.compile(r"^note left by (?P<a>.+?) in\b")
 _MEMO_BY = re.compile(r"^memorandum (?:left )?by (?P<a>.+)$")
 _NEWSPAPER = re.compile(r"gazette|dailygraph|cutting from")
+_SPOKEN = re.compile(r"\bspoken by (?P<a>.+)$")
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,9 @@ def classify_header(text: str, chars: Characters) -> HeaderInfo | None:
     if t.startswith("telegram"):
         return HeaderInfo("telegram", None, None, when)
     m = _NOTE_LEFT.match(t) or _MEMO_BY.match(t)
+    if m:
+        return HeaderInfo("memo", _resolve(m["a"], chars), None, when)
+    m = _SPOKEN.search(t)
     if m:
         return HeaderInfo("memo", _resolve(m["a"], chars), None, when)
     m = _OWNED.match(t)

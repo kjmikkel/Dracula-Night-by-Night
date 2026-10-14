@@ -92,3 +92,23 @@ def test_unanchored_chapter_after_the_story_is_kept():
     assert blocks[-1].chapter == 27
     text = reference_text(html)
     assert "NOTE" in text and "Seven years ago." in text
+
+
+PREFACE = ('<div class="chapter"><p class="nind">\nHow these papers have been placed in sequence will be made '
+           'manifest in the\nreading of them.\n</p></div>')
+TITLE = '<div class="chapter"><h2>D R A C U L A</h2><hr></div>'
+
+
+def test_preface_before_chapter_one_is_kept():
+    copyright_page = '<div class="chapter"><p class="c">Copyright, 1897.</p></div>'
+    html = page(copyright_page, PREFACE, TITLE, chapter(1, "<p>Hello.</p>"))
+    blocks = parse_book(html)
+    assert roles_and_texts(blocks) == [
+        ("para", "How these papers have been placed in sequence will be made manifest in the reading of them."),
+        ("header", "JONATHAN HARKER’S JOURNAL"),
+        ("para", "Hello."),
+    ]
+    assert blocks[0].chapter == 0
+    text = reference_text(html)
+    assert "How these papers" in text
+    assert "Copyright" not in text and "D R A C U L A" not in text

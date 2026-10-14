@@ -13,8 +13,19 @@ class OverrideError(Exception):
     pass
 
 
+class _UniqueKeyLoader(yaml.SafeLoader):
+    def construct_mapping(self, node, deep=False):
+        seen = set()
+        for key_node, _ in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if key in seen:
+                raise OverrideError(f"duplicate key '{key}' in overrides.yaml (line {key_node.start_mark.line + 1})")
+            seen.add(key)
+        return super().construct_mapping(node, deep)
+
+
 def load_overrides(yaml_text: str) -> dict[str, dict]:
-    data = yaml.safe_load(yaml_text) or {}
+    data = yaml.load(yaml_text, Loader=_UniqueKeyLoader) or {}
     if not isinstance(data, dict) or not all(isinstance(v, dict) for v in data.values()):
         raise OverrideError("overrides.yaml must map entry ids to mappings")
     return data

@@ -68,3 +68,7 @@ westminster_gazette:
   name: The Westminster Gazette
   short: Westminster Gazette
   aliases: [westminster gazette]
+bram_stoker:
+  name: Bram Stoker
+  short: Stoker
+  aliases: []

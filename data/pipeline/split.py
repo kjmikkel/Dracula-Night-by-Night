@@ -12,7 +12,7 @@ _NO_HEADER = HeaderInfo(None, None, None, None)
 _LOG_DAY = re.compile(r"^On \d{1,2} [A-Z][a-z]+")
 
 
-def split_entries(blocks: list[Block], chars: Characters) -> list[Entry]:
+def split_entries(blocks: list[Block], chars: Characters, unmatched: list[str] | None = None) -> list[Entry]:
     entries: list[Entry] = []
     cur: Entry | None = None
     ctx = _NO_HEADER
@@ -25,6 +25,8 @@ def split_entries(blocks: list[Block], chars: Characters) -> list[Entry]:
             while j < len(blocks) and blocks[j].role == "header":
                 j += 1
             for text, info in _header_groups(blocks[i:j], chars):
+                if info is None and unmatched is not None:
+                    unmatched.append(text)
                 if info is None and cur is not None:
                     cur.blocks.append(Block("note", (Span(text),), b.chapter))
                 else:

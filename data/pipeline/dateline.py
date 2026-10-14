@@ -104,7 +104,8 @@ def _time_in(text: str) -> tuple[time | None, bool]:
         return time(hour, int(m["m"] or 0)), False
     m = _OCLOCK.search(text)
     if m:
-        return time(int(m["h"]), int(m["m"] or 0)), False
+        # No a.m./p.m.: the hour is right but morning vs evening is a guess.
+        return time(int(m["h"]), int(m["m"] or 0)), True
     low = text.lower()
     for word, clock, estimated in _PERIODS:
         if re.search(rf"\b{word}\b", low):

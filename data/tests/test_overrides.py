@@ -59,3 +59,8 @@ def test_load_overrides_rejects_non_mapping():
     assert load_overrides("{}") == {}
     with pytest.raises(OverrideError):
         load_overrides("- just a list")
+
+
+def test_duplicate_ids_are_an_error():
+    with pytest.raises(OverrideError, match="duplicate key 'a'"):
+        load_overrides('a: {time: "10:00"}\na: {time: "11:00"}\n')
