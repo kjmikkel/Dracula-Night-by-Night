@@ -82,3 +82,13 @@ def test_reference_text_is_independent_of_roles():
     assert "CHAPTER" not in text
     assert "Preface" not in text
     assert "Advert" not in text
+
+
+def test_unanchored_chapter_after_the_story_is_kept():
+    note = '<div class="chapter"><h2>NOTE</h2><p>Seven years ago.</p><p class="c">THE END</p></div>'
+    html = page(chapter(27, "<p>Last.</p>", subtitle=None), note)
+    blocks = parse_book(html)
+    assert roles_and_texts(blocks) == [("para", "Last."), ("header", "NOTE"), ("para", "Seven years ago.")]
+    assert blocks[-1].chapter == 27
+    text = reference_text(html)
+    assert "NOTE" in text and "Seven years ago." in text

@@ -61,3 +61,7 @@ def test_classifies_real_headers(chars, header, expected):
 @pytest.mark.parametrize("header", ["“FINIS.”", "DRACULA.", "THE ESCAPED WOLF."])
 def test_unclassifiable_headers_return_none(chars, header):
     assert classify_header(header, chars) is None
+
+
+def test_closing_note_header(chars):
+    assert classify_header("NOTE", chars) == HeaderInfo("memo", None, None, None)

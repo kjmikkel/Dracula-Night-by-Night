@@ -1,0 +1,55 @@
+from datetime import date
+
+import pytest
+
+from pipeline.cli import run_pipeline
+from pipeline.validate import MISSING_TIME
+from tests.conftest import DATA_DIR
+
+DIARISTS = {"jonathan_harker", "mina_harker", "lucy_westenra", "john_seward"}
+
+
+@pytest.fixture(scope="module")
+def run():
+    return run_pipeline(DATA_DIR)
+
+
+def test_no_structural_errors(run):
+    structural = [p for p in run.problems if p.level == "error" and p.message != MISSING_TIME]
+    assert structural == []
+
+
+def test_first_entry_is_harker_in_bistritz(run):
+    first = run.entries[0]
+    assert (first.id, first.type, first.place) == ("1893-05-03-jonathan_harker-01", "diary", "Bistritz")
+
+
+def test_story_spans_the_season(run):
+    dates = [e.date for e in run.entries]
+    assert min(dates) == date(1893, 5, 3)
+    assert max(dates) == date(1893, 11, 6)
+
+
+def test_plausible_entry_count(run):
+    assert 200 <= len(run.entries) <= 450
+
+
+def test_epilogue_is_last(run):
+    last = run.entries[-1]
+    assert (last.header, last.author) == ("NOTE", "jonathan_harker")
+    assert "Seven years ago" in last.text()
+
+
+def test_diaries_belong_to_diarists(run):
+    wrong = [(e.id, e.author) for e in run.entries if e.type in ("diary", "phonograph") and e.author not in DIARISTS]
+    assert wrong == []
+
+
+def test_demeter_log_is_split_by_day(run):
+    log_dates = [e.date for e in run.entries if e.type == "log"]
+    assert date(1893, 7, 6) in log_dates and date(1893, 8, 4) in log_dates
+    assert len(log_dates) >= 15
+
+
+def test_finis_is_not_part_of_a_header(run):
+    assert [e.id for e in run.entries if e.header and "FINIS" in e.header] == []

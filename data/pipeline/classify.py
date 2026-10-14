@@ -23,6 +23,8 @@ class HeaderInfo:
 def classify_header(text: str, chars: Characters) -> HeaderInfo | None:
     t = normalise_name(text.replace("\n", " "))
     when = extract_date(text)
+    if t in ("note", "note."):
+        return HeaderInfo("memo", None, None, when)
     if t.startswith("log of the"):
         return HeaderInfo("log", _resolve(t, chars), None, when)
     if _NEWSPAPER.search(t):

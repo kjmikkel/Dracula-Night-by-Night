@@ -119,3 +119,39 @@ def test_assign_ids_sequences_per_date_and_author():
         "1893-09-30-mina_harker-02",
         "undated-unknown-01",
     ]
+
+
+def test_unclassifiable_header_before_a_real_one_stays_with_previous_entry(chars):
+    entries = split_entries(
+        [
+            H("Jonathan Harker’s Journal"),
+            P("—a.", "24 October."),
+            H("Rufus Smith, Lloyd’s, London, to Lord Godalming."),
+            H("Dr. Seward’s Diary."),
+            P("—b.", "25 October."),
+        ],
+        chars,
+    )
+    assert [(e.author, e.header) for e in entries] == [
+        ("jonathan_harker", "Jonathan Harker’s Journal"),
+        ("john_seward", "Dr. Seward’s Diary."),
+    ]
+    assert (entries[0].blocks[-1].role, entries[0].blocks[-1].text) == (
+        "note", "Rufus Smith, Lloyd’s, London, to Lord Godalming.")
+
+
+def test_log_days_split_on_plain_paragraphs(chars):
+    entries = split_entries(
+        [
+            H("LOG OF THE “DEMETER.”"),
+            P("", "Written 18 July, things so strange happening."),
+            P("On 6 July we finished taking in cargo."),
+            P("On 11 July at dawn entered Bosphorus."),
+        ],
+        chars,
+    )
+    assert [(e.type, e.date) for e in entries] == [
+        ("log", None),
+        ("log", date(1893, 7, 6)),
+        ("log", date(1893, 7, 11)),
+    ]
