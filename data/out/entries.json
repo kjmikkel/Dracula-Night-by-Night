@@ -1579,7 +1579,7 @@
     "order": 13,
     "place": null,
     "recipient": null,
-    "time": "09:00",
+    "time": "10:00",
     "timeEstimated": true,
     "type": "diary"
   },
@@ -2966,7 +2966,7 @@
     "order": 28,
     "place": null,
     "recipient": null,
-    "time": "21:00",
+    "time": "23:00",
     "timeEstimated": true,
     "type": "phonograph"
   },
@@ -3571,7 +3571,7 @@
     "order": 40,
     "place": null,
     "recipient": null,
-    "time": "07:00",
+    "time": "09:00",
     "timeEstimated": true,
     "type": "phonograph"
   },
@@ -4115,8 +4115,8 @@
     "order": 51,
     "place": null,
     "recipient": null,
-    "time": "12:00",
-    "timeEstimated": false,
+    "time": "12:30",
+    "timeEstimated": true,
     "type": "log"
   },
   {
@@ -4139,8 +4139,8 @@
     "order": 52,
     "place": null,
     "recipient": null,
-    "time": "16:00",
-    "timeEstimated": false,
+    "time": "16:30",
+    "timeEstimated": true,
     "type": "log"
   },
   {
@@ -4251,7 +4251,7 @@
     "order": 56,
     "place": null,
     "recipient": null,
-    "time": "08:00",
+    "time": "13:00",
     "timeEstimated": true,
     "type": "log"
   },
@@ -5890,7 +5890,7 @@
     "order": 91,
     "place": "Hillingham",
     "recipient": null,
-    "time": "21:00",
+    "time": "20:00",
     "timeEstimated": true,
     "type": "diary"
   },
@@ -20390,7 +20390,7 @@
     "order": 208,
     "place": null,
     "recipient": null,
-    "time": "09:00",
+    "time": "08:30",
     "timeEstimated": true,
     "type": "diary"
   },
@@ -21168,7 +21168,7 @@
     "order": 216,
     "place": null,
     "recipient": null,
-    "time": "22:00",
+    "time": "23:30",
     "timeEstimated": true,
     "type": "diary"
   },
@@ -22282,7 +22282,7 @@
     "order": 234,
     "place": null,
     "recipient": null,
-    "time": "23:59",
+    "time": "20:00",
     "timeEstimated": true,
     "type": "memo"
   }
