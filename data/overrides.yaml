@@ -1,0 +1,4 @@
+# Hand-curated editorial decisions, keyed by entry id.
+# Keys: time ("HH:MM"), estimated (bool), date ("1893-MM-DD"), type, author,
+#       recipient, place, split_after (block index), merge_with_next (bool), note (free text).
+{}
