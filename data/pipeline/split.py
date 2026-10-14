@@ -1,13 +1,15 @@
+import re
 from collections import Counter
 from datetime import date
 
 from .characters import Characters
 from .classify import HeaderInfo, classify_header
-from .dateline import parse_dateline
+from .dateline import Dateline, extract_date, parse_dateline
 from .model import Block, Entry, Span
 
 _QUOTES = set("“‘\"' ")
 _NO_HEADER = HeaderInfo(None, None, None, None)
+_LOG_DAY = re.compile(r"^On \d{1,2} [A-Z][a-z]+")
 
 
 def split_entries(blocks: list[Block], chars: Characters) -> list[Entry]:
@@ -20,18 +22,15 @@ def split_entries(blocks: list[Block], chars: Characters) -> list[Entry]:
         b = blocks[i]
         if b.role == "header":
             j = i
-            texts = []
             while j < len(blocks) and blocks[j].role == "header":
-                texts.append(blocks[j].text)
                 j += 1
-            text = "\n".join(texts)
-            info = classify_header(text, chars)
-            if info is None and cur is not None:
-                cur.blocks.append(Block("note", (Span(text),), b.chapter))
-            else:
-                ctx = info or _NO_HEADER
-                current = ctx.date or current
-                cur = _new(entries, b.chapter, ctx, current, header=text)
+            for text, info in _header_groups(blocks[i:j], chars):
+                if info is None and cur is not None:
+                    cur.blocks.append(Block("note", (Span(text),), b.chapter))
+                else:
+                    ctx = info or _NO_HEADER
+                    current = ctx.date or current
+                    cur = _new(entries, b.chapter, ctx, current, header=text)
             i = j
             continue
 
@@ -40,6 +39,8 @@ def split_entries(blocks: list[Block], chars: Characters) -> list[Entry]:
         role = b.role
         lead = _leading_italic(b) if role in ("para", "signoff") else None
         dl = parse_dateline(lead, current) if lead else None
+        if dl is None and ctx.type == "log" and role == "para":
+            dl = _log_day(b)
         if dl is not None:
             if role == "signoff":
                 role = "dateline"
@@ -66,6 +67,24 @@ def assign_ids(entries: list[Entry]) -> None:
         stem = f"{e.date.isoformat() if e.date else 'undated'}-{e.author or 'unknown'}"
         seen[stem] += 1
         e.id = f"{stem}-{seen[stem]:02d}"
+
+
+def _header_groups(run: list[Block], chars: Characters) -> list[tuple[str, HeaderInfo | None]]:
+    """Each header that classifies on its own starts a group; unclassifiable lines join the group before them."""
+    groups: list[list[str]] = []
+    for b in run:
+        if not groups or classify_header(b.text, chars) is not None:
+            groups.append([b.text])
+        else:
+            groups[-1].append(b.text)
+    return [("\n".join(g), classify_header("\n".join(g), chars)) for g in groups]
+
+
+def _log_day(b: Block) -> Dateline | None:
+    """Ship's log paragraphs such as "On 6 July we finished taking in cargo" start a new day."""
+    m = _LOG_DAY.match(b.text)
+    when = extract_date(m.group(0)) if m else None
+    return Dateline(when, None, False, None, False) if when else None
 
 
 def _new(entries: list[Entry], chapter: int, ctx: HeaderInfo, when: date | None, header: str | None) -> Entry:

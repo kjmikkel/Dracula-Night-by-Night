@@ -1,4 +1,14 @@
 # Hand-curated editorial decisions, keyed by entry id.
 # Keys: time ("HH:MM"), estimated (bool), date ("1893-MM-DD"), type, author,
 #       recipient, place, split_after (block index), merge_with_next (bool), note (free text).
-{}
+1893-08-09-demeter_captain-01:
+  date: "1893-07-18"
+  note: "Captain's preface is headed 'Written 18 July'; it inherited the cutting's date"
+1893-10-24-jonathan_harker-02:
+  type: telegram
+  author: rufus_smith
+  recipient: arthur_holmwood
+  note: "Lloyd's telegram quoted in Harker's journal"
+1893-11-06-unknown-01:
+  author: jonathan_harker
+  note: "Closing NOTE signed by Jonathan Harker, written seven years later; unlocks last"

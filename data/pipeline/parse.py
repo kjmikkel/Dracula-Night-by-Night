@@ -13,16 +13,17 @@ _END = "THE END"
 def parse_book(html: str) -> list[Block]:
     soup = BeautifulSoup(html, "html.parser")
     blocks: list[Block] = []
-    for div in soup.select("div.chapter"):
-        anchor = div.find("a", id=_CHAP_ID)
-        if anchor is None:
-            continue
-        chapter = int(_CHAP_ID.match(anchor["id"]).group(1))
+    chapter = 0
+    for div, anchor in _story_divs(soup):
+        if anchor is not None:
+            chapter = int(_CHAP_ID.match(anchor["id"]).group(1))
         for el in div.find_all(["h2", "p", "div"]):
             if el.name == "h2":
                 small = el.find("small")
                 if small is not None:
                     blocks.append(Block("header", _spans(small), chapter))
+                elif anchor is None:
+                    blocks.append(Block("header", _spans(el), chapter))
                 continue
             if el.name == "div":
                 if "stanza" in el.get("class", []):
@@ -44,12 +45,11 @@ def reference_text(html: str) -> str:
     """Book body text extracted without any role logic, for conservation checks."""
     soup = BeautifulSoup(html, "html.parser")
     parts: list[str] = []
-    for div in soup.select("div.chapter"):
-        if div.find("a", id=_CHAP_ID) is None:
-            continue
-        for h2 in div.find_all("h2"):
-            small = h2.find("small")
-            h2.replace_with(NavigableString(small.get_text() if small else ""))
+    for div, anchor in _story_divs(soup):
+        if anchor is not None:
+            for h2 in div.find_all("h2"):
+                small = h2.find("small")
+                h2.replace_with(NavigableString(small.get_text() if small else ""))
         text = div.get_text()
         end = text.find(_END)
         if end != -1:
@@ -57,6 +57,16 @@ def reference_text(html: str) -> str:
             break
         parts.append(text)
     return "".join(parts)
+
+
+def _story_divs(soup: BeautifulSoup) -> list[tuple[Tag, Tag | None]]:
+    """Chapter divs from CHAPTER I onwards, with their chapNN anchor (None for e.g. the closing NOTE)."""
+    out: list[tuple[Tag, Tag | None]] = []
+    for div in soup.select("div.chapter"):
+        anchor = div.find("a", id=_CHAP_ID)
+        if anchor is not None or out:
+            out.append((div, anchor))
+    return out
 
 
 def _role(el: Tag, text: str) -> str:
