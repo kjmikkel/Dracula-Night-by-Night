@@ -1,0 +1,84 @@
+from pipeline.model import Block, Span
+from pipeline.parse import parse_book, reference_text
+from tests.markup import chapter, page
+
+
+def roles_and_texts(blocks):
+    return [(b.role, b.text) for b in blocks]
+
+
+def test_front_matter_skipped():
+    front = '<div class="chapter"><h2>D R A C U L A</h2><p>Preface text.</p></div>'
+    blocks = parse_book(page(front, chapter(1, "<p>Hello.</p>")))
+    assert roles_and_texts(blocks) == [
+        ("header", "JONATHAN HARKER’S JOURNAL"),
+        ("para", "Hello."),
+    ]
+    assert all(b.chapter == 1 for b in blocks)
+
+
+def test_italic_spans_and_whitespace():
+    html = page(chapter(1, '<p><i>3 May. Bistritz.</i>—Left Munich at 8:35 '
+                           '<span class="smcap">P. M.</span>, on\n1st May.</p>', subtitle=None))
+    [block] = parse_book(html)
+    assert block.spans == (
+        Span("3 May. Bistritz.", True),
+        Span("—Left Munich at 8:35 P. M., on 1st May.", False),
+    )
+
+
+def test_roles_by_class():
+    inner = """
+<p class="c">(<i>Kept in shorthand.</i>)</p>
+<p class="c"><i>Letter from Miss Mina Murray to Miss Lucy Westenra.</i></p>
+<p class="letra"><i>Dr. Seward’s Diary.</i></p>
+<p class="r">
+“<i>9 May.</i><br>
+</p>
+<p class="nind">
+“My dearest Lucy,—<br>
+</p>
+<p class="nind">W<small>HEN</small> we arrived at the Berkeley Hotel.</p>
+<div class="poem"><div class="stanza">
+<span class="i0">“Denn die Todten reiten schnell”—<br></span>
+<span class="i0">(“For the dead travel fast.”)<br></span>
+</div></div>
+"""
+    blocks = parse_book(page(chapter(1, inner, subtitle=None)))
+    assert roles_and_texts(blocks) == [
+        ("note", "(Kept in shorthand.)"),
+        ("header", "Letter from Miss Mina Murray to Miss Lucy Westenra."),
+        ("header", "Dr. Seward’s Diary."),
+        ("signoff", "“9 May."),
+        ("salutation", "“My dearest Lucy,—"),
+        ("para", "WHEN we arrived at the Berkeley Hotel."),
+        ("verse", "“Denn die Todten reiten schnell”—\n(“For the dead travel fast.”)"),
+    ]
+
+
+def test_multiline_signoff_keeps_line_breaks():
+    inner = '<p class="r">\n“Your friend,<br>\n“<span class="smcap">Dracula</span>.”<br>\n</p>'
+    [block] = parse_book(page(chapter(1, inner, subtitle=None)))
+    assert block == Block("signoff", (Span("“Your friend,\n“Dracula.”"),), 1)
+
+
+def test_blank_paragraphs_skipped():
+    blocks = parse_book(page(chapter(1, "<p>\u00a0</p><p> </p><p>Text.</p>", subtitle=None)))
+    assert roles_and_texts(blocks) == [("para", "Text.")]
+
+
+def test_stops_at_the_end():
+    inner = '<p>Last words.</p>\n<p class="c">\nTHE END<br>\n</p>\n<p>Ask for our free list!</p>'
+    blocks = parse_book(page(chapter(27, inner, subtitle=None)))
+    assert roles_and_texts(blocks) == [("para", "Last words.")]
+
+
+def test_reference_text_is_independent_of_roles():
+    front = '<div class="chapter"><p>Preface.</p></div>'
+    inner = '<p>Body.</p><p class="c">THE END</p><p>Advert.</p>'
+    text = reference_text(page(front, chapter(1, inner)))
+    assert "JONATHAN HARKER’S JOURNAL" in text
+    assert "Body." in text
+    assert "CHAPTER" not in text
+    assert "Preface" not in text
+    assert "Advert" not in text
