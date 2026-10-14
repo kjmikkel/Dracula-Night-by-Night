@@ -1,0 +1,70 @@
+# id: display name, short name, aliases used in headers (matched case-insensitively as prefixes)
+jonathan_harker:
+  name: Jonathan Harker
+  short: Jonathan
+  aliases: [jonathan harker]
+mina_harker:
+  name: Mina Harker
+  short: Mina
+  aliases: [mina harker, mina murray, miss mina murray, miss wilhelmina murray, mrs. harker]
+lucy_westenra:
+  name: Lucy Westenra
+  short: Lucy
+  aliases: [lucy westenra, miss lucy westenra]
+john_seward:
+  name: Dr. John Seward
+  short: Seward
+  diary_type: phonograph
+  aliases: [dr. seward, john seward, seward]
+arthur_holmwood:
+  name: Arthur Holmwood
+  short: Arthur
+  aliases: [arthur holmwood, hon. arthur holmwood, lord godalming]
+quincey_morris:
+  name: Quincey P. Morris
+  short: Quincey
+  aliases: [quincey p. morris, quincey morris]
+van_helsing:
+  name: Abraham Van Helsing
+  short: Van Helsing
+  aliases: [van helsing, abraham van helsing, dr. van helsing]
+sister_agatha:
+  name: Sister Agatha
+  short: Sister Agatha
+  aliases: [sister agatha]
+patrick_hennessey:
+  name: Dr. Patrick Hennessey
+  short: Hennessey
+  aliases: [patrick hennessey]
+billington_and_son:
+  name: Samuel F. Billington & Son
+  short: Billington
+  aliases: [samuel f. billington, messrs. billington]
+carter_paterson:
+  name: Carter, Paterson & Co.
+  short: Carter, Paterson
+  aliases: ["messrs. carter, paterson"]
+mitchell_sons_candy:
+  name: Mitchell, Sons & Candy
+  short: Mitchell
+  aliases: ["mitchell, sons and candy"]
+rufus_smith:
+  name: Rufus Smith
+  short: Rufus Smith
+  aliases: [rufus smith]
+demeter_captain:
+  name: Captain of the Demeter
+  short: Demeter
+  aliases: [log of the demeter]
+dailygraph:
+  name: The Dailygraph
+  short: Dailygraph
+  aliases: [dailygraph]
+pall_mall_gazette:
+  name: The Pall Mall Gazette
+  short: Pall Mall Gazette
+  aliases: [pall mall gazette]
+westminster_gazette:
+  name: The Westminster Gazette
+  short: Westminster Gazette
+  aliases: [westminster gazette]
