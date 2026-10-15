@@ -79,8 +79,10 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
         blocked = !Notifications.allowed(context)
         viewModel.recheckNotifications()
     }
-    val askPermission = rememberNotificationPermissionRequest { granted ->
-        viewModel.setNotify(granted)
+    // The reader asked for notifications: keep that wish even if Android refuses (or, after two refusals, no longer
+    // asks), so the row says they are blocked and leads to Android's settings instead of going dead.
+    val askPermission = rememberNotificationPermissionRequest {
+        viewModel.setNotify(true)
         blocked = !Notifications.allowed(context)
     }
 
