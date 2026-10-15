@@ -162,6 +162,25 @@ license files; Serif and Sans-serif are the device's.
   theme; high contrast in light and dark, and following the system Contrast setting; Start over with and without bookmarks; Skip to a day and Back to real time keep read entries listed;
   no crashes in logcat.
 
+## Future spike: accessibility pass
+
+After plan C, when the screens and theme have settled, a time-boxed spike checks the whole app with the tools
+people actually use, and turns what it finds into issues (fixes are separate tasks, not part of the spike):
+
+- **TalkBack:** every screen and the reader end to end — reading order, labels for icons and type markers,
+  the unread dot and bookmark state announced, headings marked as headings, notifications read sensibly.
+- **Switch Access and keyboard:** everything reachable and operable, visible focus.
+- **Text and display:** system font size at 200 % and display size at largest, with every reading font and
+  text size; nothing clipped or overlapping; landscape.
+- **Contrast and colour:** Accessibility Scanner on each screen in light, dark, high contrast and sepia;
+  colour-blindness simulation; no meaning carried by colour alone.
+- **Touch targets** at least 48 dp; motion (no animation needed to understand anything; respects
+  "Remove animations").
+- **Output:** a short findings report in `docs/` and one GitHub issue per finding, graded by impact.
+
+The spike's question: *can a reader who relies on TalkBack, large text or high contrast read Dracula night by
+night without help?*
+
 ## Out of scope (plans B and C)
 
 Filter chips, bookmarks list, swipe between entries (B). Sepia, period display font, ornaments, About page
