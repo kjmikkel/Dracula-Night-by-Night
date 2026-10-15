@@ -2,6 +2,11 @@
 
 **Status:** Draft for review · **Date:** 2026-10-14 · **Related:** [Dataset design](2026-10-14-dataset-design.md)
 
+> **Revised 2026-10-15 by [App plan A](2026-10-15-app-plan-a-design.md)** (decisions D1–D11 there): notifications
+> are silent with no in-app quiet hours, wake-ups use an inexact alarm instead of WorkManager, read entries stay
+> readable, onboarding is one screen; skip ahead, reading fonts, Start over, the new-season prompt, "Start
+> tomorrow?" and the end card are added. Where this document disagrees, plan A wins.
+
 ## Purpose
 
 A free, open-source (Apache-2.0) Android app on Google Play that lets readers
