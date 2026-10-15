@@ -18,6 +18,8 @@ jobs:
           distribution: temurin
           java-version: "21"
       - uses: android-actions/setup-android@v3
-      - run: sdkmanager "platforms;android-37.0" "build-tools;36.0.0"
+        with:
+          # the default also asks for the legacy "tools" package, which the SDK repository no longer has
+          packages: platform-tools platforms;android-37.0 build-tools;36.0.0
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew :app:testDebugUnitTest :app:assembleDebug --console=plain
