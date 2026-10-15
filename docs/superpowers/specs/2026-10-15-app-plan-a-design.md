@@ -26,6 +26,7 @@ notified, as revised below).
 | D9 | **"Start tomorrow?"** when Same tempo started today would put the first scheduled entry under an hour away or past. | New |
 | D10 | **End card** replaces the Next card at the bottom of the timeline once nothing is left to unlock. | New |
 | D11 | Theme setting **System / Light / Dark** with a dark palette now; Sepia and the period display font stay in plan C. | Visual design (split across plans A and C) |
+| D12 | **High contrast** switch, independent of the theme (light or dark high-contrast palette). Every text/background pair meets WCAG AAA (≥ 7:1). Defaults to on when Android 14+'s Contrast setting is high. Wins over Sepia (plan C). | Accessibility (made concrete) |
 
 ## Saved reader state
 
@@ -40,6 +41,7 @@ unchanged. An unknown or invalid value falls back to the default — never a cra
 | `textSize` | `small` · `normal` · `large` · `xlarge`, `normal` | Story text size |
 | `readingFont` | `serif` · `sans` · `atkinson` · `opendyslexic`, `serif` | Story text font |
 | `theme` | `system` · `light` · `dark`, `system` | Plan C adds `sepia` |
+| `highContrast` | `Boolean?`, `null` | `null` follows Android's Contrast setting (high on Android 14+ means on, otherwise off); `true`/`false` once the reader sets the switch |
 | `seasonPromptYear` | `Int?`, `null` | Year whose new-season prompt has been answered |
 
 `skipAheadMinutes` (plan 1) is now written by skip ahead as well as reset by mode changes.
@@ -97,7 +99,8 @@ is left to unlock ("The end. You have read *Dracula* night by night." · Start o
   start-tomorrow hint); Skip to a day (story days 3 May – 6 November); Back to real time (only when ahead).
 - *Notifications:* Notify me (asks permission when turned on; shows "Notifications are blocked in Android's
   settings · Open settings" when blocked); Sound and vibration… (opens the "New entries" channel settings).
-- *Display:* Text size (four steps, live sample); Reading font (each label in its own font); Theme.
+- *Display:* Text size (four steps, live sample); Reading font (each label in its own font); Theme; High contrast
+  (switch).
 - *Start over* (bottom, error colour): dialog "Start over? Your reading progress is cleared and entries lock
   again on schedule." with ☐ "Also remove my N bookmarks" (off; shown only with bookmarks) and, for Same tempo,
   the restart date (today); Cancel · Start over.
@@ -106,7 +109,10 @@ is left to unlock ("The end. You have read *Dracula* night by night." · Start o
 **Reader:** story blocks use the chosen text size and reading font; headers keep the theme's fonts.
 
 **Theme:** `DraculaTheme` gains a dark palette (bone text on near-black, muted oxblood accents); the setting
-picks system, light or dark.
+picks system, light or dark. **High contrast** replaces the active palette with its high-contrast variant:
+near-black on white (light) or white on near-black (dark); accents keep oxblood, darkened or lightened until
+they pass; dividers, outlines and the unread dot are drawn stronger. The palettes are plain data
+(`Palette` of named colour pairs) so their contrast can be checked on the JVM.
 
 **Fonts:** Atkinson Hyperlegible and OpenDyslexic are bundled under the SIL Open Font License with their
 license files; Serif and Sans-serif are the device's.
@@ -147,11 +153,13 @@ license files; Serif and Sans-serif are the device's.
   none when off, blocked or Read freely); season prompt (from 26 April, once a year, Calendar only); start
   tomorrow (under, exactly, past, early in the day; dataset-anchored); Start over (progress, optional
   bookmarks, skip ahead, Calendar season, Same tempo date, display kept); notification text (one, several,
-  letters); end card versus Next card.
+  letters); end card versus Next card; palette contrast (every text/background pair ≥ 7:1 in both high-contrast
+  palettes, ≥ 4.5:1 — WCAG AA — in the standard light and dark palettes); `highContrast` null follows the
+  system setting.
 - **Emulator:** fresh install shows Welcome; Begin requests permission and a refusal turns notify off; a zone
   change making the next entry a minute away produces a silent notification whose tap opens that entry;
   notifications blocked → no alarm (`dumpsys alarm`) and the Settings hint; fonts and sizes in the reader; dark
-  theme; Start over with and without bookmarks; Skip to a day and Back to real time keep read entries listed;
+  theme; high contrast in light and dark, and following the system Contrast setting; Start over with and without bookmarks; Skip to a day and Back to real time keep read entries listed;
   no crashes in logcat.
 
 ## Out of scope (plans B and C)
