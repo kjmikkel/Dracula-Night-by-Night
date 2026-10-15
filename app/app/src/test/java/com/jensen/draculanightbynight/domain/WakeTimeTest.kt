@@ -25,6 +25,15 @@ class WakeTimeTest {
     }
 
     @Test
+    fun anArrivalMissedWhileThePhoneWasOffWakesAtOnce() {
+        // 3 May 22:00 arrived at 22:00 while the phone was off (or the clock jumped past it): announce it now,
+        // not with the next entry the following afternoon.
+        val missed = tempo.copy(lastNotifiedAt = Instant.parse("2026-10-14T21:30:00Z").toEpochMilli())
+        val now = Instant.parse("2026-10-14T22:30:00Z")
+        assertEquals(now, wake(missed, now = now))
+    }
+
+    @Test
     fun neverWakesWhenNotificationsAreOffOrBlocked() {
         assertNull(wake(tempo.copy(notify = false)))
         assertNull(wake(tempo, allowed = false))
