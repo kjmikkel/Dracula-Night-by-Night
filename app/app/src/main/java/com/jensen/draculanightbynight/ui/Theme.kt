@@ -74,7 +74,7 @@ private fun Palette.colorScheme(): ColorScheme {
 
 /** Android 14+'s Contrast setting at its highest step; earlier versions have no such setting. */
 @Composable
-private fun systemHighContrast(): Boolean {
+fun systemHighContrast(): Boolean {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return false
     val uiMode = LocalContext.current.getSystemService(UiModeManager::class.java) ?: return false
     return uiMode.contrast >= HIGH_CONTRAST_LEVEL
