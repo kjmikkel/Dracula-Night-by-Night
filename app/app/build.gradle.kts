@@ -19,6 +19,11 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // The app's text is English; keep only English resources, so library dialogs (the date picker) match.
+    androidResources {
+        localeFilters += "en"
+    }
 }
 
 /** Copies the story dataset (data/out/entries.json + characters.json) into the app's assets. */
