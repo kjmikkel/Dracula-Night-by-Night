@@ -15,7 +15,7 @@ import java.time.LocalDate
 class UserRepository(private val store: DataStore<UserState>, private val time: TimeSource) {
     val state: Flow<UserState> = store.data
 
-    /** Until the Welcome screen exists, a reader without a mode starts in Same tempo from today. */
+    /** Repair: an onboarded reader whose saved mode cannot be read (say, a broken start date) restarts Same tempo from today. */
     suspend fun ensureMode() {
         store.updateData { s -> if (s.readingMode == null) s.withMode(ReadingMode.SameTempo(time.today())) else s }
     }
