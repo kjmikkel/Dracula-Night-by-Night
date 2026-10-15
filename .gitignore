@@ -37,3 +37,10 @@ __pycache__/
 # Local Claude Code config
 .claude/
 data/out/review.html
+
+# Android
+app/local.properties
+app/.gradle/
+app/.kotlin/
+app/build/
+app/app/build/
