@@ -4,6 +4,7 @@ import com.jensen.draculanightbynight.content.Entry
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.MonthDay
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -28,10 +29,20 @@ object UnlockSchedule {
     /** When [entry] unlocks for a reader in [zone]; null means it is always unlocked. */
     fun unlockInstant(entry: Entry, mode: ReadingMode, zone: ZoneId): Instant? = when (mode) {
         ReadingMode.Free -> null
-        is ReadingMode.Calendar -> entry.date.withYear(mode.seasonYear).atTime(entry.time).atZone(zone).toInstant()
-        is ReadingMode.SameTempo -> mode.startDate
-            .plusDays(ChronoUnit.DAYS.between(STORY_START, entry.date))
-            .atTime(entry.time).atZone(zone).toInstant()
+        is ReadingMode.Calendar -> instantOf(entry.date.withYear(mode.seasonYear).atTime(entry.time), zone)
+        is ReadingMode.SameTempo -> instantOf(
+            mode.startDate.plusDays(ChronoUnit.DAYS.between(STORY_START, entry.date)).atTime(entry.time),
+            zone,
+        )
+    }
+
+    /**
+     * A wall-clock time that happens twice (clocks going back) uses the earlier one. One that never happens
+     * (clocks jumping forward) unlocks the moment the clock jumps, so entries from that night keep their order.
+     */
+    private fun instantOf(local: LocalDateTime, zone: ZoneId): Instant {
+        val rules = zone.rules
+        return if (rules.getValidOffsets(local).isEmpty()) rules.getTransition(local).instant else local.atZone(zone).toInstant()
     }
 
     fun isUnlocked(entry: Entry, settings: ReadingSettings, now: Instant, zone: ZoneId): Boolean {

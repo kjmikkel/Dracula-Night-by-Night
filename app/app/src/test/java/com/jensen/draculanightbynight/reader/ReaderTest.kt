@@ -50,6 +50,20 @@ class ReaderTest {
     }
 
     @Test
+    fun aHalfScrolledHeaderResumesAtTheTopNotInsideTheFirstBlock() {
+        // List item 0 is the header; scrolled 50 px into it is still the top of the entry.
+        assertEquals(0 to 0, savedPosition(firstVisibleItem = 0, offset = 50))
+    }
+
+    @Test
+    fun positionsInTheBodyRoundTrip() {
+        assertEquals(3 to 120, savedPosition(firstVisibleItem = 4, offset = 120))
+        assertEquals(4 to 120, listPosition(block = 3, offset = 120))
+        assertEquals(0 to 0, listPosition(block = 0, offset = 0))
+        assertEquals(1 to 40, listPosition(block = 0, offset = 40))
+    }
+
+    @Test
     fun phonographDiariesShareTheDiaryStyle() {
         assertEquals(HeaderStyle.DIARY, headerStyle(DocumentType.PHONOGRAPH))
         assertEquals(HeaderStyle.TELEGRAM, headerStyle(DocumentType.TELEGRAM))

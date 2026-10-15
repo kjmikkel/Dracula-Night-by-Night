@@ -52,3 +52,15 @@ fun buildReader(story: Story, user: UserState, settings: ReadingSettings, now: I
         bookmarked = progress.bookmarked,
     )
 }
+
+// The reader's list shows the header as item 0 and body block i as item i + 1.
+
+/**
+ * The (block, offset) to store for a list scrolled to [firstVisibleItem] at [offset] pixels.
+ * Anywhere in the header is the top of the entry: (0, 0), which [listPosition] opens at the header.
+ */
+fun savedPosition(firstVisibleItem: Int, offset: Int): Pair<Int, Int> =
+    if (firstVisibleItem == 0) 0 to 0 else (firstVisibleItem - 1) to offset
+
+/** The list item and offset to open at for a stored (block, offset). */
+fun listPosition(block: Int, offset: Int): Pair<Int, Int> = (block + if (block > 0 || offset > 0) 1 else 0) to offset

@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.content.Block
 import com.jensen.draculanightbynight.content.BlockRole
@@ -84,16 +86,22 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, onOpen: (String
 @OptIn(FlowPreview::class)
 @Composable
 private fun Body(reader: ReaderState, viewModel: ReaderViewModel, modifier: Modifier) {
-    // Item 0 is the header; block i is item i + 1.
-    val listState = rememberLazyListState(reader.startBlock + if (reader.startBlock > 0 || reader.startOffset > 0) 1 else 0, reader.startOffset)
-    // Save while reading (debounced) and once more on leaving, so a killed app still resumes close by.
+    val (startItem, startOffset) = listPosition(reader.startBlock, reader.startOffset)
+    val listState = rememberLazyListState(startItem, startOffset)
+    fun save() {
+        val (block, offset) = savedPosition(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
+        viewModel.savePosition(block, offset)
+    }
+    // Save while reading (debounced), when the app goes to the background, and once more on leaving,
+    // so a killed app still resumes where the reader was.
     LaunchedEffect(reader.entry.id) {
         snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
             .debounce(SAVE_DEBOUNCE_MILLIS)
-            .collect { (index, offset) -> viewModel.savePosition((index - 1).coerceAtLeast(0), offset) }
+            .collect { save() }
     }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) { save() }
     DisposableEffect(reader.entry.id) {
-        onDispose { viewModel.savePosition((listState.firstVisibleItemIndex - 1).coerceAtLeast(0), listState.firstVisibleItemScrollOffset) }
+        onDispose { save() }
     }
     LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), state = listState) {
         item { Header(reader) }

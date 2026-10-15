@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,19 +26,26 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private fun NavBackStackEntry.isResumed(): Boolean = lifecycle.currentState == Lifecycle.State.RESUMED
+
 @Composable
 private fun AppNavigation(app: AppContainer) {
     val nav = rememberNavController()
     NavHost(nav, startDestination = "timeline") {
-        composable("timeline") {
-            TimelineScreen(viewModel { TimelineViewModel(app) }, onOpen = { nav.navigate("reader/$it") })
+        // Taps on a screen that is still entering or already leaving (a double tap) are ignored,
+        // so a row cannot open two readers and Back cannot pop the timeline as well.
+        composable("timeline") { entry ->
+            TimelineScreen(
+                viewModel { TimelineViewModel(app) },
+                onOpen = { if (entry.isResumed()) nav.navigate("reader/$it") { launchSingleTop = true } },
+            )
         }
         composable("reader/{id}") { entry ->
             val id = entry.arguments?.getString("id").orEmpty()
             ReaderScreen(
                 viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id) },
-                onBack = { nav.popBackStack() },
-                onOpen = { next -> nav.navigate("reader/$next") { popUpTo("timeline") } },
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+                onOpen = { next -> if (entry.isResumed()) nav.navigate("reader/$next") { popUpTo("timeline") } },
             )
         }
     }

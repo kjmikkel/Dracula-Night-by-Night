@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.jensen.draculanightbynight.content.StoryRepository
 import com.jensen.draculanightbynight.user.UserRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.time.ZonedDateTime
 
 sealed interface ReaderUi {
@@ -45,9 +48,17 @@ class ReaderViewModel(
         }
     }
 
-    /** Runs in the app scope: the last save happens as the screen closes, after viewModelScope is cancelled. */
+    private val saveOrder = Mutex()
+
+    /**
+     * Runs in the app scope: the last save happens as the screen closes, after viewModelScope is cancelled.
+     * Saves are written in the order they are made: each takes its place in line before the first suspension,
+     * so a debounced save can never overwrite the later one made as the screen closes.
+     */
     fun savePosition(blockIndex: Int, blockOffset: Int) {
-        appScope.launch { users.savePosition(entryId, blockIndex, blockOffset) }
+        appScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            saveOrder.withLock { users.savePosition(entryId, blockIndex, blockOffset) }
+        }
     }
 
     fun toggleBookmark() {
