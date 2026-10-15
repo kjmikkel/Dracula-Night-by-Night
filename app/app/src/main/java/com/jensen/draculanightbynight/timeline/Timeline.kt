@@ -4,6 +4,7 @@ import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.domain.UnlockSchedule
+import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Instant
 import java.time.LocalDate
@@ -38,9 +39,9 @@ data class TimelineState(
 
 private val HOUR_MINUTE = DateTimeFormatter.ofPattern("HH:mm")
 
-/** What the timeline shows at [now]: unlocked entries grouped by in-story day, plus the next locked one. */
+/** What the timeline shows at [now]: readable entries grouped by in-story day, plus the next one to unlock. */
 fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId): TimelineState {
-    val (unlocked, locked) = story.entries.partition { UnlockSchedule.isUnlocked(it, settings, now, zone) }
+    val (unlocked, locked) = story.entries.partition { isReadable(it, settings, user, now, zone) }
     val rows = unlocked.map { e ->
         val progress = user.progressOf(e.id)
         e.date to TimelineRow(

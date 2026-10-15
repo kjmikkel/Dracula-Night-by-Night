@@ -28,6 +28,12 @@ class ReaderTest {
     }
 
     @Test
+    fun aReadEntryCanBeOpenedBeforeItsTime() {
+        val user = UserState(progress = mapOf("may09" to EntryProgress(readAtMillis = 1)))
+        assertEquals("may05", reader("may09", user)!!.previousId)
+    }
+
+    @Test
     fun previousAndNextStopAtTheLockedFrontier() {
         val middle = reader("may04")!!
         assertEquals("may03" to "may05", middle.previousId to middle.nextId)

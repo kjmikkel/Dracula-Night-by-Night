@@ -47,6 +47,15 @@ class TimelineTest {
     }
 
     @Test
+    fun aReadEntryStaysListedWhenTheScheduleNoLongerUnlocksIt() {
+        // 5 May was read (say, before Back to real time); on day 2 the schedule has only reached 4 May.
+        val user = UserState(progress = mapOf("may05" to EntryProgress(readAtMillis = 1)))
+        val t = timeline("2026-10-15T15:00:00Z", user)
+        assertEquals(listOf("may03", "may04", "may05"), t.days.flatMap { day -> day.rows.map { it.id } })
+        assertEquals("Mina Harker", t.next?.authorName) // the next entry that is not readable yet
+    }
+
+    @Test
     fun rowsShowUnreadAndBookmarkStateAndTheFirstUnread() {
         val user = UserState(progress = mapOf("may03" to EntryProgress(readAtMillis = 1, bookmarked = true)))
         val t = timeline("2026-10-16T12:00:00Z", user)
