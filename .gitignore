@@ -44,3 +44,4 @@ app/.gradle/
 app/.kotlin/
 app/build/
 app/app/build/
+!app/gradle/wrapper/gradle-wrapper.jar
