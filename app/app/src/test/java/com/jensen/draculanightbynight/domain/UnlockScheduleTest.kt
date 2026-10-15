@@ -68,6 +68,17 @@ class UnlockScheduleTest {
     }
 
     @Test
+    fun aTimeSkippedBySpringForwardUnlocksWhenTheClockJumps() {
+        // Cuba moves its clocks from 00:00 to 01:00 on 8 March 2026: 00:30 never happens there.
+        val havana = ZoneId.of("America/Havana")
+        val mode = ReadingMode.SameTempo(LocalDate.of(2026, 3, 8))
+        val inTheGap = UnlockSchedule.unlockInstant(entry("gap", 5, 3, "00:30"), mode, havana)!!
+        val afterIt = UnlockSchedule.unlockInstant(entry("after", 5, 3, "01:15"), mode, havana)!!
+        assertEquals(Instant.parse("2026-03-08T05:00:00Z"), inTheGap) // 01:00 CDT, the moment the clock jumps
+        assertTrue("story order is kept", inTheGap.isBefore(afterIt))
+    }
+
+    @Test
     fun seasonYearRollsOverAfterSixNovember() {
         assertEquals(2026, UnlockSchedule.seasonYearFor(LocalDate.of(2026, 1, 10)))
         assertEquals(2026, UnlockSchedule.seasonYearFor(LocalDate.of(2026, 11, 6)))

@@ -40,7 +40,8 @@ data class UserState(
     val readingMode: ReadingMode?
         get() = when (mode) {
             MODE_CALENDAR -> seasonYear?.let { ReadingMode.Calendar(it) }
-            MODE_TEMPO -> tempoStart?.let { ReadingMode.SameTempo(LocalDate.parse(it)) }
+            // An unreadable date counts as no mode, so ensureMode() repairs it instead of every launch crashing.
+            MODE_TEMPO -> tempoStart?.let { runCatching { LocalDate.parse(it) }.getOrNull() }?.let { ReadingMode.SameTempo(it) }
             MODE_FREE -> ReadingMode.Free
             else -> null
         }
