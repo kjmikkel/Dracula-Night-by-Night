@@ -74,7 +74,7 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
             is TimelineUi.Ready -> {
                 Timeline(state.timeline, onOpen, Modifier.padding(padding))
                 if (choosingMode) {
-                    ModeDialog(current = state.mode, onDismiss = { choosingMode = false }) {
+                    ModeDialog(current = state.mode, today = state.today, onDismiss = { choosingMode = false }) {
                         viewModel.setMode(it)
                         choosingMode = false
                     }

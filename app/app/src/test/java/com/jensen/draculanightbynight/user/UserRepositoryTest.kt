@@ -3,6 +3,7 @@ package com.jensen.draculanightbynight.user
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.domain.ReadingMode
+import com.jensen.draculanightbynight.domain.TimeSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
@@ -32,6 +33,7 @@ class UserRepositoryTest {
     }
 
     private val clock = MutableClock(Instant.parse("2026-10-14T18:00:00Z"))
+    private var zone: ZoneId = ZoneOffset.UTC
 
     private fun file() = File(tmp.root, "user.json")
 
@@ -42,7 +44,7 @@ class UserRepositoryTest {
             scope = scope,
             produceFile = ::file,
         ),
-        clock,
+        TimeSource(clock) { zone },
     )
 
     @Test
@@ -50,6 +52,15 @@ class UserRepositoryTest {
         val repo = repository()
         repo.ensureMode()
         assertEquals(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)), repo.state.first().readingMode)
+    }
+
+    @Test
+    fun aNewReadersTodayIsTheDateWhereTheyAreNow() = runTest {
+        clock.now = Instant.parse("2026-10-14T23:30:00Z") // already 15 October in Tokyo
+        zone = ZoneId.of("Asia/Tokyo")
+        val repo = repository()
+        repo.ensureMode()
+        assertEquals(ReadingMode.SameTempo(LocalDate.of(2026, 10, 15)), repo.state.first().readingMode)
     }
 
     @Test

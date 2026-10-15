@@ -2,13 +2,18 @@ package com.jensen.draculanightbynight.reader
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jensen.draculanightbynight.AppContainer
+import com.jensen.draculanightbynight.content.StoryRepository
+import com.jensen.draculanightbynight.user.UserRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
 
 sealed interface ReaderUi {
     data object Loading : ReaderUi
@@ -16,23 +21,37 @@ sealed interface ReaderUi {
     data class Ready(val reader: ReaderState) : ReaderUi
 }
 
-class ReaderViewModel(private val app: AppContainer, private val entryId: String) : ViewModel() {
-    val state: StateFlow<ReaderUi> = combine(flow { emit(app.stories.story()) }, app.users.state, app.minuteTicks()) { story, user, now ->
+/**
+ * @param ticks the current time and zone, re-emitted as time passes ([com.jensen.draculanightbynight.domain.TimeSource.ticks]).
+ * @param appScope outlives the screen, for saves made as it closes.
+ */
+class ReaderViewModel(
+    stories: StoryRepository,
+    private val users: UserRepository,
+    ticks: Flow<ZonedDateTime>,
+    private val appScope: CoroutineScope,
+    private val entryId: String,
+) : ViewModel() {
+    val state: StateFlow<ReaderUi> = combine(flow { emit(stories.story()) }, users.state, ticks) { story, user, now ->
         val settings = user.settings ?: return@combine ReaderUi.Loading
-        buildReader(story, user, settings, now, app.clock.zone, entryId)?.let { ReaderUi.Ready(it) } ?: ReaderUi.Locked
+        buildReader(story, user, settings, now.toInstant(), now.zone, entryId)?.let { ReaderUi.Ready(it) } ?: ReaderUi.Locked
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), ReaderUi.Loading)
 
     init {
-        viewModelScope.launch { app.users.markRead(entryId) }
+        // Only an entry that actually opens counts as read; a locked one keeps its unread dot for when it arrives.
+        viewModelScope.launch {
+            state.first { it is ReaderUi.Ready }
+            users.markRead(entryId)
+        }
     }
 
     /** Runs in the app scope: the last save happens as the screen closes, after viewModelScope is cancelled. */
     fun savePosition(blockIndex: Int, blockOffset: Int) {
-        app.scope.launch { app.users.savePosition(entryId, blockIndex, blockOffset) }
+        appScope.launch { users.savePosition(entryId, blockIndex, blockOffset) }
     }
 
     fun toggleBookmark() {
-        viewModelScope.launch { app.users.toggleBookmark(entryId) }
+        viewModelScope.launch { users.toggleBookmark(entryId) }
     }
 
     private companion object {

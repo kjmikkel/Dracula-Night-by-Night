@@ -1,28 +1,30 @@
 package com.jensen.draculanightbynight
 
 import android.app.Application
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.content.StoryRepository
 import com.jensen.draculanightbynight.content.decodeStory
+import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.user.UserRepository
 import com.jensen.draculanightbynight.user.UserState
 import com.jensen.draculanightbynight.user.UserStateSerializer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.Clock
-import java.time.Instant
 
 /** Hand-wired dependencies; one per process. */
 class AppContainer(context: Context) {
-    val clock: Clock = Clock.systemDefaultZone()
+    /** The zone is read afresh on every use, so travelling or a zone change takes effect at once. */
+    val time = TimeSource(Clock.systemUTC())
 
     /** Outlives every screen: writes started here finish even if the screen that asked is closed. */
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -44,19 +46,23 @@ class AppContainer(context: Context) {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { File(context.filesDir, "user_state.json") },
         ),
-        clock,
+        time,
     )
 
-    /** The current instant now and at the start of every following minute, so locked entries open on time. */
-    fun minuteTicks(): Flow<Instant> = flow {
-        while (true) {
-            emit(clock.instant())
-            delay(MINUTE_MILLIS - clock.millis() % MINUTE_MILLIS)
+    init {
+        // Re-evaluate unlocks as soon as the device's zone or clock changes, not at the next minute.
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) = time.timeChanged()
         }
-    }
-
-    private companion object {
-        const val MINUTE_MILLIS = 60_000L
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            context.registerReceiver(receiver, filter)
+        }
     }
 }
 

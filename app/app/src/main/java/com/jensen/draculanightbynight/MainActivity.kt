@@ -34,7 +34,7 @@ private fun AppNavigation(app: AppContainer) {
         composable("reader/{id}") { entry ->
             val id = entry.arguments?.getString("id").orEmpty()
             ReaderScreen(
-                viewModel(key = id) { ReaderViewModel(app, id) },
+                viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id) },
                 onBack = { nav.popBackStack() },
                 onOpen = { next -> nav.navigate("reader/$next") { popUpTo("timeline") } },
             )

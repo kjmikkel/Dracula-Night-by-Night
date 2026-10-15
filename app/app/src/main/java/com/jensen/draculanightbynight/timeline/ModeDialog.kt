@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,17 +22,20 @@ import androidx.compose.ui.unit.dp
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.UnlockSchedule
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+private val START_DATE = DateTimeFormatter.ofPattern("d MMMM")
 
 /** Minimal mode picker; plan 2 replaces it with onboarding and a settings screen. */
 @Composable
-fun ModeDialog(current: ReadingMode, onDismiss: () -> Unit, onChoose: (ReadingMode) -> Unit) {
-    val today = LocalDate.now()
+fun ModeDialog(current: ReadingMode, today: LocalDate, onDismiss: () -> Unit, onChoose: (ReadingMode) -> Unit) {
     val options = listOf(
         "On the actual days" to ReadingMode.Calendar(UnlockSchedule.seasonYearFor(today)),
-        "In the same tempo, starting today" to ReadingMode.SameTempo(today),
+        (if (current is ReadingMode.SameTempo) "In the same tempo, since ${current.startDate.format(START_DATE)}" else "In the same tempo, starting today")
+            to ReadingMode.SameTempo(today),
         "Read freely" to ReadingMode.Free,
     )
-    var selected by remember { mutableStateOf(options.indexOfFirst { it.second::class == current::class }.coerceAtLeast(0)) }
+    var selected by remember { mutableIntStateOf(options.indexOfFirst { it.second::class == current::class }.coerceAtLeast(0)) }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("How to read") },
@@ -47,7 +50,11 @@ fun ModeDialog(current: ReadingMode, onDismiss: () -> Unit, onChoose: (ReadingMo
                         Text(label, Modifier.padding(start = 8.dp), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                Text("Changing mode keeps what you have read.", style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
+                // The confirmation the spec asks for: say what switching does before "Choose" is pressed.
+                val switching = options[selected].second::class != current::class
+                Text(
+                    if (switching) "Switching mode keeps what you have read, but entries may lock or unlock." else "This is your current mode.",
+                    style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
             }
         },
         confirmButton = { TextButton(onClick = { onChoose(options[selected].second) }) { Text("Choose") } },
