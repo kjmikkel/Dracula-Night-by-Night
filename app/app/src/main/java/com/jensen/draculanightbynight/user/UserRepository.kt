@@ -3,7 +3,9 @@ package com.jensen.draculanightbynight.user
 import androidx.datastore.core.DataStore
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.TimeSource
+import com.jensen.draculanightbynight.domain.startedOver
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 class UserRepository(private val store: DataStore<UserState>, private val time: TimeSource) {
     val state: Flow<UserState> = store.data
@@ -28,5 +30,15 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
 
     suspend fun toggleBookmark(id: String) {
         store.updateData { s -> s.updateProgress(id) { it.copy(bookmarked = !it.bookmarked) } }
+    }
+
+    /** Start over: see [startedOver]. [tempoStart] is the Same tempo restart date (ignored in other modes). */
+    suspend fun startOver(removeBookmarks: Boolean, tempoStart: LocalDate) {
+        store.updateData { it.startedOver(removeBookmarks, time.today(), tempoStart, time.millis()) }
+    }
+
+    /** Records that this year's new-season prompt was answered (Start over or Not now). */
+    suspend fun answerSeasonPrompt() {
+        store.updateData { it.copy(seasonPromptYear = time.today().year) }
     }
 }

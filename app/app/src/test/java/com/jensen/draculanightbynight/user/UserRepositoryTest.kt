@@ -100,6 +100,21 @@ class UserRepositoryTest {
     }
 
     @Test
+    fun startOverAndTheSeasonAnswerAreSaved() = runTest {
+        val repo = repository()
+        repo.setMode(ReadingMode.Calendar(2025))
+        repo.markRead("a")
+        repo.toggleBookmark("b")
+        repo.startOver(removeBookmarks = false, tempoStart = LocalDate.of(2026, 10, 14))
+        repo.answerSeasonPrompt()
+        val state = repo.state.first()
+        assertNull(state.progressOf("a").readAtMillis)
+        assertTrue(state.progressOf("b").bookmarked)
+        assertEquals(ReadingMode.Calendar(2026), state.readingMode)
+        assertEquals(2026, state.seasonPromptYear)
+    }
+
+    @Test
     fun aCorruptFileStartsOverInsteadOfCrashing() = runTest {
         file().writeText("{ not json")
         assertNull(repository().state.first().readingMode)
