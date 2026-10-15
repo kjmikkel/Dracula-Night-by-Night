@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
@@ -16,13 +18,25 @@ import com.jensen.draculanightbynight.reader.ReaderViewModel
 import com.jensen.draculanightbynight.timeline.TimelineScreen
 import com.jensen.draculanightbynight.timeline.TimelineViewModel
 import com.jensen.draculanightbynight.ui.DraculaTheme
+import com.jensen.draculanightbynight.user.ReadingFont
+import com.jensen.draculanightbynight.user.TextSize
+import com.jensen.draculanightbynight.user.ThemeChoice
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val app = (application as DraculaApp).container
-        setContent { DraculaTheme { AppNavigation(app) } }
+        setContent {
+            // Display choices apply everywhere at once; until the saved state loads, the defaults are used.
+            val user by app.users.state.collectAsStateWithLifecycle(initialValue = null)
+            DraculaTheme(
+                theme = user?.theme ?: ThemeChoice.SYSTEM,
+                highContrast = user?.highContrast,
+                readingFont = user?.readingFont ?: ReadingFont.SERIF,
+                textSize = user?.textSize ?: TextSize.NORMAL,
+            ) { AppNavigation(app) }
+        }
     }
 }
 

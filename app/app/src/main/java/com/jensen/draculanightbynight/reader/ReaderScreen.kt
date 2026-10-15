@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.content.Block
 import com.jensen.draculanightbynight.content.BlockRole
 import com.jensen.draculanightbynight.timeline.typeLabel
+import com.jensen.draculanightbynight.ui.LocalReadingStyle
 import com.jensen.draculanightbynight.ui.TelegramStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -148,9 +149,11 @@ private fun annotated(block: Block): AnnotatedString = buildAnnotatedString {
 
 @Composable
 private fun BlockText(block: Block) {
-    val body = MaterialTheme.typography.bodyLarge
+    // The story text uses the reader's font and size; headers keep the theme's.
+    val reading = LocalReadingStyle.current
+    val body = reading.applyTo(MaterialTheme.typography.bodyLarge)
     when (block.role) {
-        BlockRole.NOTE -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = MaterialTheme.typography.bodyMedium,
+        BlockRole.NOTE -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = reading.applyTo(MaterialTheme.typography.bodyMedium),
             fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
         BlockRole.DATELINE, BlockRole.SIGNOFF -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body, textAlign = TextAlign.End)
         BlockRole.VERSE -> Text(annotated(block), Modifier.fillMaxWidth().padding(start = 24.dp, bottom = 12.dp), style = body, fontStyle = FontStyle.Italic)
