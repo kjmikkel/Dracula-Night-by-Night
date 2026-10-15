@@ -95,6 +95,16 @@ class UserRepositoryTest {
     }
 
     @Test
+    fun aStartDateItCannotReadCountsAsNoModeInsteadOfCrashing() = runTest {
+        // Valid JSON, but not a date: e.g. a backup restored from a newer version onto an older one.
+        file().writeText("""{"mode": "tempo", "tempoStart": "2026-10-14T00:00"}""")
+        val repo = repository()
+        assertNull(repo.state.first().readingMode)
+        repo.ensureMode()
+        assertEquals(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)), repo.state.first().readingMode)
+    }
+
+    @Test
     fun unknownFieldsFromANewerVersionAreIgnored() = runTest {
         file().writeText("""{"mode": "free", "fontScale": 1.2, "progress": {"gone-id": {"bookmarked": true}}}""")
         val state = repository().state.first()
