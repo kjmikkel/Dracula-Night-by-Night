@@ -5,8 +5,10 @@ import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.domain.ReadingSettings
+import com.jensen.draculanightbynight.domain.SeasonPrompt
 import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -35,6 +37,12 @@ data class TimelineState(
     val firstUnreadId: String?,
     val unlockedCount: Int,
     val total: Int,
+    /** How far ahead of real time the reader is (zero in real time). */
+    val skipAhead: Duration = Duration.ZERO,
+    /** Nothing is left to arrive: the end card replaces the Next card. */
+    val finished: Boolean = false,
+    /** The new-season card shows at the top. */
+    val seasonPromptDue: Boolean = false,
 )
 
 /** What the timeline shows at [now]: readable entries grouped by in-story day, plus the next one to unlock. */
@@ -65,5 +73,8 @@ fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now:
         firstUnreadId = rows.firstOrNull { it.second.unread }?.second?.id,
         unlockedCount = unlocked.size,
         total = story.entries.size,
+        skipAhead = settings.skipAhead,
+        finished = next == null,
+        seasonPromptDue = SeasonPrompt.isDue(user, now.atZone(zone).toLocalDate()),
     )
 }
