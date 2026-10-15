@@ -44,6 +44,17 @@ class WakeTimeTest {
     }
 
     @Test
+    fun aFarWakeIsApproachedHalfwayBecauseAndroidDelaysFarAlarmsMore() {
+        // Android may deliver an inexact alarm up to 75 % of its lead time late (at most an hour), so the app
+        // aims halfway, wakes, and aims again; only the last couple of minutes are aimed at directly.
+        val now = Instant.parse("2026-10-15T14:00:00Z")
+        assertEquals(Instant.parse("2026-10-15T18:00:00Z"), alarmFor(Instant.parse("2026-10-15T22:00:00Z"), now))
+        assertEquals(Instant.parse("2026-10-15T14:01:30Z"), alarmFor(Instant.parse("2026-10-15T14:03:00Z"), now))
+        assertEquals(Instant.parse("2026-10-15T14:02:00Z"), alarmFor(Instant.parse("2026-10-15T14:02:00Z"), now))
+        assertEquals(Instant.parse("2026-10-15T13:59:00Z"), alarmFor(Instant.parse("2026-10-15T13:59:00Z"), now)) // already due
+    }
+
+    @Test
     fun theSeasonPromptIsNotifiedOnceWhenItFallsDue() {
         val finished = UserState().withMode(ReadingMode.Calendar(2026))
         assertFalse(seasonPromptToNotify(finished, Instant.parse("2027-04-26T09:59:00Z"), utc))

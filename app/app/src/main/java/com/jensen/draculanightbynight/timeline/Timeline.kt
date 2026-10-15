@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.Arrivals
@@ -10,7 +11,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 data class TimelineRow(
     val id: String,
@@ -37,8 +37,6 @@ data class TimelineState(
     val total: Int,
 )
 
-private val HOUR_MINUTE = DateTimeFormatter.ofPattern("HH:mm")
-
 /** What the timeline shows at [now]: readable entries grouped by in-story day, plus the next one to unlock. */
 fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId): TimelineState {
     val (unlocked, locked) = story.entries.partition { isReadable(it, settings, user, now, zone) }
@@ -48,7 +46,7 @@ fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now:
             id = e.id,
             authorName = story.nameOf(e.author) ?: e.author,
             type = e.type,
-            timeLabel = e.time.format(HOUR_MINUTE),
+            timeLabel = e.time.format(Dates.TIME),
             timeEstimated = e.timeEstimated,
             place = e.place,
             preview = e.preview,

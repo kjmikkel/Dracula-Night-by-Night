@@ -19,19 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.UnlockSchedule
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
-private val START_DATE = DateTimeFormatter.ofPattern("d MMMM")
 
 /** Minimal mode picker; plan 2 replaces it with onboarding and a settings screen. */
 @Composable
 fun ModeDialog(current: ReadingMode, today: LocalDate, onDismiss: () -> Unit, onChoose: (ReadingMode) -> Unit) {
     val options = listOf(
         "On the actual days" to ReadingMode.Calendar(UnlockSchedule.seasonYearFor(today)),
-        (if (current is ReadingMode.SameTempo) "In the same tempo, since ${current.startDate.format(START_DATE)}" else "In the same tempo, starting today")
+        (if (current is ReadingMode.SameTempo) "In the same tempo, since ${current.startDate.format(Dates.DAY)}" else "In the same tempo, starting today")
             to ReadingMode.SameTempo(today),
         "Read freely" to ReadingMode.Free,
     )
