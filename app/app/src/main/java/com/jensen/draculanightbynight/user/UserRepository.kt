@@ -1,0 +1,33 @@
+package com.jensen.draculanightbynight.user
+
+import androidx.datastore.core.DataStore
+import com.jensen.draculanightbynight.domain.ReadingMode
+import kotlinx.coroutines.flow.Flow
+import java.time.Clock
+import java.time.LocalDate
+
+class UserRepository(private val store: DataStore<UserState>, private val clock: Clock) {
+    val state: Flow<UserState> = store.data
+
+    /** First launch: until onboarding exists, a new reader starts in Same tempo from today. */
+    suspend fun ensureMode() {
+        store.updateData { s -> if (s.readingMode == null) s.withMode(ReadingMode.SameTempo(LocalDate.now(clock))) else s }
+    }
+
+    suspend fun setMode(mode: ReadingMode) {
+        store.updateData { it.withMode(mode) }
+    }
+
+    /** Records the first time an entry was opened; reopening keeps the original time. */
+    suspend fun markRead(id: String) {
+        store.updateData { s -> s.updateProgress(id) { p -> if (p.readAtMillis != null) p else p.copy(readAtMillis = clock.millis()) } }
+    }
+
+    suspend fun savePosition(id: String, blockIndex: Int, blockOffset: Int) {
+        store.updateData { s -> s.updateProgress(id) { it.copy(blockIndex = blockIndex, blockOffset = blockOffset) } }
+    }
+
+    suspend fun toggleBookmark(id: String) {
+        store.updateData { s -> s.updateProgress(id) { it.copy(bookmarked = !it.bookmarked) } }
+    }
+}
