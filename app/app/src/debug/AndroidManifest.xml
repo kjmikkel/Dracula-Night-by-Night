@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: time travel for checking timed behaviour on a device (see TimeTravelReceiver). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <receiver
+            android:name=".debug.TimeTravelReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <!-- DUMP: held by the adb shell, never by ordinary apps, so only a developer can send it. -->
+            <intent-filter>
+                <action android:name="com.jensen.draculanightbynight.TIME_TRAVEL" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

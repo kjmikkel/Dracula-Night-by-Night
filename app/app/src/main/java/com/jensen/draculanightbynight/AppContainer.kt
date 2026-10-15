@@ -10,6 +10,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.content.StoryRepository
 import com.jensen.draculanightbynight.content.decodeStory
+import com.jensen.draculanightbynight.domain.ShiftableClock
 import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.user.UserRepository
 import com.jensen.draculanightbynight.user.UserState
@@ -23,8 +24,11 @@ import java.time.Clock
 
 /** Hand-wired dependencies; one per process. */
 class AppContainer(context: Context) {
+    /** The device clock; debug builds can move it (time travel). */
+    val clock = ShiftableClock(Clock.systemUTC())
+
     /** The zone is read afresh on every use, so travelling or a zone change takes effect at once. */
-    val time = TimeSource(Clock.systemUTC())
+    val time = TimeSource(clock)
 
     /** Outlives every screen: writes started here finish even if the screen that asked is closed. */
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -52,7 +56,7 @@ class AppContainer(context: Context) {
     init {
         // Re-evaluate unlocks as soon as the device's zone or clock changes, not at the next minute.
         val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) = time.timeChanged()
+            override fun onReceive(context: Context, intent: Intent) = onTimeChanged()
         }
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_TIMEZONE_CHANGED)
@@ -63,6 +67,11 @@ class AppContainer(context: Context) {
         } else {
             context.registerReceiver(receiver, filter)
         }
+    }
+
+    /** The device's clock or zone changed, or a debug build travelled in time: open screens look again at once. */
+    fun onTimeChanged() {
+        time.timeChanged()
     }
 }
 
