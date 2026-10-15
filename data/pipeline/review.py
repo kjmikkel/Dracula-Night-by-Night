@@ -10,7 +10,7 @@ def order_issues(entries: list[Entry]) -> set[str]:
     """Ids of entries timed before the entry they follow (same author, type and day, in book order)."""
     bad: set[str] = set()
     ordered = sorted(entries, key=lambda e: e.order)
-    for a, b in zip(ordered, ordered[1:]):
+    for a, b in zip(ordered, ordered[1:], strict=False):
         same = (a.author, a.type, a.date) == (b.author, b.type, b.date)
         if same and a.time and b.time and b.time < a.time:
             bad.add(b.id)

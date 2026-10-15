@@ -9,7 +9,7 @@ requires-python = ">=3.12"
 dependencies = ["beautifulsoup4==4.12.3", "PyYAML==6.0.2"]
 
 [project.optional-dependencies]
-dev = ["pytest==8.3.3"]
+dev = ["pytest==8.3.3", "ruff==0.7.4"]
 
 [tool.setuptools]
 packages = ["pipeline"]
@@ -17,3 +17,14 @@ packages = ["pipeline"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# embedded HTML, CSS and JavaScript for the review page
+"pipeline/review.py" = ["E501"]
