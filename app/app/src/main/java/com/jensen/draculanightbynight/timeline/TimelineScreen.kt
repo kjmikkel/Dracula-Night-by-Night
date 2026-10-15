@@ -21,6 +21,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,12 +37,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jensen.draculanightbynight.R
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.domain.ReadingMode
@@ -48,9 +52,8 @@ import com.jensen.draculanightbynight.ui.StartOverDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
+fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit, onSettings: () -> Unit) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
-    var choosingMode by rememberSaveable { mutableStateOf(false) }
     var startingOver by rememberSaveable { mutableStateOf(false) }
     var confirmingSkip by rememberSaveable { mutableStateOf(false) }
 
@@ -58,7 +61,9 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
         topBar = {
             TopAppBar(
                 title = { Text("Dracula Night by Night") },
-                actions = { TextButton(onClick = { choosingMode = true }) { Text("Mode") } },
+                actions = {
+                    IconButton(onClick = onSettings) { Icon(painterResource(R.drawable.ic_settings), contentDescription = "Settings") }
+                },
             )
         },
     ) { padding ->
@@ -76,12 +81,6 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
                     onNotNow = viewModel::dismissSeasonPrompt,
                     modifier = Modifier.padding(padding),
                 )
-                if (choosingMode) {
-                    ModeDialog(current = state.mode, today = state.today, onDismiss = { choosingMode = false }) {
-                        viewModel.setMode(it)
-                        choosingMode = false
-                    }
-                }
                 if (confirmingSkip) {
                     AlertDialog(
                         onDismissRequest = { confirmingSkip = false },

@@ -19,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import com.jensen.draculanightbynight.notify.Notifications
 import com.jensen.draculanightbynight.reader.ReaderScreen
 import com.jensen.draculanightbynight.reader.ReaderViewModel
+import com.jensen.draculanightbynight.settings.SettingsScreen
+import com.jensen.draculanightbynight.settings.SettingsViewModel
 import com.jensen.draculanightbynight.timeline.TimelineScreen
 import com.jensen.draculanightbynight.timeline.TimelineViewModel
 import com.jensen.draculanightbynight.ui.DraculaTheme
@@ -89,7 +91,11 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             TimelineScreen(
                 viewModel { TimelineViewModel(app) },
                 onOpen = { if (entry.isResumed()) nav.navigate("reader/$it") { launchSingleTop = true } },
+                onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
             )
+        }
+        composable("settings") { entry ->
+            SettingsScreen(viewModel { SettingsViewModel(app) }, onBack = { if (entry.isResumed()) nav.popBackStack() })
         }
         composable("reader/{id}") { entry ->
             val id = entry.arguments?.getString("id").orEmpty()
