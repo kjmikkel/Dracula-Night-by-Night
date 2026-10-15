@@ -63,6 +63,28 @@ class TimelineTest {
     }
 
     @Test
+    fun theTimelineSaysHowFarAheadTheReaderIs() {
+        val ahead = tempo.copy(skipAhead = Duration.ofMinutes(90))
+        assertEquals(Duration.ofMinutes(90), timeline("2026-10-15T12:00:00Z", settings = ahead).skipAhead)
+        assertEquals(Duration.ZERO, timeline("2026-10-15T12:00:00Z").skipAhead)
+    }
+
+    @Test
+    fun theEndComesWhenNothingIsLeftToArrive() {
+        assertFalse(timeline("2026-10-15T12:00:00Z").finished)
+        assertTrue(timeline("2026-10-21T00:00:00Z").finished)
+        assertTrue(timeline("2000-01-01T00:00:00Z", settings = ReadingSettings(ReadingMode.Free)).finished)
+    }
+
+    @Test
+    fun theSeasonCardShowsWhenThePromptIsDue() {
+        val calendar = UserState().withMode(ReadingMode.Calendar(2026))
+        val settings = calendar.settings!!
+        assertTrue(buildTimeline(TestStory.small, calendar, settings, Instant.parse("2027-04-27T12:00:00Z"), utc).seasonPromptDue)
+        assertFalse(buildTimeline(TestStory.small, calendar, settings, Instant.parse("2026-10-15T12:00:00Z"), utc).seasonPromptDue)
+    }
+
+    @Test
     fun rowsShowUnreadAndBookmarkStateAndTheFirstUnread() {
         val user = UserState(progress = mapOf("may03" to EntryProgress(readAtMillis = 1, bookmarked = true)))
         val t = timeline("2026-10-16T12:00:00Z", user)

@@ -15,7 +15,7 @@ import java.time.LocalDate
 class UserRepository(private val store: DataStore<UserState>, private val time: TimeSource) {
     val state: Flow<UserState> = store.data
 
-    /** Until the Welcome screen exists, a reader without a mode starts in Same tempo from today. */
+    /** Repair: an onboarded reader whose saved mode cannot be read (say, a broken start date) restarts Same tempo from today. */
     suspend fun ensureMode() {
         store.updateData { s -> if (s.readingMode == null) s.withMode(ReadingMode.SameTempo(time.today())) else s }
     }
@@ -68,5 +68,22 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
     /** Records that this year's new-season prompt was answered (Start over or Not now). */
     suspend fun answerSeasonPrompt() {
         store.updateData { it.copy(seasonPromptYear = time.today().year) }
+    }
+
+    suspend fun setTextSize(size: TextSize) {
+        store.updateData { it.copy(textSize = size) }
+    }
+
+    suspend fun setReadingFont(font: ReadingFont) {
+        store.updateData { it.copy(readingFont = font) }
+    }
+
+    suspend fun setTheme(theme: ThemeChoice) {
+        store.updateData { it.copy(theme = theme) }
+    }
+
+    /** The reader's own choice; from now on Android's contrast setting no longer decides. */
+    suspend fun setHighContrast(on: Boolean) {
+        store.updateData { it.copy(highContrast = on) }
     }
 }

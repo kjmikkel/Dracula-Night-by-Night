@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,27 +41,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.jensen.draculanightbynight.content.DocumentType
-import java.time.format.DateTimeFormatter
-
-private val DAY = DateTimeFormatter.ofPattern("d MMMM")
-private val UNLOCKS = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm")
-
-fun typeLabel(type: DocumentType): String = when (type) {
-    DocumentType.DIARY -> "Journal"
-    DocumentType.PHONOGRAPH -> "Phonograph diary"
-    DocumentType.LETTER -> "Letter"
-    DocumentType.TELEGRAM -> "Telegram"
-    DocumentType.NEWSPAPER -> "Newspaper"
-    DocumentType.MEMO -> "Memorandum"
-    DocumentType.LOG -> "Ship's log"
-}
+import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.typeLabel
+import com.jensen.draculanightbynight.domain.ReadingMode
+import com.jensen.draculanightbynight.ui.StartOverDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var choosingMode by rememberSaveable { mutableStateOf(false) }
+    var startingOver by rememberSaveable { mutableStateOf(false) }
+    var confirmingSkip by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -72,11 +65,46 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
         when (val state = ui) {
             TimelineUi.Loading -> Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) { CircularProgressIndicator() }
             is TimelineUi.Ready -> {
-                Timeline(state.timeline, onOpen, Modifier.padding(padding))
+                Timeline(
+                    state.timeline,
+                    canSkip = state.mode != ReadingMode.Free,
+                    onOpen = onOpen,
+                    // The first skip explains itself; once ahead, further skips need no confirmation.
+                    onReadItNow = { if (state.timeline.skipAhead.isZero) confirmingSkip = true else viewModel.readItNow() },
+                    onBackToRealTime = viewModel::backToRealTime,
+                    onStartOver = { startingOver = true },
+                    onNotNow = viewModel::dismissSeasonPrompt,
+                    modifier = Modifier.padding(padding),
+                )
                 if (choosingMode) {
                     ModeDialog(current = state.mode, today = state.today, onDismiss = { choosingMode = false }) {
                         viewModel.setMode(it)
                         choosingMode = false
+                    }
+                }
+                if (confirmingSkip) {
+                    AlertDialog(
+                        onDismissRequest = { confirmingSkip = false },
+                        title = { Text("Read it now?") },
+                        text = { Text("The next entry arrives early, and later ones keep the same head start. Back to real time undoes it.") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                viewModel.readItNow()
+                                confirmingSkip = false
+                            }) { Text("Read it now") }
+                        },
+                        dismissButton = { TextButton(onClick = { confirmingSkip = false }) { Text("Cancel") } },
+                    )
+                }
+                if (startingOver) {
+                    StartOverDialog(
+                        bookmarks = state.bookmarks,
+                        sameTempo = state.mode is ReadingMode.SameTempo,
+                        today = state.today,
+                        onDismiss = { startingOver = false },
+                    ) { removeBookmarks, tempoStart ->
+                        viewModel.startOver(removeBookmarks, tempoStart)
+                        startingOver = false
                     }
                 }
             }
@@ -85,7 +113,16 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit) {
 }
 
 @Composable
-private fun Timeline(state: TimelineState, onOpen: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun Timeline(
+    state: TimelineState,
+    canSkip: Boolean,
+    onOpen: (String) -> Unit,
+    onReadItNow: () -> Unit,
+    onBackToRealTime: () -> Unit,
+    onStartOver: () -> Unit,
+    onNotNow: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val listState = rememberLazyListState()
     // Item index of each row: one header item per day, then its rows.
     val firstUnreadIndex = remember(state.firstUnreadId, state.days) {
@@ -106,14 +143,32 @@ private fun Timeline(state: TimelineState, onOpen: (String) -> Unit, modifier: M
         scrolled = true
     }
 
-    LazyColumn(modifier.fillMaxSize(), state = listState) {
+    // The season card and the ahead banner stay pinned above the list: the list opens scrolled to the first
+    // unread entry, which would otherwise hide them exactly when they matter.
+    Column(modifier.fillMaxSize()) {
+        if (state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
+        if (!state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
+        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver)
+    }
+}
+
+@Composable
+private fun TimelineList(
+    state: TimelineState,
+    listState: LazyListState,
+    canSkip: Boolean,
+    onOpen: (String) -> Unit,
+    onReadItNow: () -> Unit,
+    onStartOver: () -> Unit,
+) {
+    LazyColumn(Modifier.fillMaxSize(), state = listState) {
         if (state.days.isEmpty()) {
             item { Text("The story has not begun yet.", Modifier.padding(16.dp), style = MaterialTheme.typography.bodyLarge) }
         }
         for (day in state.days) {
             item(key = "day-${day.date}") {
                 Text(
-                    day.date.format(DAY),
+                    day.date.format(Dates.DAY),
                     Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(horizontal = 16.dp, vertical = 6.dp),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
@@ -124,7 +179,7 @@ private fun Timeline(state: TimelineState, onOpen: (String) -> Unit, modifier: M
                 HorizontalDivider()
             }
         }
-        item(key = "next") { NextCard(state) }
+        item(key = "next") { if (state.finished) EndCard(onStartOver) else NextCard(state, canSkip, onReadItNow) }
     }
 }
 
@@ -157,17 +212,51 @@ private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
 }
 
 @Composable
-private fun NextCard(state: TimelineState) {
+private fun NextCard(state: TimelineState, canSkip: Boolean, onReadItNow: () -> Unit) {
+    val next = state.next ?: return
     Card(Modifier.fillMaxWidth().padding(16.dp)) {
         Column(Modifier.padding(16.dp)) {
-            val next = state.next
-            if (next == null) {
-                Text("${state.unlockedCount} of ${state.total} entries unlocked.", style = MaterialTheme.typography.bodyMedium)
-            } else {
-                Text("Next", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                Text("${next.authorName} · ${typeLabel(next.type)}", style = MaterialTheme.typography.titleMedium)
-                Text(next.unlocksAt.format(UNLOCKS), style = MaterialTheme.typography.bodyMedium)
+            Text("Next", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+            Text("${next.authorName} · ${typeLabel(next.type)}", style = MaterialTheme.typography.titleMedium)
+            Text(next.unlocksAt.format(Dates.WEEKDAY_TIME), style = MaterialTheme.typography.bodyMedium)
+            if (canSkip) TextButton(onClick = onReadItNow) { Text("Read it now") }
+        }
+    }
+}
+
+@Composable
+private fun EndCard(onStartOver: () -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            Text("The end.", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+            Text("You have read Dracula night by night.", style = MaterialTheme.typography.bodyLarge)
+            TextButton(onClick = onStartOver) { Text("Start over") }
+        }
+    }
+}
+
+@Composable
+private fun SeasonCard(onStartOver: () -> Unit, onNotNow: () -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            Text("Dracula begins again on 3 May", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+            Text("Start over and read it again this year?", style = MaterialTheme.typography.bodyMedium)
+            Row {
+                TextButton(onClick = onStartOver) { Text("Start over") }
+                TextButton(onClick = onNotNow) { Text("Not now") }
             }
         }
+    }
+}
+
+@Composable
+private fun AheadBanner(state: TimelineState, onBackToRealTime: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerHigh).clickable(onClick = onBackToRealTime)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text("Reading ${aheadLabel(state.skipAhead)} ahead", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+        Text("Back to real time", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
     }
 }
