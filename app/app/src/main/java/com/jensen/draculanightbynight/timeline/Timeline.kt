@@ -2,8 +2,8 @@ package com.jensen.draculanightbynight.timeline
 
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Story
+import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.domain.ReadingSettings
-import com.jensen.draculanightbynight.domain.UnlockSchedule
 import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Instant
@@ -26,7 +26,7 @@ data class TimelineRow(
 
 data class TimelineDay(val date: LocalDate, val rows: List<TimelineRow>)
 
-/** The next locked entry: who writes, what kind of document, and when it unlocks (no text). */
+/** The next entry to arrive: who writes, what kind of document, and when it really arrives (no text). */
 data class NextTeaser(val authorName: String, val type: DocumentType, val unlocksAt: ZonedDateTime)
 
 data class TimelineState(
@@ -58,7 +58,7 @@ fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now:
     }
     val days = rows.groupBy({ it.first }, { it.second }).map { (date, dayRows) -> TimelineDay(date, dayRows) }
     val next = locked
-        .mapNotNull { e -> UnlockSchedule.unlockInstant(e, settings.mode, zone)?.let { e to it } }
+        .mapNotNull { e -> Arrivals.arrivesAt(e, settings, zone)?.let { e to it } }
         .minByOrNull { it.second }
         ?.let { (e, at) -> NextTeaser(story.nameOf(e.author) ?: e.author, e.type, at.atZone(zone)) }
     return TimelineState(

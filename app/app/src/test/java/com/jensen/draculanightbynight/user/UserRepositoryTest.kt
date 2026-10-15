@@ -115,6 +115,34 @@ class UserRepositoryTest {
     }
 
     @Test
+    fun everyScheduleChangeMovesTheNotificationBaseline() = runTest {
+        val repo = repository()
+        suspend fun baselineAfter(at: String, change: suspend () -> Unit): Long? {
+            clock.now = Instant.parse(at)
+            change()
+            return repo.state.first().lastNotifiedAt
+        }
+        fun millis(at: String) = Instant.parse(at).toEpochMilli()
+        assertEquals(millis("2026-10-14T18:01:00Z"), baselineAfter("2026-10-14T18:01:00Z") { repo.setMode(ReadingMode.Calendar(2026)) })
+        assertEquals(millis("2026-10-14T18:02:00Z"), baselineAfter("2026-10-14T18:02:00Z") { repo.setSkipAhead(90) })
+        assertEquals(millis("2026-10-14T18:03:00Z"), baselineAfter("2026-10-14T18:03:00Z") { repo.setTempoStart(LocalDate.of(2026, 10, 1)) })
+        // Turning notifications off keeps the baseline; turning them on moves it, so nothing old is announced.
+        assertEquals(millis("2026-10-14T18:03:00Z"), baselineAfter("2026-10-14T18:04:00Z") { repo.setNotify(false) })
+        assertEquals(millis("2026-10-14T18:05:00Z"), baselineAfter("2026-10-14T18:05:00Z") { repo.setNotify(true) })
+    }
+
+    @Test
+    fun finishingOnboardingSavesTheChoices() = runTest {
+        val repo = repository()
+        repo.completeOnboarding(ReadingMode.Free, notify = false)
+        val state = repo.state.first()
+        assertTrue(state.onboarded)
+        assertFalse(state.notify)
+        assertEquals(ReadingMode.Free, state.readingMode)
+        assertEquals(Instant.parse("2026-10-14T18:00:00Z").toEpochMilli(), state.lastNotifiedAt)
+    }
+
+    @Test
     fun aCorruptFileStartsOverInsteadOfCrashing() = runTest {
         file().writeText("{ not json")
         assertNull(repository().state.first().readingMode)

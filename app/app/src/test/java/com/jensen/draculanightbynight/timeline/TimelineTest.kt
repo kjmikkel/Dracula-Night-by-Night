@@ -11,6 +11,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -53,6 +54,12 @@ class TimelineTest {
         val t = timeline("2026-10-15T15:00:00Z", user)
         assertEquals(listOf("may03", "may04", "may05"), t.days.flatMap { day -> day.rows.map { it.id } })
         assertEquals("Mina Harker", t.next?.authorName) // the next entry that is not readable yet
+    }
+
+    @Test
+    fun theNextCardShowsWhenTheEntryWillReallyArriveWhenAhead() {
+        val ahead = tempo.copy(skipAhead = Duration.ofHours(1))
+        assertEquals(ZonedDateTime.parse("2026-10-15T13:45Z"), timeline("2026-10-15T12:00:00Z", settings = ahead).next?.unlocksAt)
     }
 
     @Test
