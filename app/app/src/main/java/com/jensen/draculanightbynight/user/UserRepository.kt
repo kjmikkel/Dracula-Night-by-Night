@@ -7,16 +7,44 @@ import com.jensen.draculanightbynight.domain.startedOver
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
+/**
+ * Reads and writes the reader's saved state. Every change to the schedule (mode, start date, skip ahead,
+ * turning notifications on, Start over) moves the notification baseline to now: entries that arrive because
+ * of something the reader did are never announced afterwards.
+ */
 class UserRepository(private val store: DataStore<UserState>, private val time: TimeSource) {
     val state: Flow<UserState> = store.data
 
-    /** First launch: until onboarding exists, a new reader starts in Same tempo from today. */
+    /** Until the Welcome screen exists, a reader without a mode starts in Same tempo from today. */
     suspend fun ensureMode() {
         store.updateData { s -> if (s.readingMode == null) s.withMode(ReadingMode.SameTempo(time.today())) else s }
     }
 
+    /** Begin on the Welcome screen. */
+    suspend fun completeOnboarding(mode: ReadingMode, notify: Boolean) {
+        store.updateData { it.withMode(mode).copy(onboarded = true, notify = notify, lastNotifiedAt = time.millis()) }
+    }
+
     suspend fun setMode(mode: ReadingMode) {
-        store.updateData { it.withMode(mode) }
+        store.updateData { it.withMode(mode).copy(lastNotifiedAt = time.millis()) }
+    }
+
+    suspend fun setTempoStart(date: LocalDate) {
+        store.updateData { it.withMode(ReadingMode.SameTempo(date)).copy(lastNotifiedAt = time.millis()) }
+    }
+
+    /** Skip ahead (Read it now, Skip to a day) or, with 0, Back to real time. */
+    suspend fun setSkipAhead(minutes: Long) {
+        store.updateData { it.copy(skipAheadMinutes = minutes, lastNotifiedAt = time.millis()) }
+    }
+
+    suspend fun setNotify(on: Boolean) {
+        store.updateData { s -> if (on) s.copy(notify = true, lastNotifiedAt = time.millis()) else s.copy(notify = false) }
+    }
+
+    /** After a notification run: entries up to [atMillis] have been announced. */
+    suspend fun markNotified(atMillis: Long) {
+        store.updateData { it.copy(lastNotifiedAt = atMillis) }
     }
 
     /** Records the first time an entry was opened; reopening keeps the original time. */
