@@ -45,7 +45,8 @@ def test_load_characters_records_sorted():
          HeaderInfo("telegram", "john_seward", "van_helsing", None)),
         ("Telegram from Arthur Holmwood to Quincey P. Morris.",
          HeaderInfo("telegram", "arthur_holmwood", "quincey_morris", None)),
-        ("Telegram, October 24th.\nRufus Smith, Lloyd’s, London, to Lord Godalming, care of H. B. M. Vice-Consul, Varna.",
+        ("Telegram, October 24th.\n"
+         "Rufus Smith, Lloyd’s, London, to Lord Godalming, care of H. B. M. Vice-Consul, Varna.",
          HeaderInfo("telegram", None, "arthur_holmwood", date(1893, 10, 24))),
         ("LOG OF THE “DEMETER.”\nVarna to Whitby.", HeaderInfo("log", "demeter_captain", None, None)),
         ("DR. SEWARD’S PHONOGRAPH DIARY, SPOKEN BY VAN HELSING",

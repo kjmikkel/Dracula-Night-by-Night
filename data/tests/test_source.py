@@ -11,7 +11,7 @@ def _write(tmp_path, content: bytes, checksum: str):
 
 
 def test_returns_text_when_checksum_matches(tmp_path):
-    content = "<p>Dracula ’</p>".encode("utf-8")
+    content = "<p>Dracula ’</p>".encode()
     _write(tmp_path, content, hashlib.sha256(content).hexdigest())
     assert load_source(tmp_path) == "<p>Dracula ’</p>"
 

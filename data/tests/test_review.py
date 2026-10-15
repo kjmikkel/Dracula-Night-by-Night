@@ -33,7 +33,8 @@ def test_rows_are_in_story_order_with_names_and_notes():
     rows = review_rows(entries, CHARS, {"late": {"time": "21:00", "note": "evening cue"}})
     assert [r["id"] for r in rows] == ["early", "late"]
     late = rows[1]
-    assert (late["author"], late["time"], late["estimated"], late["note"]) == ("Mina Harker", "21:00", True, "evening cue")
+    assert (late["author"], late["time"], late["estimated"], late["note"]) == (
+        "Mina Harker", "21:00", True, "evening cue")
     assert late["text"] == "First para.\n\nNext para."
     assert rows[0]["note"] is None
 

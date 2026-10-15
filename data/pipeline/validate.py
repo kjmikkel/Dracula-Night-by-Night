@@ -67,7 +67,7 @@ def validate(entries: list[Entry], character_ids: set[str], reference: str,
     ours = _normalise("".join(e.text() for e in entries))
     book = _normalise(reference)
     if ours != book:
-        at = next((i for i, (a, b) in enumerate(zip(ours, book)) if a != b), min(len(ours), len(book)))
+        at = next((i for i, (a, b) in enumerate(zip(ours, book, strict=False)) if a != b), min(len(ours), len(book)))
         error("*", f"text differs from book at character {at}: "
                    f"entries '...{ours[max(0, at - 30):at + 30]}...' vs book '...{book[max(0, at - 30):at + 30]}...'")
 
