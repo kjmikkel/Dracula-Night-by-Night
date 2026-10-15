@@ -28,6 +28,7 @@ data class EntryProgress(
 /**
  * Everything the app remembers about its reader. Stored as JSON, separately from the story,
  * so a dataset update never touches it; progress for ids that no longer exist is simply ignored.
+ * Every field has a default, so files written by older versions load unchanged.
  */
 @Serializable
 data class UserState(
@@ -36,7 +37,23 @@ data class UserState(
     val tempoStart: String? = null,
     val skipAheadMinutes: Long = 0,
     val progress: Map<String, EntryProgress> = emptyMap(),
+    val onboarded: Boolean = false,
+    /** The reader wants notifications (Android may still block them). */
+    val notify: Boolean = true,
+    /** Notifications cover entries scheduled after this instant (epoch milliseconds). */
+    val lastNotifiedAt: Long? = null,
+    val textSize: TextSize = TextSize.NORMAL,
+    val readingFont: ReadingFont = ReadingFont.SERIF,
+    val theme: ThemeChoice = ThemeChoice.SYSTEM,
+    /** null follows Android's contrast setting; true or false once the reader has chosen. */
+    val highContrast: Boolean? = null,
+    /** The year whose new-season prompt the reader has answered. */
+    val seasonPromptYear: Int? = null,
 ) {
+    /** Readers from before the Welcome screen already chose a mode, so they count as onboarded. */
+    val isOnboarded: Boolean
+        get() = onboarded || readingMode != null
+
     val readingMode: ReadingMode?
         get() = when (mode) {
             MODE_CALENDAR -> seasonYear?.let { ReadingMode.Calendar(it) }
@@ -62,7 +79,11 @@ data class UserState(
 }
 
 object UserStateSerializer : Serializer<UserState> {
-    private val json = Json { ignoreUnknownKeys = true }
+    // Unknown fields (from a newer version) are skipped; an unknown choice such as "textSize": "huge" falls back to the default.
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
 
     override val defaultValue: UserState = UserState()
 

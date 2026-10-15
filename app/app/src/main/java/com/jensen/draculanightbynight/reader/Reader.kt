@@ -4,7 +4,7 @@ import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.ReadingSettings
-import com.jensen.draculanightbynight.domain.UnlockSchedule
+import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Instant
 import java.time.ZoneId
@@ -33,9 +33,9 @@ data class ReaderState(
     val bookmarked: Boolean,
 )
 
-/** The reader for entry [id], or null if it does not exist or is still locked. */
+/** The reader for entry [id], or null if it does not exist or is not readable (locked and never read). */
 fun buildReader(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId, id: String): ReaderState? {
-    val unlocked = story.entries.filter { UnlockSchedule.isUnlocked(it, settings, now, zone) }
+    val unlocked = story.entries.filter { isReadable(it, settings, user, now, zone) }
     val index = unlocked.indexOfFirst { it.id == id }
     if (index < 0) return null
     val entry = unlocked[index]
