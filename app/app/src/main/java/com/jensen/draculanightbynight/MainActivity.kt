@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,6 +25,8 @@ import com.jensen.draculanightbynight.ui.DraculaTheme
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
+import com.jensen.draculanightbynight.welcome.WelcomeScreen
+import com.jensen.draculanightbynight.welcome.WelcomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
@@ -43,7 +46,10 @@ class MainActivity : ComponentActivity() {
                 highContrast = user?.highContrast,
                 readingFont = user?.readingFont ?: ReadingFont.SERIF,
                 textSize = user?.textSize ?: TextSize.NORMAL,
-            ) { AppNavigation(app, openRequests) }
+            ) {
+                // Wait for the saved state before choosing the first screen, so a returning reader never sees Welcome flash.
+                user?.let { AppNavigation(app, openRequests, startRoute = if (it.isOnboarded) "timeline" else "welcome") }
+            }
         }
     }
 
@@ -61,8 +67,10 @@ class MainActivity : ComponentActivity() {
 private fun NavBackStackEntry.isResumed(): Boolean = lifecycle.currentState == Lifecycle.State.RESUMED
 
 @Composable
-private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<String?>) {
+private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<String?>, startRoute: String) {
     val nav = rememberNavController()
+    // The first screen is chosen once; later state changes (Begin) navigate instead.
+    val start = rememberSaveable { startRoute }
     // A tapped notification for one entry opens it over the timeline.
     val request by openRequests.collectAsStateWithLifecycle()
     LaunchedEffect(request) {
@@ -71,7 +79,10 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             openRequests.value = null
         }
     }
-    NavHost(nav, startDestination = "timeline") {
+    NavHost(nav, startDestination = start) {
+        composable("welcome") {
+            WelcomeScreen(viewModel { WelcomeViewModel(app) }, onBegun = { nav.navigate("timeline") { popUpTo("welcome") { inclusive = true } } })
+        }
         // Taps on a screen that is still entering or already leaving (a double tap) are ignored,
         // so a row cannot open two readers and Back cannot pop the timeline as well.
         composable("timeline") { entry ->
