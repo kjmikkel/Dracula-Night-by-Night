@@ -39,14 +39,13 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.content.Block
 import com.jensen.draculanightbynight.content.BlockRole
-import com.jensen.draculanightbynight.timeline.typeLabel
+import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.ui.LocalReadingStyle
 import com.jensen.draculanightbynight.ui.TelegramStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
-import java.time.format.DateTimeFormatter
 
-private val STORY_DATE = DateTimeFormatter.ofPattern("d MMMM yyyy")
 private const val SAVE_DEBOUNCE_MILLIS = 500L
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,7 +134,7 @@ private fun Header(reader: ReaderState) {
             Text("From ${reader.authorName}${reader.recipientName?.let { " to $it" } ?: ""}", style = MaterialTheme.typography.bodyMedium)
         }
         Row(Modifier.padding(top = 4.dp)) {
-            Text("${e.date.format(STORY_DATE)} · $time${e.place?.let { " · $it" } ?: ""}",
+            Text("${e.date.format(Dates.DAY_YEAR)} · $time${e.place?.let { " · $it" } ?: ""}",
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }

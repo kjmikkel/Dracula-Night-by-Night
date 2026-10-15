@@ -39,21 +39,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.jensen.draculanightbynight.content.DocumentType
-import java.time.format.DateTimeFormatter
+import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.typeLabel
 
-private val DAY = DateTimeFormatter.ofPattern("d MMMM")
-private val UNLOCKS = DateTimeFormatter.ofPattern("EEEE d MMMM, HH:mm")
-
-fun typeLabel(type: DocumentType): String = when (type) {
-    DocumentType.DIARY -> "Journal"
-    DocumentType.PHONOGRAPH -> "Phonograph diary"
-    DocumentType.LETTER -> "Letter"
-    DocumentType.TELEGRAM -> "Telegram"
-    DocumentType.NEWSPAPER -> "Newspaper"
-    DocumentType.MEMO -> "Memorandum"
-    DocumentType.LOG -> "Ship's log"
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +101,7 @@ private fun Timeline(state: TimelineState, onOpen: (String) -> Unit, modifier: M
         for (day in state.days) {
             item(key = "day-${day.date}") {
                 Text(
-                    day.date.format(DAY),
+                    day.date.format(Dates.DAY),
                     Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(horizontal = 16.dp, vertical = 6.dp),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
@@ -166,7 +154,7 @@ private fun NextCard(state: TimelineState) {
             } else {
                 Text("Next", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                 Text("${next.authorName} · ${typeLabel(next.type)}", style = MaterialTheme.typography.titleMedium)
-                Text(next.unlocksAt.format(UNLOCKS), style = MaterialTheme.typography.bodyMedium)
+                Text(next.unlocksAt.format(Dates.WEEKDAY_TIME), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }
