@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.jensen.draculanightbynight.AppContainer
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.SkipAhead
-import com.jensen.draculanightbynight.domain.pickMode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -33,15 +32,6 @@ class TimelineViewModel(private val app: AppContainer) : ViewModel() {
 
     init {
         viewModelScope.launch { app.users.ensureMode() }
-    }
-
-    /** Re-picking the current kind of mode keeps it; only a different kind is stored. */
-    fun setMode(picked: ReadingMode) {
-        viewModelScope.launch {
-            val current = app.users.state.first().readingMode
-            val mode = pickMode(current, picked)
-            if (mode != current) app.users.setMode(mode)
-        }
     }
 
     /** "Read it now": skip ahead just far enough for the next entry to arrive. */
