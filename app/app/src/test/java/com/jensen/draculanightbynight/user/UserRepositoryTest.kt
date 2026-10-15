@@ -143,6 +143,18 @@ class UserRepositoryTest {
     }
 
     @Test
+    fun displayChoicesAreSaved() = runTest {
+        val repo = repository()
+        repo.setTextSize(TextSize.LARGE)
+        repo.setReadingFont(ReadingFont.ATKINSON)
+        repo.setTheme(ThemeChoice.DARK)
+        repo.setHighContrast(true)
+        val state = repo.state.first()
+        assertEquals(listOf(TextSize.LARGE, ReadingFont.ATKINSON, ThemeChoice.DARK, true),
+            listOf(state.textSize, state.readingFont, state.theme, state.highContrast))
+    }
+
+    @Test
     fun aCorruptFileStartsOverInsteadOfCrashing() = runTest {
         file().writeText("{ not json")
         assertNull(repository().state.first().readingMode)

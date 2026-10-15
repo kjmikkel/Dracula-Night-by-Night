@@ -69,4 +69,21 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
     suspend fun answerSeasonPrompt() {
         store.updateData { it.copy(seasonPromptYear = time.today().year) }
     }
+
+    suspend fun setTextSize(size: TextSize) {
+        store.updateData { it.copy(textSize = size) }
+    }
+
+    suspend fun setReadingFont(font: ReadingFont) {
+        store.updateData { it.copy(readingFont = font) }
+    }
+
+    suspend fun setTheme(theme: ThemeChoice) {
+        store.updateData { it.copy(theme = theme) }
+    }
+
+    /** The reader's own choice; from now on Android's contrast setting no longer decides. */
+    suspend fun setHighContrast(on: Boolean) {
+        store.updateData { it.copy(highContrast = on) }
+    }
 }
