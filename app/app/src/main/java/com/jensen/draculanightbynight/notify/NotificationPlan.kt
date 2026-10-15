@@ -6,6 +6,7 @@ import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.domain.Arrivals
+import com.jensen.draculanightbynight.domain.announceFrom
 import com.jensen.draculanightbynight.domain.seasonPromptToNotify
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Instant
@@ -19,13 +20,13 @@ data class NotificationPlan(val arrivals: NotificationContent?, val seasonPrompt
 
 /**
  * Decides what to post at [now]: entries that arrived since the reader's notification baseline
- * (`lastNotifiedAt`; without one nothing old is announced) and the season prompt. Pure, so the receiver
+ * (`lastNotifiedAt`, at most a day back; without one nothing old is announced) and the season prompt. Pure, so the receiver
  * that runs it on the device only has to post the result.
  */
 fun planNotifications(story: Story, user: UserState, now: Instant, zone: ZoneId): NotificationPlan {
     val settings = user.settings
     if (!user.notify || settings == null) return NotificationPlan(null, null)
-    val from = user.lastNotifiedAt?.let(Instant::ofEpochMilli) ?: now
+    val from = announceFrom(user, now) ?: now
     val arrived = Arrivals.between(story, user, settings, from, now, zone)
     val prompt = if (seasonPromptToNotify(user, now, zone)) {
         NotificationContent("Dracula begins again on 3 May", "Start over and read it again this year?")

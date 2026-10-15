@@ -34,10 +34,18 @@ class NotificationPlanTest {
 
     @Test
     fun severalArrivalsAreCountedAndOpenTheTimeline() {
-        val arrivals = plan(tempo("2026-10-14T21:00:00Z"), "2026-10-16T10:00:00Z").arrivals!!
-        assertEquals("3 new entries", arrivals.title)
-        assertEquals(listOf("Jonathan Harker · Journal", "Jonathan Harker · Journal", "Jonathan Harker · Journal"), arrivals.lines)
+        val arrivals = plan(tempo("2026-10-14T21:00:00Z"), "2026-10-15T14:45:00Z").arrivals!!
+        assertEquals("2 new entries", arrivals.title)
+        assertEquals(listOf("Jonathan Harker · Journal", "Jonathan Harker · Journal"), arrivals.lines)
         assertNull(arrivals.openEntryId)
+    }
+
+    @Test
+    fun aBacklogOlderThanADayIsNotAnnounced() {
+        // Notifications blocked for days, or the phone off overnight: only the last day's arrivals are announced;
+        // older ones are waiting in the timeline. (14 Oct 22:00 is more than a day before 16 Oct 10:00.)
+        val arrivals = plan(tempo("2026-10-14T21:00:00Z"), "2026-10-16T10:00:00Z").arrivals!!
+        assertEquals("2 new entries", arrivals.title)
     }
 
     @Test
