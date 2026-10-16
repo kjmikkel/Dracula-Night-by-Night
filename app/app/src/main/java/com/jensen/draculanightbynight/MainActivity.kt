@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.jensen.draculanightbynight.bookmarks.BookmarksScreen
+import com.jensen.draculanightbynight.bookmarks.BookmarksViewModel
 import com.jensen.draculanightbynight.notify.Notifications
 import com.jensen.draculanightbynight.reader.ReaderScreen
 import com.jensen.draculanightbynight.reader.ReaderViewModel
@@ -93,7 +95,15 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             TimelineScreen(
                 viewModel { TimelineViewModel(app) },
                 onOpen = { id, filtered -> if (entry.isResumed()) nav.navigate("reader/$id?filtered=$filtered") { launchSingleTop = true } },
+                onBookmarks = { if (entry.isResumed()) nav.navigate("bookmarks") { launchSingleTop = true } },
                 onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
+            )
+        }
+        composable("bookmarks") { entry ->
+            BookmarksScreen(
+                viewModel { BookmarksViewModel(app.stories, app.users, app.time.ticks()) },
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+                onOpen = { id -> if (entry.isResumed()) nav.navigate("reader/$id") { launchSingleTop = true } },
             )
         }
         composable("settings") { entry ->
