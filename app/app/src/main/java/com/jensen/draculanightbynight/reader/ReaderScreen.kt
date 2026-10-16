@@ -1,5 +1,9 @@
 package com.jensen.draculanightbynight.reader
 
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.ui.platform.LocalLayoutDirection
+import com.jensen.draculanightbynight.ui.keyboardScroll
 import androidx.compose.material3.TopAppBarDefaults
 import com.jensen.draculanightbynight.ui.largeText
 import androidx.compose.ui.state.ToggleableState
@@ -138,7 +142,29 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 }
             }
         },
-        bottomBar = {
+    ) { padding ->
+        // The bottom bar comes after the text, not in Scaffold's bottomBar: Tab follows composition order, and
+        // Scaffold composes its bars first, which made Tab skip the text until after Next (#114).
+        val layoutDirection = LocalLayoutDirection.current
+        Column(
+            Modifier.fillMaxSize().padding(
+                start = padding.calculateStartPadding(layoutDirection),
+                top = padding.calculateTopPadding(),
+                end = padding.calculateEndPadding(layoutDirection),
+            ),
+        ) {
+            HorizontalPager(
+                pagerState,
+                Modifier.weight(1f),
+                key = { latest.pager.pages.getOrElse(it) { "page-$it" } },
+            ) { page ->
+                val shown = latest.pager.pages.getOrNull(page)?.let { latest.pages[it] }
+                if (shown == null) {
+                    Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+                } else {
+                    Body(shown, viewModel)
+                }
+            }
             BottomAppBar {
                 val page = pagerState.currentPage
                 val order = ready.pager.filterLabel?.takeIf { ready.pager.following == Following.FILTER }
@@ -158,19 +184,6 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                     enabled = page < ready.pager.pages.lastIndex,
                     modifier = Modifier.semantics { contentDescription = order?.let { "Next $it entry" } ?: "Next entry in the story" },
                 ) { Text(if (compact) "›" else "Next ›", Modifier.notSpoken()) }
-            }
-        },
-    ) { padding ->
-        HorizontalPager(
-            pagerState,
-            Modifier.fillMaxSize().padding(padding),
-            key = { latest.pager.pages.getOrElse(it) { "page-$it" } },
-        ) { page ->
-            val shown = latest.pager.pages.getOrNull(page)?.let { latest.pages[it] }
-            if (shown == null) {
-                Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
-            } else {
-                Body(shown, viewModel)
             }
         }
     }
@@ -216,7 +229,8 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel) {
     }
     // A newspaper is set in a narrower column, as in print.
     val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
-    LazyColumn(Modifier.fillMaxSize().wrapContentWidth().then(column).padding(horizontal = 20.dp), state = listState) {
+    // The text takes keyboard focus and scrolls with the arrow and page keys (#114).
+    LazyColumn(Modifier.fillMaxSize().keyboardScroll(listState).wrapContentWidth().then(column).padding(horizontal = 20.dp), state = listState) {
         item { Header(reader) }
         itemsIndexed(reader.entry.body) { _, block -> BlockText(block) }
     }
