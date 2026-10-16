@@ -55,7 +55,12 @@ import com.jensen.draculanightbynight.ui.StartOverDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (id: String, filtered: Boolean) -> Unit, onSettings: () -> Unit) {
+fun TimelineScreen(
+    viewModel: TimelineViewModel,
+    onOpen: (id: String, filtered: Boolean) -> Unit,
+    onBookmarks: () -> Unit,
+    onSettings: () -> Unit,
+) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var startingOver by rememberSaveable { mutableStateOf(false) }
     var confirmingSkip by rememberSaveable { mutableStateOf(false) }
@@ -71,6 +76,7 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (id: String, filtered: 
                         val label = if (filter.isActive) "Filter, ${filter.activeCount} active" else "Filter"
                         BadgedBox(badge = { if (filter.isActive) Badge() }) { Icon(painterResource(R.drawable.ic_filter), contentDescription = label) }
                     }
+                    IconButton(onClick = onBookmarks) { Icon(painterResource(R.drawable.ic_bookmarks), contentDescription = "Bookmarks") }
                     IconButton(onClick = onSettings) { Icon(painterResource(R.drawable.ic_settings), contentDescription = "Settings") }
                 },
             )
