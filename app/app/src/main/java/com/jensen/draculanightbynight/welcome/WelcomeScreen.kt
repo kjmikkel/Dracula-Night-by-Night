@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.welcome
 
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -72,29 +73,32 @@ fun WelcomeScreen(viewModel: WelcomeViewModel, onBegun: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge,
             )
             Text("How would you like to read?", Modifier.semantics { heading() }, style = MaterialTheme.typography.titleMedium)
-            ModeCard(choice == Choice.TEMPO, "In the same tempo", "Today is 3 May: entries arrive with the story's own gaps between them.") {
-                choice = Choice.TEMPO
-            }
-            if (choice == Choice.TEMPO && welcome.firstEntryClose && welcome.firstEntryTime != null) {
-                Column(Modifier.padding(start = 16.dp)) {
-                    Text(
-                        "${welcome.firstEntryAuthor}'s first entry comes at ${welcome.firstEntryTime.format(Dates.TIME)}. " +
-                            "Start tomorrow to read it as it happens.",
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilterChip(selected = !tomorrow, onClick = { tomorrow = false }, label = { Text("Start today") })
-                        FilterChip(selected = tomorrow, onClick = { tomorrow = true }, label = { Text("Start tomorrow") })
+            // One group, so TalkBack says "1 of 3". The start-day chips are a group of their own inside it.
+            Column(Modifier.selectableGroup(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                ModeCard(choice == Choice.TEMPO, "In the same tempo", "Today is 3 May: entries arrive with the story's own gaps between them.") {
+                    choice = Choice.TEMPO
+                }
+                if (choice == Choice.TEMPO && welcome.firstEntryClose && welcome.firstEntryTime != null) {
+                    Column(Modifier.padding(start = 16.dp)) {
+                        Text(
+                            "${welcome.firstEntryAuthor}'s first entry comes at ${welcome.firstEntryTime.format(Dates.TIME)}. " +
+                                "Start tomorrow to read it as it happens.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Row(Modifier.selectableGroup(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            FilterChip(selected = !tomorrow, onClick = { tomorrow = false }, label = { Text("Start today") })
+                            FilterChip(selected = tomorrow, onClick = { tomorrow = true }, label = { Text("Start tomorrow") })
+                        }
                     }
                 }
+                ModeCard(
+                    choice == Choice.CALENDAR,
+                    "On the actual days",
+                    "Each entry arrives on its own date, 3 May – 6 November ${welcome.seasonYear}." +
+                        if (welcome.calendarWaits) " Nothing unlocks until 3 May." else "",
+                ) { choice = Choice.CALENDAR }
+                ModeCard(choice == Choice.FREE, "Read freely", "Every entry, now.") { choice = Choice.FREE }
             }
-            ModeCard(
-                choice == Choice.CALENDAR,
-                "On the actual days",
-                "Each entry arrives on its own date, 3 May – 6 November ${welcome.seasonYear}." +
-                    if (welcome.calendarWaits) " Nothing unlocks until 3 May." else "",
-            ) { choice = Choice.CALENDAR }
-            ModeCard(choice == Choice.FREE, "Read freely", "Every entry, now.") { choice = Choice.FREE }
 
             // The whole row is the switch, so it is one target for touch and for TalkBack.
             Row(Modifier.toggleable(value = notify, role = Role.Switch) { notify = it }, verticalAlignment = Alignment.CenterVertically) {

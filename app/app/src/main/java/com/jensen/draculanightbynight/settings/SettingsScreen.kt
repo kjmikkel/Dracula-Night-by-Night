@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.settings
 
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.DisplayMode
 import com.jensen.draculanightbynight.ui.largeText
 import com.jensen.draculanightbynight.ui.BackButton
@@ -155,16 +156,23 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
             }
 
             item { Section("Display") }
-            item { Label("Text size") }
-            items(TextSize.entries) { size ->
-                Choice(size.label, size == s.textSize, sampleStyle = MaterialTheme.typography.bodyLarge.let { it.copy(fontSize = it.fontSize * size.scale) }) {
-                    viewModel.setTextSize(size)
+            // Each set of choices is one group, so TalkBack says "1 of 4" and keeps the title with it.
+            item {
+                ChoiceGroup("Text size") {
+                    TextSize.entries.forEach { size ->
+                        Choice(size.label, size == s.textSize, sampleStyle = MaterialTheme.typography.bodyLarge.let { it.copy(fontSize = it.fontSize * size.scale) }) {
+                            viewModel.setTextSize(size)
+                        }
+                    }
                 }
             }
-            item { Label("Reading font") }
-            items(ReadingFont.entries) { font ->
-                Choice(font.label, font == s.readingFont, sampleStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = font.family())) {
-                    viewModel.setReadingFont(font)
+            item {
+                ChoiceGroup("Reading font") {
+                    ReadingFont.entries.forEach { font ->
+                        Choice(font.label, font == s.readingFont, sampleStyle = MaterialTheme.typography.bodyLarge.copy(fontFamily = font.family())) {
+                            viewModel.setReadingFont(font)
+                        }
+                    }
                 }
             }
             item {
@@ -174,8 +182,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                     style = MaterialTheme.typography.bodyLarge.let { it.copy(fontFamily = s.readingFont.family(), fontSize = it.fontSize * s.textSize.scale) },
                 )
             }
-            item { Label("Theme") }
-            items(ThemeChoice.entries) { theme -> Choice(theme.label, theme == s.theme) { viewModel.setTheme(theme) } }
+            item { ChoiceGroup("Theme") { ThemeChoice.entries.forEach { theme -> Choice(theme.label, theme == s.theme) { viewModel.setTheme(theme) } } } }
             item {
                 val systemHigh = systemHighContrast()
                 ListItem(
@@ -264,6 +271,14 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
 @Composable
 private fun Section(title: String) {
     Text(title, Modifier.padding(start = 16.dp, top = 24.dp, bottom = 4.dp).semantics { heading() }, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+}
+
+@Composable
+private fun ChoiceGroup(title: String, choices: @Composable () -> Unit) {
+    Column(Modifier.selectableGroup()) {
+        Label(title)
+        choices()
+    }
 }
 
 @Composable
