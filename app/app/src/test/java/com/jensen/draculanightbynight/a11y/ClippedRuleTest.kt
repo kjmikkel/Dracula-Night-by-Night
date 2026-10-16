@@ -1,6 +1,11 @@
 package com.jensen.draculanightbynight.a11y
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.platform.testTag
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,5 +67,26 @@ class ClippedRuleTest {
             }
         }
         assertTrue(found.toString(), found.isEmpty())
+    }
+
+    @Test fun clippedSeesIconsInsideClickableRows() {
+        // The timeline's row merges its children; its ★ must still be checked on its own (#118).
+        val found = clipped {
+            Row(Modifier.fillMaxWidth().clickable {}) {
+                Text(long, Modifier.requiredWidth(2000.dp))
+                Text("★", Modifier.semantics { contentDescription = "Bookmarked" })
+            }
+        }
+        assertTrue(found.toString(), Finding("clipped", "Bookmarked") in found)
+    }
+
+    @Test fun clippedUsesTheLargeLooksScreenNotTheWindow() {
+        // The large looks draw on a narrower screen inside the window: past its edge is off screen.
+        val found = clipped {
+            Box(Modifier.testTag(SCREEN_TAG).requiredSize(200.dp).clipToBounds()) {
+                Text("Edge", Modifier.offset(x = 300.dp))
+            }
+        }
+        assertTrue(found.toString(), Finding("clipped", "Edge") in found)
     }
 }

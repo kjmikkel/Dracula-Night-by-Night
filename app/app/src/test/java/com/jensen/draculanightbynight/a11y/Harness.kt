@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.unit.Density
 import androidx.test.core.app.ApplicationProvider
+import org.robolectric.RuntimeEnvironment
 import com.jensen.draculanightbynight.AppContainer
 import com.jensen.draculanightbynight.ui.DraculaTheme
 import com.jensen.draculanightbynight.user.ReadingFont
@@ -54,6 +55,9 @@ fun InLook(look: Look, font: ReadingFont = ReadingFont.SERIF, content: @Composab
 }
 
 fun ComposeContentTestRule.showInLook(look: Look, font: ReadingFont = ReadingFont.SERIF, content: @Composable () -> Unit) {
+    // The system font size too, not only InLook's density: dialogs and sheets are windows of their own and read
+    // their density from the activity's configuration.
+    RuntimeEnvironment.setFontScale(look.fontScale)
     setContent { InLook(look, font, content) }
 }
 

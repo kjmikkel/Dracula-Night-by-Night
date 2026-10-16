@@ -195,8 +195,10 @@ licence | LIGHT_HC | double-label | Back | #116 | description and visible text a
 licence | LIGHT_LARGE | double-label | Back | #116 | description and visible text are both read
 read-it-now | DARK | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
 read-it-now | DARK_HC | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
+read-it-now | DARK_LARGE | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
 read-it-now | LIGHT | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
 read-it-now | LIGHT_HC | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
+read-it-now | LIGHT_LARGE | double-label | Read Bram Stoker, Memorandum | #116 | description and visible text are both read
 read-now-dialog | DARK | double-label | Back | #116 | description and visible text are both read
 read-now-dialog | DARK | double-label | Locked, arrives again Friday 8 May, 20:0 | #116 | description and visible text are both read
 read-now-dialog | DARK | double-label | Remove bookmark, Jonathan Harker, 8 May | #116 | description and visible text are both read
@@ -475,6 +477,10 @@ reader-telegram | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button ha
 reader-telegram | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
 
 # clipped — #118
+bookmarks | DARK_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
+bookmarks | LIGHT_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
+read-now-dialog | DARK_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
+read-now-dialog | LIGHT_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
 reader-diary | DARK_LARGE | clipped | Jonathan Harker | #118 | cut off at 200 % text on the largest display size
 reader-diary | LIGHT_LARGE | clipped | Jonathan Harker | #118 | cut off at 200 % text on the largest display size
 reader-filtered | DARK_LARGE | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
@@ -495,6 +501,14 @@ reader-phonograph | DARK_LARGE | clipped | Dr. John Seward | #118 | cut off at 2
 reader-phonograph | LIGHT_LARGE | clipped | Dr. John Seward | #118 | cut off at 200 % text on the largest display size
 reader-telegram | DARK_LARGE | clipped | Arthur Holmwood | #118 | cut off at 200 % text on the largest display size
 reader-telegram | LIGHT_LARGE | clipped | Arthur Holmwood | #118 | cut off at 200 % text on the largest display size
+settings-start-date | DARK_LARGE | clipped | Friday, May 1, 2026 | #118 | cut off at 200 % text on the largest display size
+settings-start-date | DARK_LARGE | clipped | Saturday, May 2, 2026 | #118 | cut off at 200 % text on the largest display size
+settings-start-date | DARK_LARGE | clipped | Sunday, May 31, 2026 | #118 | cut off at 200 % text on the largest display size
+settings-start-date | LIGHT_LARGE | clipped | Friday, May 1, 2026 | #118 | cut off at 200 % text on the largest display size
+settings-start-date | LIGHT_LARGE | clipped | Saturday, May 2, 2026 | #118 | cut off at 200 % text on the largest display size
+settings-start-date | LIGHT_LARGE | clipped | Sunday, May 31, 2026 | #118 | cut off at 200 % text on the largest display size
+timeline | DARK_LARGE | clipped | Bookmarked | #118 | cut off at 200 % text on the largest display size
+timeline | LIGHT_LARGE | clipped | Bookmarked | #118 | cut off at 200 % text on the largest display size
 
 # card-stops — #119
 timeline | DARK | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
@@ -558,5 +572,6 @@ filter-sheet | LIGHT_HC | role | Drag handle | #139 | Material's bottom sheet co
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_LARGE | role | Drag handle | #139 | Material's bottom sheet control has no role
 
-# keyboard-scroll — #114 (checked by KeyboardScrollTest)
-reader-letter | LIGHT | keyboard-scroll | body | #114 | Page Down and arrow down do not move the text
+# duplicate-bounds — #144
+start-over | DARK_LARGE | duplicate-bounds | Normal | #144 | two "Normal" controls report the same bounds (to investigate)
+start-over | LIGHT_LARGE | duplicate-bounds | Normal | #144 | two "Normal" controls report the same bounds (to investigate)

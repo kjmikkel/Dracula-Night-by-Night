@@ -30,6 +30,9 @@ data class Finding(val rule: String, val node: String)
 
 private const val MAX_CARD_STOPS = 3
 
+/** Test tag of the screen a large look draws on, narrower than the window (see [InLook]). */
+const val SCREEN_TAG = "a11y-screen"
+
 /**
  * Every rule broken on one screen. [merged] is what TalkBack walks; [unmerged] is the same tree before merging,
  * so a control's own description can be told apart from its children's text.
@@ -43,7 +46,12 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
     return buildList {
         for (n in clickables) {
             if (n.label().isBlank()) add(Finding("label", "unlabelled in ${n.ancestors().firstOrNull { it.label().isNotBlank() }?.name() ?: "screen"}"))
-            if (n.role() == null && n.ancestors().none { it.config.contains(SemanticsProperties.CollectionInfo) }) add(Finding("role", n.name(own)))
+            // Only a list's own rows may go without a role (TalkBack offers them as items). A row may sit below plain
+            // layout (a background is a node too); below anything labelled or clickable, it's a control in a row.
+            val isListRow = n.ancestors().takeWhile { !it.config.contains(SemanticsProperties.CollectionInfo) }
+                .none { it.label().isNotBlank() || it.isClickable() } &&
+                n.ancestors().any { it.config.contains(SemanticsProperties.CollectionInfo) }
+            if (n.role() == null && !isListRow) add(Finding("role", n.name(own)))
             // The touch area, which Compose also reports to TalkBack: Material widens a 40 dp button's to 48 dp.
             // Only nodes fully in view: a row half scrolled out of a list has a cut-off touch area, not a small one.
             val whole = n.boundsInRoot.width >= n.size.width - 1f && n.boundsInRoot.height >= n.size.height - 1f
@@ -73,11 +81,10 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
             val found = nodes.filter { fragment in it.label() }
             if (found.none { word.lowercase() in it.label().lowercase() }) add(Finding("words", "$fragment → $word"))
         }
-        for (n in nodes) {
-            if (n.label().isNotBlank() && n.isClippedAcrossItsScroll(window)) add(Finding("clipped", n.name(own)))
-        }
+        // Over the unmerged tree: a clickable row merges its children, but its ★ can be cut off on its own (#118).
         for (n in own.values) {
-            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name(own)))
+            if (n.label().isNotBlank() && n.isClippedAcrossItsScroll(window)) add(Finding("clipped", n.name()))
+            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name()))
         }
         expect.cardTag?.let { tag ->
             val card = nodes.firstOrNull { it.config.getOrNull(SemanticsProperties.TestTag) == tag }
