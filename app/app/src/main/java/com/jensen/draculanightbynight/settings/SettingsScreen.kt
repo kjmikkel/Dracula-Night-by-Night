@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.jensen.draculanightbynight.BuildConfig
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.notify.Notifications
@@ -71,12 +72,12 @@ private const val SAMPLE = "“I was not able to light on any map or work giving
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
+fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var dialog by rememberSaveable { mutableStateOf<Dialog?>(null) }
     // Android's notification settings can change while the app is away: look again on every return.
-    var blocked by remember { mutableStateOf(false) }
+    var blocked by remember { mutableStateOf(!Notifications.allowed(context)) }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         blocked = !Notifications.allowed(context)
         viewModel.recheckNotifications()
@@ -186,13 +187,10 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                 ListItem(
                     headlineContent = { Text("Start over", color = MaterialTheme.colorScheme.error) },
                     supportingContent = { Text("Clear your reading progress and begin the story again") },
-                    modifier = Modifier.clickable { dialog = Dialog.START_OVER },
+                    modifier = Modifier.clickable(role = Role.Button) { dialog = Dialog.START_OVER },
                 )
             }
-            item {
-                val version = remember { context.packageManager.getPackageInfo(context.packageName, 0).versionName }
-                Text("Version $version", Modifier.padding(16.dp), style = MaterialTheme.typography.bodySmall)
-            }
+            item { Setting("About", "Version ${BuildConfig.VERSION_NAME} · sources, licences, privacy", onAbout) }
         }
 
         when (dialog) {
@@ -228,7 +226,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                         items(s.storyDays) { day ->
                             Text(
                                 day.format(Dates.DAY),
-                                Modifier.fillMaxWidth().clickable {
+                                Modifier.fillMaxWidth().clickable(role = Role.Button) {
                                     viewModel.skipToDay(day)
                                     dialog = null
                                 }.padding(vertical = 12.dp),
@@ -265,7 +263,7 @@ private fun Label(title: String) {
 
 @Composable
 private fun Setting(title: String, summary: String, onClick: () -> Unit) {
-    ListItem(headlineContent = { Text(title) }, supportingContent = { Text(summary) }, modifier = Modifier.clickable(onClick = onClick))
+    ListItem(headlineContent = { Text(title) }, supportingContent = { Text(summary) }, modifier = Modifier.clickable(role = Role.Button, onClick = onClick))
 }
 
 @Composable

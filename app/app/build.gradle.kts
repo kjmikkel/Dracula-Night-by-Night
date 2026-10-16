@@ -18,6 +18,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     // The app's text is English; keep only English resources, so library dialogs (the date picker) match.
