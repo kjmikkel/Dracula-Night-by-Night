@@ -49,6 +49,13 @@ fun readerFor(story: Story, user: UserState, entry: Entry): ReaderState {
     )
 }
 
+/** A newspaper header as its masthead (first non-blank line) and the headline under it, if any. */
+fun mastheadOf(entry: Entry): Pair<String, String?> {
+    val lines = entry.header?.lines()?.map { it.trim() }?.filter { it.isNotEmpty() }.orEmpty()
+    val masthead = lines.firstOrNull() ?: return "Newspaper" to null
+    return masthead to lines.drop(1).joinToString(" ").ifEmpty { null }
+}
+
 // The reader's list shows the header as item 0 and body block i as item i + 1.
 
 /**

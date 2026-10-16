@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -34,7 +36,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -52,13 +56,17 @@ import com.jensen.draculanightbynight.content.Block
 import com.jensen.draculanightbynight.content.BlockRole
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
+import com.jensen.draculanightbynight.ui.DisplayCapsFamily
 import com.jensen.draculanightbynight.ui.LocalReadingStyle
+import com.jensen.draculanightbynight.ui.Ornament
 import com.jensen.draculanightbynight.ui.TelegramStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 private const val SAVE_DEBOUNCE_MILLIS = 500L
+private const val COMPACT_FONT_SCALE = 1.5f
+private val NEWSPAPER_COLUMN = 520.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +75,7 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
     when (val state = ui) {
         is ReaderUi.Ready -> Pages(state, viewModel, onBack)
         else -> Scaffold(
-            topBar = { TopAppBar(title = {}, navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } }) },
+            topBar = { TopAppBar(title = {}, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } }) },
         ) { padding ->
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
                 if (state == ReaderUi.Locked) Text("This entry has not arrived yet.") else CircularProgressIndicator()
@@ -97,8 +105,8 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(reader.authorName) },
-                navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } },
+                title = { Text(reader.authorName, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } },
                 actions = {
                     TextButton(onClick = viewModel::toggleBookmark) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
                 },
@@ -109,11 +117,13 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 val page = pagerState.currentPage
                 val order = ready.pager.filterLabel?.takeIf { ready.pager.following == Following.FILTER }
                     ?.let { if ('+' in it) "filtered" else it }
+                // At large text the buttons shrink to arrows (still labelled for TalkBack) so the switch fits.
+                val compact = LocalDensity.current.fontScale >= COMPACT_FONT_SCALE
                 TextButton(
                     onClick = { scope.launch { pagerState.animateScrollToPage(page - 1) } },
                     enabled = page > 0,
                     modifier = Modifier.semantics { contentDescription = order?.let { "Previous $it entry" } ?: "Previous entry in the story" },
-                ) { Text("‹ Previous") }
+                ) { Text(if (compact) "‹" else "‹ Previous") }
                 Box(Modifier.weight(1f), Alignment.Center) {
                     ready.pager.filterLabel?.let { FollowSwitch(it, ready.pager.following, viewModel::follow) }
                 }
@@ -121,7 +131,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                     onClick = { scope.launch { pagerState.animateScrollToPage(page + 1) } },
                     enabled = page < ready.pager.pages.lastIndex,
                     modifier = Modifier.semantics { contentDescription = order?.let { "Next $it entry" } ?: "Next entry in the story" },
-                ) { Text("Next ›") }
+                ) { Text(if (compact) "›" else "Next ›") }
             }
         },
     ) { padding ->
@@ -144,12 +154,12 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FollowSwitch(filterLabel: String, following: Following, onFollow: (Following) -> Unit) {
-    SingleChoiceSegmentedButtonRow {
+    SingleChoiceSegmentedButtonRow(Modifier.semantics { contentDescription = "Previous and Next follow" }) {
         SegmentedButton(
             selected = following == Following.FILTER,
             onClick = { onFollow(Following.FILTER) },
             shape = SegmentedButtonDefaults.itemShape(0, 2),
-        ) { Text(filterLabel, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        ) { Text(filterLabel, Modifier.widthIn(max = 120.dp), maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis) }
         SegmentedButton(
             selected = following == Following.ALL,
             onClick = { onFollow(Following.ALL) },
@@ -178,7 +188,9 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel) {
     DisposableEffect(reader.entry.id) {
         onDispose { save() }
     }
-    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 20.dp), state = listState) {
+    // A newspaper is set in a narrower column, as in print.
+    val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
+    LazyColumn(Modifier.fillMaxSize().wrapContentWidth().then(column).padding(horizontal = 20.dp), state = listState) {
         item { Header(reader) }
         itemsIndexed(reader.entry.body) { _, block -> BlockText(block) }
     }
@@ -189,29 +201,38 @@ private fun Header(reader: ReaderState) {
     val e = reader.entry
     val time = if (e.timeEstimated) "about ${e.time}" else "${e.time}"
     Column(Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
+        val fromTo = "From ${reader.authorName}${reader.recipientName?.let { " to $it" } ?: ""}"
         when (reader.style) {
-            HeaderStyle.TELEGRAM -> Text(
-                "TELEGRAM",
-                Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(8.dp),
-                style = TelegramStyle,
-                textAlign = TextAlign.Center,
-            )
-            HeaderStyle.NEWSPAPER -> {
-                HorizontalDivider()
-                Text(e.header?.lineSequence()?.firstOrNull { it.isNotBlank() } ?: "Newspaper",
-                    Modifier.fillMaxWidth().padding(vertical = 6.dp), style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-                HorizontalDivider()
+            // A telegram form: typewritten strip and addresses.
+            HeaderStyle.TELEGRAM -> {
+                Text(
+                    "TELEGRAM",
+                    Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(8.dp).semantics { heading() },
+                    style = TelegramStyle,
+                    textAlign = TextAlign.Center,
+                )
+                Text(fromTo, Modifier.padding(top = 6.dp), style = TelegramStyle)
             }
-            else -> Text(e.header ?: typeLabel(e.type), style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-        }
-        if (reader.style == HeaderStyle.LETTER || reader.style == HeaderStyle.TELEGRAM) {
-            Text("From ${reader.authorName}${reader.recipientName?.let { " to $it" } ?: ""}", style = MaterialTheme.typography.bodyMedium)
+            // A cutting: the masthead between rules, the headline below.
+            HeaderStyle.NEWSPAPER -> {
+                val (masthead, headline) = mastheadOf(e)
+                HorizontalDivider(thickness = 2.dp)
+                Text(masthead, Modifier.fillMaxWidth().padding(vertical = 6.dp).semantics { heading() },
+                    style = MaterialTheme.typography.titleLarge, fontFamily = DisplayCapsFamily, textAlign = TextAlign.Center)
+                HorizontalDivider()
+                headline?.let { Text(it, Modifier.fillMaxWidth().padding(top = 6.dp), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center) }
+            }
+            else -> {
+                Text(e.header ?: typeLabel(e.type), Modifier.semantics { heading() },
+                    style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+                if (reader.style == HeaderStyle.LETTER) Text(fromTo, style = MaterialTheme.typography.bodyMedium)
+            }
         }
         Row(Modifier.padding(top = 4.dp)) {
             Text("${e.date.format(Dates.DAY_YEAR)} · $time${e.place?.let { " · $it" } ?: ""}",
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
+        Ornament(Modifier.padding(top = 8.dp))
     }
 }
 

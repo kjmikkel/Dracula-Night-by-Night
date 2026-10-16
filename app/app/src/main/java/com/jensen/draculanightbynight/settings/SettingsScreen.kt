@@ -42,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -88,7 +90,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Settings") }, navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Settings") }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
         },
     ) { padding ->
         val s = state
