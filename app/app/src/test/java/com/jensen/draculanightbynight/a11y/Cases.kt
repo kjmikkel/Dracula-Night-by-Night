@@ -89,7 +89,7 @@ private fun ComposeContentTestRule.tap(label: String) {
     onAllNodes(matcher).onFirst().performClick()
 }
 
-private const val TAP_ATTEMPTS = 20
+private const val TAP_ATTEMPTS = 40
 private const val TAP_WAIT_MS = 500L
 
 private val timelineHeadings = listOf("Dracula Night by Night", "3 May")

@@ -88,7 +88,8 @@ class RatchetTest(private val caseName: String, private val lookKey: String) {
     }
 
     companion object {
-        private const val READY_TIMEOUT_MS = 10_000L
+        /** Generous: each case loads and parses the whole story first, and CI machines are slow. */
+        private const val READY_TIMEOUT_MS = 30_000L
         private const val MAX_SCROLL_STEPS = 40
         private const val SCROLL_FRACTION = 0.7f
 
