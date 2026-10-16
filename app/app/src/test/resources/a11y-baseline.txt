@@ -6,32 +6,6 @@
 # The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
-# group — #121
-settings | DARK | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | DARK | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | DARK | group | System/Light/Dark | #121 | options are not one selectable group
-settings | DARK_HC | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | DARK_HC | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | DARK_HC | group | System/Light/Dark | #121 | options are not one selectable group
-settings | DARK_LARGE | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | DARK_LARGE | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | DARK_LARGE | group | System/Light/Dark | #121 | options are not one selectable group
-settings | LIGHT | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | LIGHT | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | LIGHT | group | System/Light/Dark | #121 | options are not one selectable group
-settings | LIGHT_HC | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | LIGHT_HC | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | LIGHT_HC | group | System/Light/Dark | #121 | options are not one selectable group
-settings | LIGHT_LARGE | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
-settings | LIGHT_LARGE | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
-settings | LIGHT_LARGE | group | System/Light/Dark | #121 | options are not one selectable group
-welcome | DARK | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-welcome | DARK_HC | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-welcome | DARK_LARGE | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-welcome | LIGHT | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-welcome | LIGHT_HC | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-welcome | LIGHT_LARGE | group | In the same tempo/On the actual days/Read freely | #121 | options are not one selectable group
-
 # role — #139
 filter-sheet | DARK | role | Close sheet | #139 | Material's bottom sheet control has no role
 filter-sheet | DARK | role | Drag handle | #139 | Material's bottom sheet control has no role
@@ -46,6 +20,3 @@ filter-sheet | LIGHT_HC | role | Drag handle | #139 | Material's bottom sheet co
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_LARGE | role | Drag handle | #139 | Material's bottom sheet control has no role
 
-# duplicate-bounds — #144
-start-over | DARK_LARGE | duplicate-bounds | Normal | #144 | two "Normal" controls report the same bounds (to investigate)
-start-over | LIGHT_LARGE | duplicate-bounds | Normal | #144 | two "Normal" controls report the same bounds (to investigate)
