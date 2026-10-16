@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasScrollToNodeAction
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -76,10 +77,11 @@ private const val JONATHAN_8_MAY = "1893-05-08-jonathan_harker-01"
 
 /**
  * Taps the first control showing [label]. Screens load their state in the background, so it waits for the control
- * and, while it isn't there, scrolls the screen's list towards it.
+ * to be there and enabled (the timeline's Filter button is disabled while loading, and ignores taps) and, while it
+ * isn't there, scrolls the screen's list towards it.
  */
 private fun ComposeContentTestRule.tap(label: String) {
-    val matcher = hasText(label, substring = true) or hasContentDescription(label, substring = true)
+    val matcher = (hasText(label, substring = true) or hasContentDescription(label, substring = true)) and isEnabled()
     fun present() = onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty()
     repeat(TAP_ATTEMPTS) {
         if (present()) return@repeat
