@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.ui.largeText
 import com.jensen.draculanightbynight.ui.focusRings
 import com.jensen.draculanightbynight.ui.notSpoken
 import androidx.compose.foundation.background
@@ -80,7 +81,8 @@ fun TimelineScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Dracula Night by Night", Modifier.semantics { heading() }) },
+                // At large text the title wraps to three lines here; it moves to the top of the list instead (#151).
+                title = { if (!largeText()) AppTitle() },
                 actions = {
                     IconButton(onClick = { filtering = true }, enabled = ui is TimelineUi.Ready) {
                         val label = if (filter.isActive) "Filter, ${filter.activeCount} active" else "Filter"
@@ -159,7 +161,9 @@ private fun Timeline(
     // On a short window (landscape, or large text) the cards join the list instead of crowding it out.
     // Measured in lines of text rather than dp, so large text counts as a short window too.
     val density = LocalDensity.current
-    val cardsInList = with(density) { LocalWindowInfo.current.containerSize.height.toDp() } / density.fontScale < SHORT_WINDOW_DP.dp
+    // At large text the app's title leads the list too, above the cards, and scrolls away with them.
+    val large = largeText()
+    val cardsInList = large || with(density) { LocalWindowInfo.current.containerSize.height.toDp() } / density.fontScale < SHORT_WINDOW_DP.dp
     var anchoredFor by rememberSaveable { mutableStateOf<String?>(null) }
     LaunchedEffect(state.filter) {
         val key = state.filter.summary
@@ -170,6 +174,7 @@ private fun Timeline(
         }
     }
     val cards: @Composable () -> Unit = {
+        if (large) AppTitle(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         state.tonight?.let { TonightCardView(it, onOpen) }
         if (state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
         if (!state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
@@ -183,6 +188,11 @@ private fun Timeline(
         if (!cardsInList) cards()
         TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
     }
+}
+
+@Composable
+private fun AppTitle(modifier: Modifier = Modifier) {
+    Text("Dracula Night by Night", modifier.semantics { heading() }, style = MaterialTheme.typography.titleLarge)
 }
 
 /** Below this window height the pinned cards become the first item of the list. */

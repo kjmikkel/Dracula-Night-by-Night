@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.jensen.draculanightbynight.ui.keyboardScroll
-import androidx.compose.material3.TopAppBarDefaults
 import com.jensen.draculanightbynight.ui.largeText
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.semantics.toggleableState
@@ -112,35 +111,27 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
         if (!pagerState.isScrollInProgress && pagerState.currentPage != ready.pager.index) pagerState.scrollToPage(ready.pager.index)
     }
     val reader = ready.reader
-    // At large text the author gets a line of its own under the bar, where it can wrap instead of collapsing to "…".
+    // At large text the author leads the text, where it can wrap and scrolls away, instead of collapsing to "…" in
+    // the bar (#118) or taking a line under it (#151). The bars stay put: hiding them on scroll would hide Back and
+    // Next from TalkBack too, whose scrolling moves them.
     val large = largeText()
     Scaffold(
         topBar = {
-            Column {
-                TopAppBar(
-                    title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                    navigationIcon = { BackButton(onBack) },
-                    actions = {
-                        // A switch for TalkBack: "Bookmark, on/off", without the star.
-                        TextButton(
-                            onClick = viewModel::toggleBookmark,
-                            modifier = Modifier.semantics {
-                                contentDescription = "Bookmark"
-                                role = Role.Switch
-                                toggleableState = ToggleableState(reader.bookmarked)
-                            },
-                        ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
-                    },
-                )
-                if (large) {
-                    Text(
-                        reader.authorName,
-                        Modifier.fillMaxWidth().background(TopAppBarDefaults.topAppBarColors().containerColor).padding(horizontal = 16.dp, vertical = 4.dp)
-                            .semantics { heading() },
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                }
-            }
+            TopAppBar(
+                title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                navigationIcon = { BackButton(onBack) },
+                actions = {
+                    // A switch for TalkBack: "Bookmark, on/off", without the star.
+                    TextButton(
+                        onClick = viewModel::toggleBookmark,
+                        modifier = Modifier.semantics {
+                            contentDescription = "Bookmark"
+                            role = Role.Switch
+                            toggleableState = ToggleableState(reader.bookmarked)
+                        },
+                    ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
+                },
+            )
         },
     ) { padding ->
         // The bottom bar comes after the text, not in Scaffold's bottomBar: Tab follows composition order, and
@@ -162,7 +153,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 if (shown == null) {
                     Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
                 } else {
-                    Body(shown, viewModel)
+                    Body(shown, viewModel, authorLine = large)
                 }
             }
             BottomAppBar {
@@ -209,7 +200,7 @@ private fun FollowSwitch(filterLabel: String, following: Following, onFollow: (F
 
 @OptIn(FlowPreview::class)
 @Composable
-private fun Body(reader: ReaderState, viewModel: ReaderViewModel) {
+private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Boolean) {
     val (startItem, startOffset) = listPosition(reader.startBlock, reader.startOffset)
     val listState = rememberLazyListState(startItem, startOffset)
     fun save() {
@@ -231,7 +222,13 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel) {
     val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
     // The text takes keyboard focus and scrolls with the arrow and page keys (#114).
     LazyColumn(Modifier.fillMaxSize().keyboardScroll(listState).wrapContentWidth().then(column).padding(horizontal = 20.dp), state = listState) {
-        item { Header(reader) }
+        // One item with the header, so saved positions (item 0 is the header) mean the same at any text size.
+        item {
+            Column {
+                if (authorLine) Text(reader.authorName, Modifier.padding(top = 12.dp).semantics { heading() }, style = MaterialTheme.typography.titleLarge)
+                Header(reader)
+            }
+        }
         itemsIndexed(reader.entry.body) { _, block -> BlockText(block) }
     }
 }
