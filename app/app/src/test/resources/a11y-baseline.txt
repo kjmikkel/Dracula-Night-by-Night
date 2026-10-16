@@ -1,0 +1,7 @@
+# Accessibility ratchet baseline (issue #37).
+#
+# Known accessibility violations, one per line:
+#   screen | look | rule | node | #issue | reason
+#
+# The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
+# longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
