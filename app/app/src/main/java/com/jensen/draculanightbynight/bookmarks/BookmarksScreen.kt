@@ -60,7 +60,7 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
     var confirming by remember { mutableStateOf<BookmarkRow?>(null) }
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Bookmarks") }, navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Bookmarks") }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
         },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->

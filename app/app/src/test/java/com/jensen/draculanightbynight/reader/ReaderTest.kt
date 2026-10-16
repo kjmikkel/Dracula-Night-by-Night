@@ -66,4 +66,12 @@ class ReaderTest {
         assertEquals(HeaderStyle.DIARY, headerStyle(DocumentType.PHONOGRAPH))
         assertEquals(HeaderStyle.TELEGRAM, headerStyle(DocumentType.TELEGRAM))
     }
+
+    @Test
+    fun aNewspaperHeaderSplitsIntoMastheadAndHeadline() {
+        val paper = TestStory.entry("n", 8, 8, "10:00", type = DocumentType.NEWSPAPER)
+        assertEquals("THE DAILYGRAPH" to "A STORM AT WHITBY", mastheadOf(paper.copy(header = "THE DAILYGRAPH\nA STORM AT WHITBY")))
+        assertEquals("Newspaper" to null, mastheadOf(paper.copy(header = null)))
+        assertEquals("THE PALL MALL GAZETTE" to null, mastheadOf(paper.copy(header = "\nTHE PALL MALL GAZETTE\n")))
+    }
 }
