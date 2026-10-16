@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
+import androidx.compose.material3.Button
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,7 +41,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,6 +56,7 @@ import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingMode
+import com.jensen.draculanightbynight.ui.Ornament
 import com.jensen.draculanightbynight.ui.StartOverDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -143,22 +149,51 @@ private fun Timeline(
     val listState = rememberLazyListState()
     // Opens at the first unread entry, and again whenever the filter changes (the old position means nothing in
     // the new list); otherwise the list stays where the reader left it.
+    // On a short window (landscape, or large text) the cards join the list instead of crowding it out.
+    // Measured in lines of text rather than dp, so large text counts as a short window too.
+    val density = LocalDensity.current
+    val cardsInList = with(density) { LocalWindowInfo.current.containerSize.height.toDp() } / density.fontScale < SHORT_WINDOW_DP.dp
     var anchoredFor by rememberSaveable { mutableStateOf<String?>(null) }
     LaunchedEffect(state.filter) {
         val key = state.filter.summary
         if (anchoredFor != key) {
-            listState.scrollToItem(openingItem(state))
+            // With the cards in the list it opens at the top, so they show; the Tonight card leads to the first unread.
+            listState.scrollToItem(if (cardsInList) 0 else openingItem(state))
             anchoredFor = key
         }
     }
-
-    // The season card and the ahead banner stay pinned above the list: the list opens scrolled to the first
-    // unread entry, which would otherwise hide them exactly when they matter.
-    Column(modifier.fillMaxSize()) {
+    val cards: @Composable () -> Unit = {
+        state.tonight?.let { TonightCardView(it, onOpen) }
         if (state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
         if (!state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
         if (state.filter.isActive) FilteredLine(state, onClearFilter)
-        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter)
+        Ornament()
+    }
+
+    // The cards stay pinned above the list: the list opens scrolled to the first unread entry, which would
+    // otherwise hide them exactly when they matter.
+    Column(modifier.fillMaxSize()) {
+        if (!cardsInList) cards()
+        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
+    }
+}
+
+/** Below this window height the pinned cards become the first item of the list. */
+private const val SHORT_WINDOW_DP = 480
+
+@Composable
+private fun TonightCardView(card: TonightCard, onOpen: (String) -> Unit) {
+    Card(Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            Text(card.heading, Modifier.semantics { heading() }, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+            if (card.waiting > 1) Text("${card.waiting} entries waiting", style = MaterialTheme.typography.bodyMedium)
+            Text("${card.authorName} · ${typeLabel(card.type)}", style = MaterialTheme.typography.labelLarge)
+            Text(card.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Button(
+                onClick = { onOpen(card.entryId) },
+                modifier = Modifier.padding(top = 8.dp).semantics { contentDescription = "Read ${card.authorName}, ${typeLabel(card.type)}" },
+            ) { Text("Read") }
+        }
     }
 }
 
@@ -171,8 +206,10 @@ private fun TimelineList(
     onReadItNow: () -> Unit,
     onStartOver: () -> Unit,
     onClearFilter: () -> Unit,
+    header: (@Composable () -> Unit)? = null,
 ) {
     LazyColumn(Modifier.fillMaxSize(), state = listState) {
+        header?.let { cards -> item(key = "cards") { Column { cards() } } }
         if (state.days.isEmpty() && state.hiddenCount > 0) {
             item(key = "no-match") {
                 Column(Modifier.padding(16.dp)) {
@@ -207,9 +244,11 @@ private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
         Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Column(Modifier.width(52.dp)) {
+        Column(Modifier.widthIn(min = 52.dp)) {
             Text(
                 row.timeLabel,
+                maxLines = 1,
+                softWrap = false,
                 style = MaterialTheme.typography.bodyMedium,
                 fontStyle = if (row.timeEstimated) FontStyle.Italic else FontStyle.Normal,
                 color = if (row.timeEstimated) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
@@ -285,7 +324,7 @@ private fun FilteredLine(state: TimelineState, onClear: () -> Unit) {
 @Composable
 private fun AheadBanner(state: TimelineState, onBackToRealTime: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerHigh).clickable(onClick = onBackToRealTime)
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerHigh).clickable(role = Role.Button, onClick = onBackToRealTime)
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
