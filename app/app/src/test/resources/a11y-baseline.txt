@@ -557,3 +557,6 @@ filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material's bottom sheet co
 filter-sheet | LIGHT_HC | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_LARGE | role | Drag handle | #139 | Material's bottom sheet control has no role
+
+# keyboard-scroll — #114 (checked by KeyboardScrollTest)
+reader-letter | LIGHT | keyboard-scroll | body | #114 | Page Down and arrow down do not move the text

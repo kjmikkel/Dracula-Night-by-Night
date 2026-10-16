@@ -49,7 +49,7 @@ class RatchetTest(private val caseName: String, private val lookKey: String) {
             // environment is gone by then, and the exception would land in the next test.
             runBlocking { app.scope.coroutineContext.job.cancelAndJoin() }
         }
-        val result = diff(found, loadBaseline(), case.name, lookKey)
+        val result = diff(found, loadBaseline().filter { it.violation.rule !in OWNED_ELSEWHERE }, case.name, lookKey)
         assertTrue(result.failureMessage(), result.isEmpty())
     }
 
@@ -92,6 +92,9 @@ class RatchetTest(private val caseName: String, private val lookKey: String) {
         private const val READY_TIMEOUT_MS = 30_000L
         private const val MAX_SCROLL_STEPS = 40
         private const val SCROLL_FRACTION = 0.7f
+
+        /** Rules other tests check (KeyboardScrollTest), whose baseline lines this test leaves alone. */
+        private val OWNED_ELSEWHERE = setOf("keyboard-scroll")
 
         /** Rules about what a screen should have: met in any window or scroll position is met. */
         private val EXPECTATIONS = setOf("headings", "toggle-state", "group", "words")
