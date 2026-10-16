@@ -19,6 +19,12 @@ object Dates {
     /** "Thursday 15 October, 22:00" */
     val WEEKDAY_TIME: DateTimeFormatter = english("EEEE d MMMM, HH:mm")
 
+    /** "Thursday" */
+    val WEEKDAY: DateTimeFormatter = english("EEEE")
+
+    /** "14 Oct" */
+    val SHORT_DAY: DateTimeFormatter = english("d MMM")
+
     /** "22:00" */
     val TIME: DateTimeFormatter = english("HH:mm")
 }
