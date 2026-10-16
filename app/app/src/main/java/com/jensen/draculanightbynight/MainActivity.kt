@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
@@ -116,7 +117,7 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             val id = entry.arguments?.getString("id").orEmpty()
             val filtered = entry.arguments?.getBoolean("filtered") ?: false
             ReaderScreen(
-                viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered) },
+                viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered, createSavedStateHandle()) },
                 onBack = { if (entry.isResumed()) nav.popBackStack() },
             )
         }
