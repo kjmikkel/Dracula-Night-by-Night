@@ -1,5 +1,9 @@
 package com.jensen.draculanightbynight.reader
 
+import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.Role
 import com.jensen.draculanightbynight.ui.notSpoken
 import com.jensen.draculanightbynight.ui.BackButton
 import androidx.compose.foundation.background
@@ -110,7 +114,15 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 navigationIcon = { BackButton(onBack) },
                 actions = {
-                    TextButton(onClick = viewModel::toggleBookmark) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
+                    // A switch for TalkBack: "Bookmark, on/off", without the star.
+                    TextButton(
+                        onClick = viewModel::toggleBookmark,
+                        modifier = Modifier.semantics {
+                            contentDescription = "Bookmark"
+                            role = Role.Switch
+                            toggleableState = ToggleableState(reader.bookmarked)
+                        },
+                    ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
                 },
             )
         },
