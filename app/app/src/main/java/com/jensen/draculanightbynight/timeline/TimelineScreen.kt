@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.platform.testTag
@@ -255,6 +256,8 @@ private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
         Column(Modifier.widthIn(min = 52.dp)) {
             Text(
                 row.timeLabel,
+                // Italics mark an estimated time; TalkBack says it in words, as the reader does.
+                if (row.timeEstimated) Modifier.clearAndSetSemantics { contentDescription = "about ${row.timeLabel}" } else Modifier,
                 maxLines = 1,
                 softWrap = false,
                 style = MaterialTheme.typography.bodyMedium,
