@@ -2,6 +2,8 @@ package com.jensen.draculanightbynight.timeline
 
 import com.jensen.draculanightbynight.TestStory
 import com.jensen.draculanightbynight.content.DocumentType
+import com.jensen.draculanightbynight.domain.EntryFilter
+import com.jensen.draculanightbynight.domain.Voice
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.user.EntryProgress
@@ -93,5 +95,32 @@ class TimelineTest {
         assertTrue(first.bookmarked)
         assertEquals("may04", t.firstUnreadId)
         assertEquals("22:00", first.timeLabel)
+    }
+
+    private val free = ReadingSettings(ReadingMode.Free)
+    private val mina = EntryFilter(setOf(Voice.MINA))
+
+    @Test
+    fun aFilterLeavesOutDaysWithNoMatchingEntries() {
+        val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)
+        assertEquals(listOf(LocalDate.of(1893, 5, 9)), t.days.map { it.date })
+        assertEquals(3, t.hiddenCount)
+        assertEquals(4, t.unlockedCount)
+        assertEquals(mina, t.filter)
+    }
+
+    @Test
+    fun theListOpensAtTheFirstUnreadMatchingEntry() {
+        val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)
+        assertEquals("may09", t.firstUnreadId)
+    }
+
+    @Test
+    fun aFilterThatHidesEverythingKeepsTheNextCard() {
+        val t = buildTimeline(TestStory.small, UserState(), tempo, Instant.parse("2026-10-15T12:00:00Z"), utc, mina)
+        assertTrue(t.days.isEmpty())
+        assertEquals(1, t.hiddenCount)
+        assertEquals("Jonathan Harker", t.next?.authorName)
+        assertFalse(t.finished)
     }
 }

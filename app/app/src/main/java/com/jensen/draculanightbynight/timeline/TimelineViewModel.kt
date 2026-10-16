@@ -23,7 +23,7 @@ class TimelineViewModel(private val app: AppContainer) : ViewModel() {
     val state: StateFlow<TimelineUi> = combine(flow { emit(app.stories.story()) }, app.users.state, app.time.ticks()) { story, user, now ->
         val settings = user.settings ?: return@combine TimelineUi.Loading
         TimelineUi.Ready(
-            buildTimeline(story, user, settings, now.toInstant(), now.zone),
+            buildTimeline(story, user, settings, now.toInstant(), now.zone, user.filter),
             settings.mode,
             now.toLocalDate(),
             bookmarks = user.progress.values.count { it.bookmarked },
