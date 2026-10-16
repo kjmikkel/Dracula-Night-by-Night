@@ -8,15 +8,9 @@
 
 # role — #139
 filter-sheet | DARK | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | DARK | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | DARK_HC | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | DARK_HC | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | DARK_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | DARK_LARGE | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT_HC | role | Drag handle | #139 | Material's bottom sheet control has no role
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT_LARGE | role | Drag handle | #139 | Material's bottom sheet control has no role
 
