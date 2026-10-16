@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,21 +49,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.R
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
+import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.ui.StartOverDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit, onSettings: () -> Unit) {
+fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (id: String, filtered: Boolean) -> Unit, onSettings: () -> Unit) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var startingOver by rememberSaveable { mutableStateOf(false) }
     var confirmingSkip by rememberSaveable { mutableStateOf(false) }
+    var filtering by rememberSaveable { mutableStateOf(false) }
+    val filter = (ui as? TimelineUi.Ready)?.timeline?.filter ?: EntryFilter()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Dracula Night by Night") },
                 actions = {
+                    IconButton(onClick = { filtering = true }, enabled = ui is TimelineUi.Ready) {
+                        val label = if (filter.isActive) "Filter, ${filter.activeCount} active" else "Filter"
+                        BadgedBox(badge = { if (filter.isActive) Badge() }) { Icon(painterResource(R.drawable.ic_filter), contentDescription = label) }
+                    }
                     IconButton(onClick = onSettings) { Icon(painterResource(R.drawable.ic_settings), contentDescription = "Settings") }
                 },
             )
@@ -73,7 +82,8 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit, onSet
                 Timeline(
                     state.timeline,
                     canSkip = state.mode != ReadingMode.Free,
-                    onOpen = onOpen,
+                    onOpen = { id -> onOpen(id, state.timeline.filter.isActive) },
+                    onClearFilter = viewModel::clearFilter,
                     // The first skip explains itself; once ahead, further skips need no confirmation.
                     onReadItNow = { if (state.timeline.skipAhead.isZero) confirmingSkip = true else viewModel.readItNow() },
                     onBackToRealTime = viewModel::backToRealTime,
@@ -95,6 +105,7 @@ fun TimelineScreen(viewModel: TimelineViewModel, onOpen: (String) -> Unit, onSet
                         dismissButton = { TextButton(onClick = { confirmingSkip = false }) { Text("Cancel") } },
                     )
                 }
+                if (filtering) FilterSheet(state.timeline.filter, viewModel::setFilter) { filtering = false }
                 if (startingOver) {
                     StartOverDialog(
                         bookmarks = state.bookmarks,
@@ -120,6 +131,7 @@ private fun Timeline(
     onBackToRealTime: () -> Unit,
     onStartOver: () -> Unit,
     onNotNow: () -> Unit,
+    onClearFilter: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -147,7 +159,8 @@ private fun Timeline(
     Column(modifier.fillMaxSize()) {
         if (state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
         if (!state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
-        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver)
+        if (state.filter.isActive) FilteredLine(state, onClearFilter)
+        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter)
     }
 }
 
@@ -159,9 +172,17 @@ private fun TimelineList(
     onOpen: (String) -> Unit,
     onReadItNow: () -> Unit,
     onStartOver: () -> Unit,
+    onClearFilter: () -> Unit,
 ) {
     LazyColumn(Modifier.fillMaxSize(), state = listState) {
-        if (state.days.isEmpty()) {
+        if (state.days.isEmpty() && state.hiddenCount > 0) {
+            item(key = "no-match") {
+                Column(Modifier.padding(16.dp)) {
+                    Text("No entries match yet.", style = MaterialTheme.typography.bodyLarge)
+                    TextButton(onClick = onClearFilter) { Text("Clear filter") }
+                }
+            }
+        } else if (state.days.isEmpty()) {
             item { Text("The story has not begun yet.", Modifier.padding(16.dp), style = MaterialTheme.typography.bodyLarge) }
         }
         for (day in state.days) {
@@ -245,6 +266,21 @@ private fun SeasonCard(onStartOver: () -> Unit, onNotNow: () -> Unit) {
                 TextButton(onClick = onNotNow) { Text("Not now") }
             }
         }
+    }
+}
+
+@Composable
+private fun FilteredLine(state: TimelineState, onClear: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainer).padding(start = 16.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            "Filtered: ${state.filter.summary} · ${state.hiddenCount} hidden",
+            Modifier.weight(1f).padding(vertical = 10.dp),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        TextButton(onClick = onClear) { Text("Clear") }
     }
 }
 

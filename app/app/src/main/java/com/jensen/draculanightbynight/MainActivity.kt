@@ -13,9 +13,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jensen.draculanightbynight.notify.Notifications
 import com.jensen.draculanightbynight.reader.ReaderScreen
 import com.jensen.draculanightbynight.reader.ReaderViewModel
@@ -90,14 +92,17 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
         composable("timeline") { entry ->
             TimelineScreen(
                 viewModel { TimelineViewModel(app) },
-                onOpen = { if (entry.isResumed()) nav.navigate("reader/$it") { launchSingleTop = true } },
+                onOpen = { id, filtered -> if (entry.isResumed()) nav.navigate("reader/$id?filtered=$filtered") { launchSingleTop = true } },
                 onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
             )
         }
         composable("settings") { entry ->
             SettingsScreen(viewModel { SettingsViewModel(app) }, onBack = { if (entry.isResumed()) nav.popBackStack() })
         }
-        composable("reader/{id}") { entry ->
+        composable(
+            "reader/{id}?filtered={filtered}",
+            arguments = listOf(navArgument("filtered") { type = NavType.BoolType; defaultValue = false }),
+        ) { entry ->
             val id = entry.arguments?.getString("id").orEmpty()
             ReaderScreen(
                 viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id) },
