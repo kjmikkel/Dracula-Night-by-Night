@@ -63,4 +63,14 @@ class PaletteTest {
         assertEquals(0xFF121011L, Palettes.Dark.background)
         assertEquals(0xFFE8DCC6L, Palettes.Dark.onBackground)
     }
+
+    @Test
+    fun snackbarsAndErrorsUseThePalette() {
+        for (palette in listOf(Palettes.Light, Palettes.Dark, Palettes.LightHighContrast, Palettes.DarkHighContrast)) {
+            val names = palette.textPairs().map { it.name }
+            assertTrue(palette.name, "inverseOnSurface on inverseSurface" in names)
+            assertTrue(palette.name, "inversePrimary on inverseSurface" in names)
+            assertTrue(palette.name, "onError on error" in names)
+        }
+    }
 }

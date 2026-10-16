@@ -30,6 +30,12 @@ data class Palette(
     val onSelected: Long,
     /** The decorative ornament; never text. */
     val ornament: Long,
+    /** Snackbars: an inverted bar, its text and its action. */
+    val inverseSurface: Long,
+    val inverseOnSurface: Long,
+    val inversePrimary: Long,
+    /** Text on the error colour. */
+    val onError: Long,
 ) {
     /** Every text colour on every background it appears on. */
     fun textPairs(): List<TextPair> {
@@ -39,7 +45,10 @@ data class Palette(
         return texts.flatMap { (tn, t) -> backgrounds.map { (bn, b) -> TextPair("$tn on $bn", t, b) } } +
             TextPair("onBackground on background", onBackground, background) +
             TextPair("onPrimary on primary", onPrimary, primary) +
-            TextPair("onSelected on selected", onSelected, selected)
+            TextPair("onSelected on selected", onSelected, selected) +
+            TextPair("inverseOnSurface on inverseSurface", inverseOnSurface, inverseSurface) +
+            TextPair("inversePrimary on inverseSurface", inversePrimary, inverseSurface) +
+            TextPair("onError on error", onError, error)
     }
 }
 
@@ -53,6 +62,7 @@ object Palettes {
         containers = listOf(0xFFFFFBF3, 0xFFF8F0E2, 0xFFF1E7D6, 0xFFEADBC0, 0xFFE5D6BC),
         primary = 0xFF6E1414, onPrimary = 0xFFF4ECDD, secondary = 0xFF75655A, outline = 0xFF8A7A6E, error = 0xFF9C2328,
         selected = 0xFFE8CFC6, onSelected = 0xFF4A0E0E, ornament = 0xFF9B6B5A,
+        inverseSurface = 0xFF2A1A16, inverseOnSurface = 0xFFF4ECDD, inversePrimary = 0xFFE0A458, onError = 0xFFF4ECDD,
     )
 
     // Candlelight: warm bone on near-black, candle amber for labels, blood red for what is selected.
@@ -64,6 +74,7 @@ object Palettes {
         containers = listOf(0xFF0D0B0C, 0xFF171314, 0xFF1E191A, 0xFF2A1E17, 0xFF342620),
         primary = 0xFFE0A458, onPrimary = 0xFF121011, secondary = 0xFFA39282, outline = 0xFF7F6650, error = 0xFFF2B8B5,
         selected = 0xFFB23A2E, onSelected = 0xFFF6EBDD, ornament = 0xFF6B4A2F,
+        inverseSurface = 0xFFE8DCC6, inverseOnSurface = 0xFF121011, inversePrimary = 0xFF6E1414, onError = 0xFF121011,
     )
 
     // High contrast: near-black on white or white on black; oxblood kept but deepened or lightened to pass 7:1.
@@ -75,6 +86,7 @@ object Palettes {
         containers = listOf(0xFFFFFFFF, 0xFFFAF8F5, 0xFFF5F2EC, 0xFFF0EBE3, 0xFFEAE4DA),
         primary = 0xFF5A0E12, onPrimary = 0xFFFFFFFF, secondary = 0xFF3B302A, outline = 0xFF000000, error = 0xFF7A0A0A,
         selected = 0xFF5A0E12, onSelected = 0xFFFFFFFF, ornament = 0xFF1F1A17,
+        inverseSurface = 0xFF000000, inverseOnSurface = 0xFFFFFFFF, inversePrimary = 0xFFFFB3B0, onError = 0xFFFFFFFF,
     )
 
     val DarkHighContrast = Palette(
@@ -85,6 +97,7 @@ object Palettes {
         containers = listOf(0xFF000000, 0xFF0A0909, 0xFF121010, 0xFF1C1919, 0xFF262222),
         primary = 0xFFFFB3B0, onPrimary = 0xFF000000, secondary = 0xFFE8DDD2, outline = 0xFFFFFFFF, error = 0xFFFFC4C1,
         selected = 0xFFFFB3B0, onSelected = 0xFF000000, ornament = 0xFFF2EDE6,
+        inverseSurface = 0xFFFFFFFF, inverseOnSurface = 0xFF000000, inversePrimary = 0xFF5A0E12, onError = 0xFF000000,
     )
 }
 

@@ -111,6 +111,9 @@ private fun Palette.colorScheme(): ColorScheme {
         tertiary = Color(primary), onTertiary = Color(onPrimary),
         tertiaryContainer = Color(selected), onTertiaryContainer = Color(onSelected),
         surfaceTint = Color(primary),
+        // Snackbars and error text: also the palette's own, so no default purple shows anywhere.
+        inverseSurface = Color(inverseSurface), inverseOnSurface = Color(inverseOnSurface), inversePrimary = Color(inversePrimary),
+        onError = Color(onError),
     )
 }
 
