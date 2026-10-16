@@ -45,4 +45,22 @@ class PaletteTest {
         assertEquals(Palettes.DarkHighContrast, paletteFor(ThemeChoice.DARK, systemDark = false, highContrast = null, systemHighContrast = true))
         assertEquals(Palettes.Dark, paletteFor(ThemeChoice.DARK, systemDark = false, highContrast = false, systemHighContrast = true))
     }
+
+    @Test
+    fun selectionColoursMeetTheBar() {
+        listOf(Palettes.Light, Palettes.Dark).forEach { assertTrue(it.name, contrast(it.onSelected, it.selected) >= 4.5) }
+        listOf(Palettes.LightHighContrast, Palettes.DarkHighContrast).forEach { assertTrue(it.name, contrast(it.onSelected, it.selected) >= 7.0) }
+    }
+
+    @Test
+    fun lightIsParchmentAndOxblood() {
+        assertEquals(0xFFF4ECDDL, Palettes.Light.background)
+        assertEquals(0xFF6E1414L, Palettes.Light.primary)
+    }
+
+    @Test
+    fun darkIsCandlelight() {
+        assertEquals(0xFF121011L, Palettes.Dark.background)
+        assertEquals(0xFFE8DCC6L, Palettes.Dark.onBackground)
+    }
 }
