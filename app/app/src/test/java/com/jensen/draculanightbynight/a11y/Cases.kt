@@ -43,7 +43,8 @@ data class Case(
     val fonts: List<ReadingFont> = emptyList(),
     val expect: Expectations = Expectations(),
     val seed: suspend AppContainer.() -> Unit = { tempo() },
-    val open: ComposeContentTestRule.() -> Unit = {},
+    /** Opens a dialog or sheet over the screen; [ready] must then be text only that window shows. */
+    val open: (ComposeContentTestRule.() -> Unit)? = null,
     val content: @Composable (AppContainer) -> Unit,
 )
 
@@ -197,5 +198,5 @@ val cases: List<Case> = listOf(
         "about", setOf("AboutScreen"), ready = "The text", seed = {},
         expect = Expectations(headings = listOf("About", "The text", "The app", "Fonts")),
     ) { AboutScreen(onBack = {}) },
-    Case("licence", setOf("LicenceDialog"), ready = "Apache License", seed = {}, open = { tap("Special Elite") }) { AboutScreen(onBack = {}) },
+    Case("licence", setOf("LicenceDialog"), ready = "January 2004", seed = {}, open = { tap("Special Elite") }) { AboutScreen(onBack = {}) },
 )

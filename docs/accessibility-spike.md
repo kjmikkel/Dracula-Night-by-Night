@@ -108,8 +108,9 @@ What a machine can check now runs on every PR, inside `app-tests`, as the access
 - **Every scroll position:** each case scrolls every list to its end, so rows below the fold are checked too.
 
 **Not checked:** Google's Accessibility Test Framework can't see Compose's nodes under Robolectric, so it isn't
-used; the rules cover its checks instead. Text contrast stays in `PaletteTest`. Focus visibility (#113), the
-OpenDyslexic spacing (#123) and TalkBack's own wording stay manual checks.
+used; the rules cover its checks instead. Text contrast stays in `PaletteTest`. Focus visibility (#113), keyboard
+scrolling in the reader (#114: Robolectric can't deliver keyboard focus and keys the way a phone does, so a test
+couldn't see a fix), the OpenDyslexic spacing (#123) and TalkBack's own wording stay manual checks.
 
 **The baseline:** `app/app/src/test/resources/a11y-baseline.txt` lists every known violation:
 

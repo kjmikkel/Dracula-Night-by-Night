@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.a11y
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -66,6 +68,28 @@ class RulesTest {
     @Test fun roleAllowsListRows() {
         val found = findings { LazyColumn { item { Text("22:00 Jonathan Harker", Modifier.clickable {}) } } }
         assertTrue(found.rule("role").isEmpty())
+    }
+
+    @Test fun roleAllowsRowsBelowPlainLayout() {
+        // The bookmark row: its clickable part sits beside a remove button, one layout level below the list item.
+        val found = findings {
+            LazyColumn {
+                item {
+                    // A background gives the row a semantics node of its own (a shape), but no label or action.
+                    Row(Modifier.background(Color.LightGray)) {
+                        Column(Modifier.weight(1f).clickable(onClickLabel = "Open") {}) { Text("4 May, 14:45") }
+                        Button("Remove bookmark")
+                    }
+                }
+            }
+        }
+        assertTrue(found.rule("role").toString(), found.rule("role").isEmpty())
+    }
+
+    @Test fun roleFiresOnRolelessControlNestedInsideAListRow() {
+        // Only a list's own rows may go without a role; a control inside a row is just a control.
+        val found = findings { LazyColumn { item { Box(Modifier.semantics { contentDescription = "card" }) { Text("Open", Modifier.clickable {}) } } } }
+        assertEquals(listOf(Finding("role", "Open")), found.rule("role"))
     }
 
     // target
