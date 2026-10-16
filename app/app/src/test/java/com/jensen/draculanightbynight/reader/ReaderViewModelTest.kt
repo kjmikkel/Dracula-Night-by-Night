@@ -1,6 +1,7 @@
 package com.jensen.draculanightbynight.reader
 
 import androidx.datastore.core.DataStore
+import androidx.lifecycle.SavedStateHandle
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.TestStory
@@ -71,7 +72,7 @@ class ReaderViewModelTest {
     private suspend fun TestScope.open(id: String): Pair<ReaderUi, UserState> {
         val users = users()
         users.setMode(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)))
-        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, id)
+        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, id, false, SavedStateHandle())
         val ui = viewModel.state.first { it != ReaderUi.Loading }
         advanceUntilIdle()
         return ui to users.state.first()
@@ -82,7 +83,7 @@ class ReaderViewModelTest {
         val users = users()
         users.setMode(ReadingMode.Free)
         users.setFilter(EntryFilter(setOf(Voice.MINA)))
-        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, id, filtered)
+        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, id, filtered, SavedStateHandle())
         viewModel.state.first { it is ReaderUi.Ready }
         return viewModel to users
     }
@@ -124,7 +125,7 @@ class ReaderViewModelTest {
         val users = UserRepository(MemoryStore(), TimeSource(Clock.fixed(dayThreeNoon.toInstant(), ZoneOffset.UTC)) { ZoneOffset.UTC })
         users.setMode(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)))
         val dispatcher = NewestFirstDispatcher()
-        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), CoroutineScope(dispatcher), "may04")
+        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), CoroutineScope(dispatcher), "may04", false, SavedStateHandle())
         viewModel.savePosition("may04", 1, 10) // e.g. the debounced save while scrolling
         viewModel.savePosition("may04", 2, 20) // the save as the screen closes
         while (dispatcher.runAll()) advanceUntilIdle()
@@ -168,5 +169,18 @@ class ReaderViewModelTest {
         assertEquals(true, users.state.first().progressOf("may05").bookmarked)
         assertNotNull(users.state.first().progressOf("may05").readAtMillis)
         assertEquals(false, users.state.first().progressOf("may04").bookmarked)
+    }
+
+    @Test
+    fun aRestoredReaderReopensAtThePageItWasOnNotTheOneItOpened() = runTest {
+        val users = users()
+        users.setMode(ReadingMode.Free)
+        val saved = SavedStateHandle()
+        val first = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, "may04", false, saved)
+        first.onPageSettled("may05")
+        first.follow(Following.ALL)
+        // Android killed the app; the same route ("may04") comes back with the saved state.
+        val restored = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, "may04", false, saved)
+        assertEquals("may05", restored.ready().reader.entry.id)
     }
 }

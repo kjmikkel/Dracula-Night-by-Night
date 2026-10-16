@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.reader
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jensen.draculanightbynight.content.StoryRepository
@@ -7,7 +8,6 @@ import com.jensen.draculanightbynight.user.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -39,13 +39,16 @@ class ReaderViewModel(
     ticks: Flow<ZonedDateTime>,
     private val appScope: CoroutineScope,
     startId: String,
-    filtered: Boolean = false,
+    filtered: Boolean,
+    private val saved: SavedStateHandle,
 ) : ViewModel() {
-    private val current = MutableStateFlow(startId)
-    private val following = MutableStateFlow(if (filtered) Following.FILTER else Following.ALL)
+    // Kept in the saved state, so a reader whose app Android killed comes back to the page they were on.
+    private val current = saved.getStateFlow(KEY_CURRENT, startId)
+    private val following = saved.getStateFlow(KEY_FOLLOWING, if (filtered) Following.FILTER.name else Following.ALL.name)
 
     val state: StateFlow<ReaderUi> =
-        combine(flow { emit(stories.story()) }, users.state, ticks, current, following) { story, user, now, id, follows ->
+        combine(flow { emit(stories.story()) }, users.state, ticks, current, following) { story, user, now, id, followName ->
+            val follows = Following.valueOf(followName)
             val settings = user.settings ?: return@combine ReaderUi.Loading
             val pager = buildPager(story, user, settings, now.toInstant(), now.zone, id, follows, switchable = filtered)
                 ?: return@combine ReaderUi.Locked
@@ -55,13 +58,13 @@ class ReaderViewModel(
 
     /** A page the reader has come to rest on: it becomes current and counts as read (pages dragged past do not). */
     fun onPageSettled(id: String) {
-        current.value = id
+        saved[KEY_CURRENT] = id
         viewModelScope.launch { users.markRead(id) }
     }
 
     /** The switch: keeps the current entry and rebuilds the order around it. */
     fun follow(order: Following) {
-        following.value = order
+        saved[KEY_FOLLOWING] = order.name
     }
 
     private val saveOrder = Mutex()
@@ -84,6 +87,8 @@ class ReaderViewModel(
 
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L
+        const val KEY_CURRENT = "current"
+        const val KEY_FOLLOWING = "following"
 
         /** Pages either side of the current one that the pager may show while it is dragged. */
         const val NEIGHBOURS = 2

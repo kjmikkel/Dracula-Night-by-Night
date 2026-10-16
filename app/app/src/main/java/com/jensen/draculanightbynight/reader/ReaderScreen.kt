@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
@@ -80,7 +81,9 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
 @Composable
 private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit) {
     val latest by rememberUpdatedState(ready)
-    val pagerState = rememberPagerState(initialPage = ready.pager.index) { latest.pager.pages.size }
+    // Not saved by the pager itself: after Android kills the app the view model's saved page is the truth, and a
+    // restored index could point at another entry once new ones have arrived.
+    val pagerState = remember { PagerState(ready.pager.index) { latest.pager.pages.size } }
     val scope = rememberCoroutineScope()
     // Only the page the reader comes to rest on is current and counts as read; pages dragged past do not.
     LaunchedEffect(pagerState) {
