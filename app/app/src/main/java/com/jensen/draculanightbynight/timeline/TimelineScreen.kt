@@ -191,9 +191,12 @@ private fun TonightCardView(card: TonightCard, onOpen: (String) -> Unit) {
     Card(Modifier.testTag("tonight-card").fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
         Column(Modifier.padding(16.dp)) {
             Text(card.heading, Modifier.semantics { heading() }, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-            if (card.waiting > 1) Text("${card.waiting} entries waiting", style = MaterialTheme.typography.bodyMedium)
-            Text("${card.authorName} · ${typeLabel(card.type)}", style = MaterialTheme.typography.labelLarge)
-            Text(card.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            // One TalkBack stop for the summary: heading, summary, Read.
+            Column(Modifier.semantics(mergeDescendants = true) {}) {
+                if (card.waiting > 1) Text("${card.waiting} entries waiting", style = MaterialTheme.typography.bodyMedium)
+                Text("${card.authorName} · ${typeLabel(card.type)}", style = MaterialTheme.typography.labelLarge)
+                Text(card.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            }
             Button(
                 onClick = { onOpen(card.entryId) },
                 modifier = Modifier.padding(top = 8.dp).semantics { contentDescription = "Read ${card.authorName}, ${typeLabel(card.type)}" },
