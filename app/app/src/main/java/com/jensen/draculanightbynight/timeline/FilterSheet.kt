@@ -1,5 +1,7 @@
 package com.jensen.draculanightbynight.timeline
 
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.material3.BottomSheetDefaults
 import com.jensen.draculanightbynight.ui.focusRings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -42,7 +44,11 @@ fun FilterSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         modifier = Modifier.focusRings(),
+        // Material's handle is a TalkBack stop without a role (#139), and it only repeats what the scrim and Back do.
+        // The sheet keeps the look of one; dragging works anywhere on the sheet.
+        dragHandle = null,
     ) {
+        BottomSheetDefaults.DragHandle(Modifier.align(Alignment.CenterHorizontally).clearAndSetSemantics {})
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 24.dp)) {
             Heading("Voices")
             Chips(Voice.entries, { it.label }, filter.voices, onToggleVoice)
