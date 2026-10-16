@@ -28,6 +28,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -63,13 +65,13 @@ fun WelcomeScreen(viewModel: WelcomeViewModel, onBegun: () -> Unit) {
             Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text("Dracula Night by Night", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+            Text("Dracula Night by Night", Modifier.semantics { heading() }, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
             Text(
                 "Dracula is told in diaries, letters, telegrams and newspaper cuttings, each of them dated. " +
                     "This app gives them to you as they happen, night by night.",
                 style = MaterialTheme.typography.bodyLarge,
             )
-            Text("How would you like to read?", style = MaterialTheme.typography.titleMedium)
+            Text("How would you like to read?", Modifier.semantics { heading() }, style = MaterialTheme.typography.titleMedium)
             ModeCard(choice == Choice.TEMPO, "In the same tempo", "Today is 3 May: entries arrive with the story's own gaps between them.") {
                 choice = Choice.TEMPO
             }

@@ -43,7 +43,7 @@ fun AboutScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("About") },
+                title = { Text("About", Modifier.semantics { heading() }) },
                 navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } },
             )
         },

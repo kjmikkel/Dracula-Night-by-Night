@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -91,7 +92,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Settings") }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Settings", Modifier.semantics { heading() }) }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
         },
     ) { padding ->
         val s = state
@@ -253,12 +254,12 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
 
 @Composable
 private fun Section(title: String) {
-    Text(title, Modifier.padding(start = 16.dp, top = 24.dp, bottom = 4.dp), style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+    Text(title, Modifier.padding(start = 16.dp, top = 24.dp, bottom = 4.dp).semantics { heading() }, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
 }
 
 @Composable
 private fun Label(title: String) {
-    Text(title, Modifier.padding(start = 16.dp, top = 12.dp), style = MaterialTheme.typography.labelLarge)
+    Text(title, Modifier.padding(start = 16.dp, top = 12.dp).semantics { heading() }, style = MaterialTheme.typography.labelLarge)
 }
 
 @Composable

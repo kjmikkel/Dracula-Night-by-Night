@@ -77,7 +77,7 @@ fun TimelineScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Dracula Night by Night") },
+                title = { Text("Dracula Night by Night", Modifier.semantics { heading() }) },
                 actions = {
                     IconButton(onClick = { filtering = true }, enabled = ui is TimelineUi.Ready) {
                         val label = if (filter.isActive) "Filter, ${filter.activeCount} active" else "Filter"
@@ -228,7 +228,7 @@ private fun TimelineList(
             item(key = "day-${day.date}") {
                 Text(
                     day.date.format(Dates.DAY),
-                    Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(horizontal = 16.dp, vertical = 6.dp),
+                    Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant).padding(horizontal = 16.dp, vertical = 6.dp).semantics { heading() },
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )

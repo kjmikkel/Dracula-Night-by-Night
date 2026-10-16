@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,7 +62,7 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
     var confirmingId by rememberSaveable { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Bookmarks") }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Bookmarks", Modifier.semantics { heading() }) }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
         },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->

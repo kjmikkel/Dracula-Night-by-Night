@@ -105,7 +105,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(reader.authorName, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } },
                 actions = {
                     TextButton(onClick = viewModel::toggleBookmark) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
