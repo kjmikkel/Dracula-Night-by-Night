@@ -1,6 +1,9 @@
 package com.jensen.draculanightbynight.ui
 
-import android.app.Activity
+import android.graphics.Color as AndroidColor
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import android.app.UiModeManager
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,7 +16,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -29,11 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
 import com.jensen.draculanightbynight.R
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
+
+// AndroidX's default navigation bar scrims.
+private val NAV_LIGHT_SCRIM = AndroidColor.argb(0xE6, 0xFF, 0xFF, 0xFF)
+private val NAV_DARK_SCRIM = AndroidColor.argb(0x80, 0x1B, 0x1B, 0x1B)
 
 /** The period display face (IM Fell English, OFL): headings only, never story text. */
 val DisplayFamily = FontFamily(
@@ -136,18 +142,15 @@ fun DraculaTheme(
     content: @Composable () -> Unit,
 ) {
     val palette = paletteFor(theme, isSystemInDarkTheme(), highContrast, systemHighContrast())
-    // The status and navigation bar icons follow the app's palette, not the phone's theme: a dark app on a light
-    // phone otherwise gets dark icons on a dark bar.
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            (view.context as? Activity)?.window?.let { window ->
-                WindowCompat.getInsetsController(window, view).apply {
-                    isAppearanceLightStatusBars = !palette.isDark
-                    isAppearanceLightNavigationBars = !palette.isDark
-                }
-            }
-        }
+    // The system bars follow the app's palette, not the phone's theme: a dark app on a light phone otherwise gets
+    // dark icons on a dark bar. enableEdgeToEdge sets the icons and, on Android 8–9, the matching scrim together.
+    val activity = LocalView.current.context as? ComponentActivity
+    LaunchedEffect(activity, palette.isDark) {
+        val status = if (palette.isDark) SystemBarStyle.dark(AndroidColor.TRANSPARENT)
+        else SystemBarStyle.light(AndroidColor.TRANSPARENT, AndroidColor.TRANSPARENT)
+        // The navigation bar keeps AndroidX's scrims: Android 8.0 cannot draw dark navigation icons.
+        val navigation = if (palette.isDark) SystemBarStyle.dark(NAV_DARK_SCRIM) else SystemBarStyle.light(NAV_LIGHT_SCRIM, NAV_DARK_SCRIM)
+        activity?.enableEdgeToEdge(statusBarStyle = status, navigationBarStyle = navigation)
     }
     CompositionLocalProvider(
         LocalReadingStyle provides ReadingStyle(readingFont.family(), textSize.scale),
