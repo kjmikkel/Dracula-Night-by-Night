@@ -19,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 
@@ -44,7 +46,9 @@ fun StartOverDialog(
                 Text("Your reading progress is cleared and entries lock again on schedule.")
                 if (bookmarks > 0) {
                     Row(
-                        Modifier.fillMaxWidth().toggleable(removeBookmarks, role = Role.Checkbox) { removeBookmarks = it },
+                        Modifier.fillMaxWidth().toggleable(removeBookmarks, role = Role.Checkbox) { removeBookmarks = it }
+                            // TalkBack 17 says "checked" but stays silent when unticked; say both states ourselves.
+                            .semantics { stateDescription = if (removeBookmarks) "Checked" else "Not checked" },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Checkbox(checked = removeBookmarks, onCheckedChange = null)
