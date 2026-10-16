@@ -6,58 +6,6 @@
 # The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
-# headings — #115
-
-# double-label — #116
-
-# toggle-state — #117
-reader-diary | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-diary | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-diary | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-diary | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-diary | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-diary | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_LARGE/ATKINSON | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_LARGE/OPEN_DYSLEXIC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_LARGE/SANS | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-letter | LIGHT_LARGE/SERIF | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-log | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-memo | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-newspaper | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-phonograph | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | DARK | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | DARK_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | DARK_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | LIGHT | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | LIGHT_HC | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-reader-telegram | LIGHT_LARGE | toggle-state | Bookmark | #117 | bookmark button has no on/off state
-
 # clipped — #118
 bookmarks | DARK_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
 bookmarks | LIGHT_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
