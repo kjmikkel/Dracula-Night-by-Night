@@ -1,5 +1,7 @@
 package com.jensen.draculanightbynight.reader
 
+import androidx.compose.material3.TopAppBarDefaults
+import com.jensen.draculanightbynight.ui.largeText
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.semantics.role
@@ -42,7 +44,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -71,7 +72,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 private const val SAVE_DEBOUNCE_MILLIS = 500L
-private const val COMPACT_FONT_SCALE = 1.5f
 private val NEWSPAPER_COLUMN = 520.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,23 +108,35 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
         if (!pagerState.isScrollInProgress && pagerState.currentPage != ready.pager.index) pagerState.scrollToPage(ready.pager.index)
     }
     val reader = ready.reader
+    // At large text the author gets a line of its own under the bar, where it can wrap instead of collapsing to "…".
+    val large = largeText()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = { BackButton(onBack) },
-                actions = {
-                    // A switch for TalkBack: "Bookmark, on/off", without the star.
-                    TextButton(
-                        onClick = viewModel::toggleBookmark,
-                        modifier = Modifier.semantics {
-                            contentDescription = "Bookmark"
-                            role = Role.Switch
-                            toggleableState = ToggleableState(reader.bookmarked)
-                        },
-                    ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
-                },
-            )
+            Column {
+                TopAppBar(
+                    title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    navigationIcon = { BackButton(onBack) },
+                    actions = {
+                        // A switch for TalkBack: "Bookmark, on/off", without the star.
+                        TextButton(
+                            onClick = viewModel::toggleBookmark,
+                            modifier = Modifier.semantics {
+                                contentDescription = "Bookmark"
+                                role = Role.Switch
+                                toggleableState = ToggleableState(reader.bookmarked)
+                            },
+                        ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
+                    },
+                )
+                if (large) {
+                    Text(
+                        reader.authorName,
+                        Modifier.fillMaxWidth().background(TopAppBarDefaults.topAppBarColors().containerColor).padding(horizontal = 16.dp, vertical = 4.dp)
+                            .semantics { heading() },
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                }
+            }
         },
         bottomBar = {
             BottomAppBar {
@@ -132,7 +144,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 val order = ready.pager.filterLabel?.takeIf { ready.pager.following == Following.FILTER }
                     ?.let { if ('+' in it) "filtered" else it }
                 // At large text the buttons shrink to arrows (still labelled for TalkBack) so the switch fits.
-                val compact = LocalDensity.current.fontScale >= COMPACT_FONT_SCALE
+                val compact = large
                 TextButton(
                     onClick = { scope.launch { pagerState.animateScrollToPage(page - 1) } },
                     enabled = page > 0,

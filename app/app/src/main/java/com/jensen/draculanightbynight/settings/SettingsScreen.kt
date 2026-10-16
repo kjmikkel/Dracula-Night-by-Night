@@ -1,5 +1,7 @@
 package com.jensen.draculanightbynight.settings
 
+import androidx.compose.material3.DisplayMode
+import com.jensen.draculanightbynight.ui.largeText
 import com.jensen.draculanightbynight.ui.BackButton
 import android.content.Intent
 import android.content.res.Configuration
@@ -201,9 +203,15 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                 dialog = null
             }
             Dialog.START_DATE -> {
+                val large = largeText()
                 // English like the rest of the app, whatever the phone's language.
                 val picker = remember {
-                    DatePickerState(locale = Locale.ENGLISH, initialSelectedDateMillis = s.tempoStart?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli())
+                    DatePickerState(
+                        locale = Locale.ENGLISH,
+                        initialSelectedDateMillis = s.tempoStart?.atStartOfDay(ZoneOffset.UTC)?.toInstant()?.toEpochMilli(),
+                        // The month grid's day cells are cut off at large text; typing the date fits.
+                        initialDisplayMode = if (large) DisplayMode.Input else DisplayMode.Picker,
+                    )
                 }
                 DatePickerDialog(
                     onDismissRequest = { dialog = null },

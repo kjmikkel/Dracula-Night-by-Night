@@ -6,40 +6,6 @@
 # The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
-# clipped — #118
-bookmarks | DARK_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
-bookmarks | LIGHT_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
-read-now-dialog | DARK_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
-read-now-dialog | LIGHT_LARGE | clipped | Story order | #118 | cut off at 200 % text on the largest display size
-reader-diary | DARK_LARGE | clipped | Jonathan Harker | #118 | cut off at 200 % text on the largest display size
-reader-diary | LIGHT_LARGE | clipped | Jonathan Harker | #118 | cut off at 200 % text on the largest display size
-reader-filtered | DARK_LARGE | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-filtered | LIGHT_LARGE | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | DARK_LARGE | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | LIGHT_LARGE | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | LIGHT_LARGE/ATKINSON | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | LIGHT_LARGE/OPEN_DYSLEXIC | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | LIGHT_LARGE/SANS | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-letter | LIGHT_LARGE/SERIF | clipped | Mina Harker | #118 | cut off at 200 % text on the largest display size
-reader-log | DARK_LARGE | clipped | Captain of the Demeter | #118 | cut off at 200 % text on the largest display size
-reader-log | LIGHT_LARGE | clipped | Captain of the Demeter | #118 | cut off at 200 % text on the largest display size
-reader-memo | DARK_LARGE | clipped | Bram Stoker | #118 | cut off at 200 % text on the largest display size
-reader-memo | LIGHT_LARGE | clipped | Bram Stoker | #118 | cut off at 200 % text on the largest display size
-reader-newspaper | DARK_LARGE | clipped | The Dailygraph | #118 | cut off at 200 % text on the largest display size
-reader-newspaper | LIGHT_LARGE | clipped | The Dailygraph | #118 | cut off at 200 % text on the largest display size
-reader-phonograph | DARK_LARGE | clipped | Dr. John Seward | #118 | cut off at 200 % text on the largest display size
-reader-phonograph | LIGHT_LARGE | clipped | Dr. John Seward | #118 | cut off at 200 % text on the largest display size
-reader-telegram | DARK_LARGE | clipped | Arthur Holmwood | #118 | cut off at 200 % text on the largest display size
-reader-telegram | LIGHT_LARGE | clipped | Arthur Holmwood | #118 | cut off at 200 % text on the largest display size
-settings-start-date | DARK_LARGE | clipped | Friday, May 1, 2026 | #118 | cut off at 200 % text on the largest display size
-settings-start-date | DARK_LARGE | clipped | Saturday, May 2, 2026 | #118 | cut off at 200 % text on the largest display size
-settings-start-date | DARK_LARGE | clipped | Sunday, May 31, 2026 | #118 | cut off at 200 % text on the largest display size
-settings-start-date | LIGHT_LARGE | clipped | Friday, May 1, 2026 | #118 | cut off at 200 % text on the largest display size
-settings-start-date | LIGHT_LARGE | clipped | Saturday, May 2, 2026 | #118 | cut off at 200 % text on the largest display size
-settings-start-date | LIGHT_LARGE | clipped | Sunday, May 31, 2026 | #118 | cut off at 200 % text on the largest display size
-timeline | DARK_LARGE | clipped | Bookmarked | #118 | cut off at 200 % text on the largest display size
-timeline | LIGHT_LARGE | clipped | Bookmarked | #118 | cut off at 200 % text on the largest display size
-
 # card-stops — #119
 timeline | DARK | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
 timeline | DARK_HC | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops

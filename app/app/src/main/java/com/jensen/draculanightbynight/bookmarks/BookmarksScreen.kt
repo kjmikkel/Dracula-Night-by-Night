@@ -1,5 +1,10 @@
 package com.jensen.draculanightbynight.bookmarks
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.material3.RadioButton
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.selectable
+import com.jensen.draculanightbynight.ui.largeText
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import com.jensen.draculanightbynight.ui.notSpoken
 import com.jensen.draculanightbynight.ui.BackButton
@@ -112,9 +117,28 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SortSwitch(sort: BookmarkSort, onSort: (BookmarkSort) -> Unit) {
+    // Side by side the two labels don't fit at large text: there they become a list of radio buttons.
+    if (largeText()) {
+        Column(Modifier.fillMaxWidth().padding(vertical = 4.dp).selectableGroup()) {
+            SortOption("Story order", sort == BookmarkSort.STORY) { onSort(BookmarkSort.STORY) }
+            SortOption("Recently bookmarked", sort == BookmarkSort.RECENT) { onSort(BookmarkSort.RECENT) }
+        }
+        return
+    }
     SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
         SegmentedButton(sort == BookmarkSort.STORY, { onSort(BookmarkSort.STORY) }, SegmentedButtonDefaults.itemShape(0, 2)) { Text("Story order") }
         SegmentedButton(sort == BookmarkSort.RECENT, { onSort(BookmarkSort.RECENT) }, SegmentedButtonDefaults.itemShape(1, 2)) { Text("Recently bookmarked") }
+    }
+}
+
+@Composable
+private fun SortOption(label: String, selected: Boolean, onSelect: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().selectable(selected = selected, role = Role.RadioButton, onClick = onSelect).padding(horizontal = 16.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RadioButton(selected = selected, onClick = null)
+        Text(label, Modifier.padding(start = 12.dp), style = MaterialTheme.typography.bodyLarge)
     }
 }
 

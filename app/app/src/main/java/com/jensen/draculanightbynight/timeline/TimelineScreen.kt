@@ -264,7 +264,9 @@ private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
                 if (row.unread) {
                     Box(Modifier.size(8.dp).background(MaterialTheme.colorScheme.primary, CircleShape).semantics { contentDescription = "Unread" })
                 }
-                Text("${row.authorName} · ${typeLabel(row.type)}${row.place?.let { " · $it" } ?: ""}", style = MaterialTheme.typography.labelLarge)
+                // Wraps rather than pushing the star off the edge at large text.
+                Text("${row.authorName} · ${typeLabel(row.type)}${row.place?.let { " · $it" } ?: ""}", Modifier.weight(1f, fill = false),
+                    style = MaterialTheme.typography.labelLarge)
                 if (row.bookmarked) Text("★", color = MaterialTheme.colorScheme.primary, modifier = Modifier.semantics { contentDescription = "Bookmarked" })
             }
             Text(row.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis,

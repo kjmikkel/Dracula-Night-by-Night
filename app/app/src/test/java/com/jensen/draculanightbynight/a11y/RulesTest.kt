@@ -12,6 +12,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalViewConfiguration
@@ -63,6 +64,12 @@ class RulesTest {
 
     @Test fun roleFiresOnClickableWithoutRole() {
         assertEquals(listOf(Finding("role", "Open")), findings { Text("Open", Modifier.clickable {}) }.rule("role"))
+    }
+
+    @Test fun roleAllowsTextFields() {
+        // TalkBack announces an editable field as an edit box; it needs no role.
+        val found = findings { TextField("", {}, label = { Text("Date") }) }
+        assertTrue(found.rule("role").toString(), found.rule("role").isEmpty())
     }
 
     @Test fun roleAllowsListRows() {
