@@ -3,7 +3,8 @@
 *Last updated: 16 October 2026*
 
 Dracula Night by Night is a free, open-source Android app for reading Bram Stoker's *Dracula* at the pace it was
-written. This policy describes what the app does with information about you. In short: nothing leaves your phone.
+written. This policy describes what the app does with information about you. In short: the app collects nothing and sends
+nothing anywhere.
 
 ## What the app collects
 
@@ -13,10 +14,13 @@ does not have permission to use the internet, so it cannot send anything anywher
 ## What the app stores on your phone
 
 To work, the app keeps a small file on your phone with your own choices: how you read (calendar, same tempo or
-freely), which entries you have read and where you stopped, your bookmarks, filters and display settings. This file
-never leaves your device. It is deleted when you uninstall the app, or when you clear the app's storage in
-Android's settings. Android's own device backup may include it if you have turned backup on for your phone; that
-is between you and your backup provider, not the app.
+freely), which entries you have read and where you stopped, your bookmarks, filters and display settings. The app
+never sends this file anywhere. It is deleted when you uninstall the app, or when you clear the app's storage in
+Android's settings.
+
+If you have turned on Android's own device backup, Android may include this file in your phone's backup (for
+example to your Google account), so your reading place survives a new phone. That backup is made by Android, under
+your backup provider's privacy policy; you can turn it off in Android's settings.
 
 ## Notifications
 
