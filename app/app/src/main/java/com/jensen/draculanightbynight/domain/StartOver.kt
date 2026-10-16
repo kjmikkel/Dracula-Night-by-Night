@@ -11,7 +11,7 @@ import java.time.LocalDate
  * restarting never produces a burst of notifications.
  */
 fun UserState.startedOver(removeBookmarks: Boolean, today: LocalDate, tempoStart: LocalDate, nowMillis: Long): UserState {
-    val kept = if (removeBookmarks) emptyMap() else progress.filterValues { it.bookmarked }.mapValues { EntryProgress(bookmarked = true) }
+    val kept = if (removeBookmarks) emptyMap() else progress.filterValues { it.bookmarked }.mapValues { EntryProgress(bookmarked = true, bookmarkedAtMillis = it.value.bookmarkedAtMillis) }
     val restarted = when (readingMode) {
         is ReadingMode.Calendar -> withMode(ReadingMode.Calendar(UnlockSchedule.seasonYearFor(today)))
         is ReadingMode.SameTempo -> withMode(ReadingMode.SameTempo(tempoStart))

@@ -1,5 +1,8 @@
 package com.jensen.draculanightbynight.user
 
+import com.jensen.draculanightbynight.domain.Voice
+import com.jensen.draculanightbynight.domain.EntryFilter
+import com.jensen.draculanightbynight.content.DocumentType
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.domain.ReadingMode
@@ -176,5 +179,45 @@ class UserRepositoryTest {
         val state = repository().state.first()
         assertEquals(ReadingMode.Free, state.readingMode)
         assertTrue(state.progressOf("gone-id").bookmarked)
+    }
+
+    @Test
+    fun bookmarkingStampsTheTimeAndRemovingClearsIt() = runTest {
+        val repo = repository()
+        repo.toggleBookmark("may03")
+        assertEquals(EntryProgress(bookmarked = true, bookmarkedAtMillis = clock.millis()), repo.state.first().progressOf("may03"))
+        repo.toggleBookmark("may03")
+        assertEquals(EntryProgress(), repo.state.first().progressOf("may03"))
+    }
+
+    @Test
+    fun undoRestoresTheOriginalTime() = runTest {
+        val repo = repository()
+        val madeAt = clock.millis()
+        repo.toggleBookmark("may03")
+        repo.toggleBookmark("may03")
+        clock.now = Instant.parse("2026-10-15T09:00:00Z")
+        repo.restoreBookmark("may03", madeAt)
+        assertEquals(EntryProgress(bookmarked = true, bookmarkedAtMillis = madeAt), repo.state.first().progressOf("may03"))
+    }
+
+    @Test
+    fun theFilterAndSortAreSaved() = runTest {
+        val repo = repository()
+        val f = EntryFilter(setOf(Voice.LUCY), setOf(DocumentType.LETTER))
+        repo.setFilter(f)
+        repo.setBookmarkSort(BookmarkSort.RECENT)
+        assertEquals(f, repo.state.first().filter)
+        assertEquals(BookmarkSort.RECENT, repo.state.first().bookmarkSort)
+    }
+
+    @Test
+    fun changingTheFilterLeavesTheNotificationBaselineAlone() = runTest {
+        val repo = repository()
+        repo.setMode(ReadingMode.Free)
+        val baseline = repo.state.first().lastNotifiedAt
+        clock.now = Instant.parse("2026-10-15T09:00:00Z")
+        repo.setFilter(EntryFilter(setOf(Voice.MINA)))
+        assertEquals(baseline, repo.state.first().lastNotifiedAt)
     }
 }

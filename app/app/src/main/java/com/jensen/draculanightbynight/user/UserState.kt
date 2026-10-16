@@ -2,8 +2,12 @@ package com.jensen.draculanightbynight.user
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
+import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.ReadingSettings
+import com.jensen.draculanightbynight.domain.Voice
+import com.jensen.draculanightbynight.domain.documentTypeFromKey
+import com.jensen.draculanightbynight.domain.key
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -23,6 +27,8 @@ data class EntryProgress(
     val blockIndex: Int = 0,
     val blockOffset: Int = 0,
     val bookmarked: Boolean = false,
+    /** When the bookmark was made (app clock); null for bookmarks from before plan B. */
+    val bookmarkedAtMillis: Long? = null,
 )
 
 /**
@@ -49,6 +55,10 @@ data class UserState(
     val highContrast: Boolean? = null,
     /** The year whose new-season prompt the reader has answered. */
     val seasonPromptYear: Int? = null,
+    /** Timeline filter, stored as keys so a name a later version drops is skipped rather than failing the file. */
+    val filterVoices: Set<String> = emptySet(),
+    val filterTypes: Set<String> = emptySet(),
+    val bookmarkSort: BookmarkSort = BookmarkSort.STORY,
 ) {
     /** Readers from before the Welcome screen already chose a mode, so they count as onboarded. */
     val isOnboarded: Boolean
@@ -71,6 +81,16 @@ data class UserState(
         is ReadingMode.SameTempo -> copy(mode = MODE_TEMPO, tempoStart = newMode.startDate.toString(), skipAheadMinutes = 0)
         ReadingMode.Free -> copy(mode = MODE_FREE, skipAheadMinutes = 0)
     }
+
+    /** The saved timeline filter; unknown names are dropped. */
+    val filter: EntryFilter
+        get() = EntryFilter(
+            voices = filterVoices.mapNotNull(Voice::fromKey).toSet(),
+            types = filterTypes.mapNotNull(::documentTypeFromKey).toSet(),
+        )
+
+    fun withFilter(filter: EntryFilter): UserState =
+        copy(filterVoices = filter.voices.map { it.key }.toSet(), filterTypes = filter.types.map { it.key }.toSet())
 
     fun progressOf(id: String): EntryProgress = progress[id] ?: EntryProgress()
 
