@@ -51,7 +51,9 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
             val isListRow = n.ancestors().takeWhile { !it.config.contains(SemanticsProperties.CollectionInfo) }
                 .none { it.label().isNotBlank() || it.isClickable() } &&
                 n.ancestors().any { it.config.contains(SemanticsProperties.CollectionInfo) }
-            if (n.role() == null && !isListRow) add(Finding("role", n.name(own)))
+            // An editable field is announced as an edit box, so it needs no role either.
+            val isTextField = n.config.contains(SemanticsProperties.EditableText)
+            if (n.role() == null && !isListRow && !isTextField) add(Finding("role", n.name(own)))
             // The touch area, which Compose also reports to TalkBack: Material widens a 40 dp button's to 48 dp.
             // Only nodes fully in view: a row half scrolled out of a list has a cut-off touch area, not a small one.
             val whole = n.boundsInRoot.width >= n.size.width - 1f && n.boundsInRoot.height >= n.size.height - 1f
