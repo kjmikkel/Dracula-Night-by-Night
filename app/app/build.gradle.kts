@@ -68,10 +68,12 @@ android {
         buildConfig = true
     }
 
-    // The accessibility ratchet renders real screens under Robolectric: it needs the app's resources and assets.
+    // The accessibility ratchet renders real screens under Robolectric: it needs the app's resources and assets,
+    // and real text measuring (Robolectric's default graphics make text about a pixel per character).
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            all { it.systemProperty("robolectric.graphicsMode", "NATIVE") }
         }
     }
 

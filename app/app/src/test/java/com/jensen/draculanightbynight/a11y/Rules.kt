@@ -4,6 +4,8 @@ import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 
@@ -66,12 +68,47 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
             val found = nodes.filter { fragment in it.label() }
             if (found.none { word.lowercase() in it.label().lowercase() }) add(Finding("words", "$fragment → $word"))
         }
+        for (n in nodes) {
+            if (n.label().isNotBlank() && n.isClippedAcrossItsScroll()) add(Finding("clipped", n.name()))
+        }
+        for (n in own.values) {
+            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name()))
+        }
         expect.cardTag?.let { tag ->
             val card = nodes.firstOrNull { it.config.getOrNull(SemanticsProperties.TestTag) == tag }
             val stops = card?.descendants()?.count { it.isClickable() || it.label().isNotBlank() } ?: 0
             if (stops > MAX_CARD_STOPS) add(Finding("card-stops", "$tag: $stops stops"))
         }
     }
+}
+
+/**
+ * Cut off along an axis nothing lets the reader scroll: by its parent, or by the edge of the window. Being scrolled
+ * out of a list's view is not clipping.
+ */
+private fun SemanticsNode.isClippedAcrossItsScroll(): Boolean {
+    val scroller = ancestors().firstOrNull {
+        it.config.contains(SemanticsProperties.VerticalScrollAxisRange) || it.config.contains(SemanticsProperties.HorizontalScrollAxisRange)
+    }
+    val scrollsVertically = scroller?.config?.contains(SemanticsProperties.VerticalScrollAxisRange) == true
+    val scrollsHorizontally = scroller?.config?.contains(SemanticsProperties.HorizontalScrollAxisRange) == true
+    val shown = boundsInRoot
+    val cutWidth = size.width - shown.width > 1f
+    val cutHeight = size.height - shown.height > 1f
+    return (cutWidth && !scrollsHorizontally) || (cutHeight && !scrollsVertically)
+}
+
+/** One line ending in "…" with room for fewer than about three characters: the text is effectively gone. */
+private fun SemanticsNode.isCollapsedToEllipsis(density: Density): Boolean {
+    val results = mutableListOf<TextLayoutResult>()
+    config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(results) ?: return false
+    val layout = results.firstOrNull() ?: return false
+    val fontPx = with(density) { layout.layoutInput.style.fontSize.toPx() }
+    // Decided from the layout's inputs rather than isLineEllipsized, which Robolectric's text measuring never sets.
+    val input = layout.layoutInput
+    val wouldEllipsize = input.maxLines == 1 && input.overflow == TextOverflow.Ellipsis &&
+        layout.multiParagraph.intrinsics.maxIntrinsicWidth > layout.size.width
+    return wouldEllipsize && size.width < 3 * fontPx
 }
 
 private fun SemanticsNode.descendants(): List<SemanticsNode> = children.flatMap { listOf(it) + it.descendants() }
