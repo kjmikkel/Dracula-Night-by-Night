@@ -26,27 +26,23 @@ data class ReaderState(
     val authorName: String,
     val recipientName: String?,
     val style: HeaderStyle,
-    val previousId: String?,
-    val nextId: String?,
     val startBlock: Int,
     val startOffset: Int,
     val bookmarked: Boolean,
 )
 
 /** The reader for entry [id], or null if it does not exist or is not readable (locked and never read). */
-fun buildReader(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId, id: String): ReaderState? {
-    val unlocked = story.entries.filter { isReadable(it, settings, user, now, zone) }
-    val index = unlocked.indexOfFirst { it.id == id }
-    if (index < 0) return null
-    val entry = unlocked[index]
-    val progress = user.progressOf(id)
+fun buildReader(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId, id: String): ReaderState? =
+    story.entry(id)?.takeIf { isReadable(it, settings, user, now, zone) }?.let { readerFor(story, user, it) }
+
+/** The reader for an entry already known to be readable (a page of the pager). */
+fun readerFor(story: Story, user: UserState, entry: Entry): ReaderState {
+    val progress = user.progressOf(entry.id)
     return ReaderState(
         entry = entry,
         authorName = story.nameOf(entry.author) ?: entry.author,
         recipientName = story.nameOf(entry.recipient),
         style = headerStyle(entry.type),
-        previousId = unlocked.getOrNull(index - 1)?.id,
-        nextId = unlocked.getOrNull(index + 1)?.id,
         startBlock = progress.blockIndex.coerceIn(0, (entry.body.size - 1).coerceAtLeast(0)),
         startOffset = progress.blockOffset,
         bookmarked = progress.bookmarked,

@@ -5,7 +5,9 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.jensen.draculanightbynight.TestStory
 import com.jensen.draculanightbynight.content.StoryRepository
+import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingMode
+import com.jensen.draculanightbynight.domain.Voice
 import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.user.UserRepository
 import com.jensen.draculanightbynight.user.UserState
@@ -22,6 +24,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.sync.Mutex
@@ -74,6 +77,18 @@ class ReaderViewModelTest {
         return ui to users.state.first()
     }
 
+    /** A Read freely reader with a Mina filter, opened at [id]. */
+    private suspend fun TestScope.openFiltered(id: String, filtered: Boolean): Pair<ReaderViewModel, UserRepository> {
+        val users = users()
+        users.setMode(ReadingMode.Free)
+        users.setFilter(EntryFilter(setOf(Voice.MINA)))
+        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, id, filtered)
+        viewModel.state.first { it is ReaderUi.Ready }
+        return viewModel to users
+    }
+
+    private suspend fun ReaderViewModel.ready(): ReaderUi.Ready = state.first { it is ReaderUi.Ready } as ReaderUi.Ready
+
     @Test
     fun aLockedEntryIsNotMarkedRead() = runTest {
         val (ui, user) = open("may09")
@@ -110,17 +125,48 @@ class ReaderViewModelTest {
         users.setMode(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)))
         val dispatcher = NewestFirstDispatcher()
         val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), CoroutineScope(dispatcher), "may04")
-        viewModel.savePosition(1, 10) // e.g. the debounced save while scrolling
-        viewModel.savePosition(2, 20) // the save as the screen closes
+        viewModel.savePosition("may04", 1, 10) // e.g. the debounced save while scrolling
+        viewModel.savePosition("may04", 2, 20) // the save as the screen closes
         while (dispatcher.runAll()) advanceUntilIdle()
         val saved = users.state.first().progressOf("may04")
         assertEquals(2 to 20, saved.blockIndex to saved.blockOffset)
     }
 
     @Test
-    fun anUnlockedEntryIsMarkedReadWhenItOpens() = runTest {
-        val (ui, user) = open("may04")
-        assertEquals("may04", (ui as ReaderUi.Ready).reader.entry.id)
+    fun onlyASettledPageIsMarkedRead() = runTest {
+        val (viewModel, users) = openFiltered("may04", filtered = false)
+        assertEquals("may04", viewModel.ready().reader.entry.id)
+        runCurrent()
+        assertNull(users.state.first().progressOf("may04").readAtMillis) // open, but its page has not settled yet
+        viewModel.onPageSettled("may04")
+        advanceUntilIdle()
+        val user = users.state.first()
         assertNotNull(user.progressOf("may04").readAtMillis)
+        assertNull(user.progressOf("may03").readAtMillis)
+        assertNull(user.progressOf("may05").readAtMillis)
+    }
+
+    @Test
+    fun theSwitchKeepsTheCurrentEntry() = runTest {
+        val (viewModel, _) = openFiltered("may04", filtered = true)
+        assertEquals(listOf("may04", "may09"), viewModel.ready().pager.pages)
+        viewModel.follow(Following.ALL)
+        val all = viewModel.state.first { it is ReaderUi.Ready && it.pager.following == Following.ALL } as ReaderUi.Ready
+        assertEquals("may04", all.pager.pages[all.pager.index])
+        assertEquals(1, all.pager.index)
+        viewModel.follow(Following.FILTER)
+        val back = viewModel.state.first { it is ReaderUi.Ready && it.pager.following == Following.FILTER } as ReaderUi.Ready
+        assertEquals(listOf("may04", "may09"), back.pager.pages)
+    }
+
+    @Test
+    fun theBookmarkActsOnTheSettledPage() = runTest {
+        val (viewModel, users) = openFiltered("may04", filtered = false)
+        viewModel.onPageSettled("may05")
+        viewModel.toggleBookmark()
+        advanceUntilIdle()
+        assertEquals(true, users.state.first().progressOf("may05").bookmarked)
+        assertNotNull(users.state.first().progressOf("may05").readAtMillis)
+        assertEquals(false, users.state.first().progressOf("may04").bookmarked)
     }
 }
