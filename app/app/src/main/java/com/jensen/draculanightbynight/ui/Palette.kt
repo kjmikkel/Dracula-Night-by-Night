@@ -25,6 +25,11 @@ data class Palette(
     val secondary: Long,
     val outline: Long,
     val error: Long,
+    /** Selected chips, segmented buttons and switch tracks, with the text drawn on them. */
+    val selected: Long,
+    val onSelected: Long,
+    /** The decorative ornament; never text. */
+    val ornament: Long,
 ) {
     /** Every text colour on every background it appears on. */
     fun textPairs(): List<TextPair> {
@@ -33,28 +38,32 @@ data class Palette(
         val texts = listOf("onSurface" to onSurface, "onSurfaceVariant" to onSurfaceVariant, "primary" to primary, "error" to error)
         return texts.flatMap { (tn, t) -> backgrounds.map { (bn, b) -> TextPair("$tn on $bn", t, b) } } +
             TextPair("onBackground on background", onBackground, background) +
-            TextPair("onPrimary on primary", onPrimary, primary)
+            TextPair("onPrimary on primary", onPrimary, primary) +
+            TextPair("onSelected on selected", onSelected, selected)
     }
 }
 
 object Palettes {
-    // Restrained gothic baseline: oxblood on parchment, bone on near-black.
+    // Restrained gothic: oxblood and deep ink on parchment.
     val Light = Palette(
         name = "Light", isDark = false,
-        background = 0xFFF4ECDC, onBackground = 0xFF2A1F1A,
-        surface = 0xFFFBF6EC, onSurface = 0xFF2A1F1A,
+        background = 0xFFF4ECDD, onBackground = 0xFF2A1A16,
+        surface = 0xFFFAF4E8, onSurface = 0xFF2A1A16,
         surfaceVariant = 0xFFEADFCB, onSurfaceVariant = 0xFF5C4D43,
-        containers = listOf(0xFFFFFBF3, 0xFFF8F0E2, 0xFFF1E7D6, 0xFFEBE0CD, 0xFFE5D9C4),
-        primary = 0xFF7A1F24, onPrimary = 0xFFFBF6EC, secondary = 0xFF75655A, outline = 0xFF8A7A6E, error = 0xFF9C2328,
+        containers = listOf(0xFFFFFBF3, 0xFFF8F0E2, 0xFFF1E7D6, 0xFFEADBC0, 0xFFE5D6BC),
+        primary = 0xFF6E1414, onPrimary = 0xFFF4ECDD, secondary = 0xFF75655A, outline = 0xFF8A7A6E, error = 0xFF9C2328,
+        selected = 0xFFE8CFC6, onSelected = 0xFF4A0E0E, ornament = 0xFF9B6B5A,
     )
 
+    // Candlelight: warm bone on near-black, candle amber for labels, blood red for what is selected.
     val Dark = Palette(
         name = "Dark", isDark = true,
-        background = 0xFF141011, onBackground = 0xFFECE2D4,
-        surface = 0xFF1D1718, onSurface = 0xFFECE2D4,
-        surfaceVariant = 0xFF2A2223, onSurfaceVariant = 0xFFBFAF9F,
-        containers = listOf(0xFF0F0C0D, 0xFF1A1516, 0xFF211A1B, 0xFF2B2324, 0xFF362C2D),
-        primary = 0xFFDB8280, onPrimary = 0xFF1D1718, secondary = 0xFFA39282, outline = 0xFF7F7066, error = 0xFFF2B8B5,
+        background = 0xFF121011, onBackground = 0xFFE8DCC6,
+        surface = 0xFF1A1617, onSurface = 0xFFE8DCC6,
+        surfaceVariant = 0xFF241E1F, onSurfaceVariant = 0xFFC2B39F,
+        containers = listOf(0xFF0D0B0C, 0xFF171314, 0xFF1E191A, 0xFF2A1E17, 0xFF342620),
+        primary = 0xFFE0A458, onPrimary = 0xFF121011, secondary = 0xFFA39282, outline = 0xFF7F6650, error = 0xFFF2B8B5,
+        selected = 0xFFB23A2E, onSelected = 0xFFF6EBDD, ornament = 0xFF6B4A2F,
     )
 
     // High contrast: near-black on white or white on black; oxblood kept but deepened or lightened to pass 7:1.
@@ -65,6 +74,7 @@ object Palettes {
         surfaceVariant = 0xFFF0EBE3, onSurfaceVariant = 0xFF1F1A17,
         containers = listOf(0xFFFFFFFF, 0xFFFAF8F5, 0xFFF5F2EC, 0xFFF0EBE3, 0xFFEAE4DA),
         primary = 0xFF5A0E12, onPrimary = 0xFFFFFFFF, secondary = 0xFF3B302A, outline = 0xFF000000, error = 0xFF7A0A0A,
+        selected = 0xFF5A0E12, onSelected = 0xFFFFFFFF, ornament = 0xFF1F1A17,
     )
 
     val DarkHighContrast = Palette(
@@ -74,6 +84,7 @@ object Palettes {
         surfaceVariant = 0xFF1C1919, onSurfaceVariant = 0xFFF2EDE6,
         containers = listOf(0xFF000000, 0xFF0A0909, 0xFF121010, 0xFF1C1919, 0xFF262222),
         primary = 0xFFFFB3B0, onPrimary = 0xFF000000, secondary = 0xFFE8DDD2, outline = 0xFFFFFFFF, error = 0xFFFFC4C1,
+        selected = 0xFFFFB3B0, onSelected = 0xFF000000, ornament = 0xFFF2EDE6,
     )
 }
 
