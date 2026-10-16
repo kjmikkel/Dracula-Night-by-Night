@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.bookmarks
 
+import com.jensen.draculanightbynight.ui.focusRings
 import androidx.compose.ui.semantics.Role
 import androidx.compose.material3.RadioButton
 import androidx.compose.foundation.selection.selectableGroup
@@ -194,6 +195,7 @@ private fun ReadNowDialog(row: BookmarkRow, earlier: Int, onDismiss: () -> Unit,
     }
     val text = "This entry arrives again $arrives." + if (also.isEmpty()) " Reading it now puts you ahead of real time." else "$also and puts you ahead of real time."
     AlertDialog(
+        modifier = Modifier.focusRings(),
         onDismissRequest = onDismiss,
         title = { Text("Read it now?") },
         text = { Text(text) },

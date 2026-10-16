@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.ui.focusRings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ fun ModeDialog(current: ReadingMode, today: LocalDate, onDismiss: () -> Unit, on
     )
     var selected by remember { mutableIntStateOf(options.indexOfFirst { it.second::class == current::class }.coerceAtLeast(0)) }
     AlertDialog(
+        modifier = Modifier.focusRings(),
         onDismissRequest = onDismiss,
         title = { Text("How to read") },
         text = {

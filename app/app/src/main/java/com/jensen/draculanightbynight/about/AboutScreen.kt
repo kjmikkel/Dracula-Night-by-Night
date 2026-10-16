@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.about
 
+import com.jensen.draculanightbynight.ui.focusRings
 import com.jensen.draculanightbynight.ui.BackButton
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -112,6 +113,7 @@ private fun LicenceDialog(asset: String, onDismiss: () -> Unit) {
     val context = LocalContext.current
     val text = remember(asset) { context.assets.open("licenses/$asset").bufferedReader().use { it.readText() } }
     AlertDialog(
+        modifier = Modifier.focusRings(),
         onDismissRequest = onDismiss,
         title = { Text(Licences.first { it.asset == asset }.name) },
         text = { Text(text, Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()), style = MaterialTheme.typography.bodySmall) },

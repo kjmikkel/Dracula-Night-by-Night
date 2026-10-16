@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.settings
 
+import com.jensen.draculanightbynight.ui.focusRings
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.DisplayMode
 import com.jensen.draculanightbynight.ui.largeText
@@ -221,6 +222,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                     )
                 }
                 DatePickerDialog(
+                    modifier = Modifier.focusRings(),
                     onDismissRequest = { dialog = null },
                     confirmButton = {
                         TextButton(onClick = {
@@ -236,6 +238,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                 }
             }
             Dialog.SKIP_DAY -> AlertDialog(
+                modifier = Modifier.focusRings(),
                 onDismissRequest = { dialog = null },
                 title = { Text("Skip to a day") },
                 text = {

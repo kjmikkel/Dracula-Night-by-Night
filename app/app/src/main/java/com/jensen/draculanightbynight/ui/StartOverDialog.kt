@@ -39,6 +39,7 @@ fun StartOverDialog(
     var removeBookmarks by rememberSaveable { mutableStateOf(false) }
     var tomorrow by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
+        modifier = Modifier.focusRings(),
         onDismissRequest = onDismiss,
         title = { Text("Start over?") },
         text = {

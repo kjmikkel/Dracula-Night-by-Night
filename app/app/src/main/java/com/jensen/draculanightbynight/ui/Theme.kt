@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.ui
 
+import androidx.compose.foundation.layout.Box
 import android.graphics.Color as AndroidColor
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -156,6 +157,8 @@ fun DraculaTheme(
         LocalReadingStyle provides ReadingStyle(readingFont.family(), textSize.scale),
         LocalOrnamentColor provides Color(palette.ornament),
     ) {
-        MaterialTheme(colorScheme = palette.colorScheme(), typography = Serif, content = content)
+        MaterialTheme(colorScheme = palette.colorScheme(), typography = Serif) {
+            Box(Modifier.focusRings(), propagateMinConstraints = true) { content() }
+        }
     }
 }
