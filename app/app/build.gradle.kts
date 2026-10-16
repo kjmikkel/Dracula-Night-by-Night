@@ -63,6 +63,15 @@ android {
         }
     }
 
+    // Accessibility lint fails the build instead of warning (#37); the Compose screens are checked by the
+    // accessibility ratchet in the unit tests.
+    lint {
+        error += setOf(
+            "ContentDescription", "ClickableViewAccessibility", "KeyboardInaccessibleWidget", "LabelFor",
+            "GetContentDescriptionOverride",
+        )
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
