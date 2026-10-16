@@ -78,7 +78,7 @@ fun AboutScreen(onBack: () -> Unit) {
             item {
                 ListItem(
                     headlineContent = { Text("Privacy") },
-                    supportingContent = { Text("No data leaves your phone. Read the privacy policy.") },
+                    supportingContent = { Text("The app collects nothing and sends nothing anywhere. Read the privacy policy.") },
                     modifier = Modifier.linkRow("Open the privacy policy") { links.openUri(PRIVACY_URL) },
                 )
             }
