@@ -2,6 +2,7 @@ package com.jensen.draculanightbynight.timeline
 
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.DocumentType
+import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.domain.EntryFilter
@@ -51,6 +52,22 @@ data class TimelineState(
     val hiddenCount: Int = 0,
 )
 
+/** One entry as a list row; the timeline and the bookmarks list build rows the same way. */
+fun timelineRow(story: Story, user: UserState, entry: Entry): TimelineRow {
+    val progress = user.progressOf(entry.id)
+    return TimelineRow(
+        id = entry.id,
+        authorName = story.nameOf(entry.author) ?: entry.author,
+        type = entry.type,
+        timeLabel = entry.time.format(Dates.TIME),
+        timeEstimated = entry.timeEstimated,
+        place = entry.place,
+        preview = entry.preview,
+        unread = progress.readAtMillis == null,
+        bookmarked = progress.bookmarked,
+    )
+}
+
 /**
  * What the timeline shows at [now]: readable entries matching [filter], grouped by in-story day, plus the next one
  * to unlock. Everything but the list (Next card, end, skip ahead, season card) uses the whole story.
@@ -65,20 +82,7 @@ fun buildTimeline(
 ): TimelineState {
     val (unlocked, locked) = story.entries.partition { isReadable(it, settings, user, now, zone) }
     val shown = readingOrder(story, user, settings, now, zone, filter)
-    val rows = shown.map { e ->
-        val progress = user.progressOf(e.id)
-        e.date to TimelineRow(
-            id = e.id,
-            authorName = story.nameOf(e.author) ?: e.author,
-            type = e.type,
-            timeLabel = e.time.format(Dates.TIME),
-            timeEstimated = e.timeEstimated,
-            place = e.place,
-            preview = e.preview,
-            unread = progress.readAtMillis == null,
-            bookmarked = progress.bookmarked,
-        )
-    }
+    val rows = shown.map { e -> e.date to timelineRow(story, user, e) }
     val days = rows.groupBy({ it.first }, { it.second }).map { (date, dayRows) -> TimelineDay(date, dayRows) }
     val next = locked
         .mapNotNull { e -> Arrivals.arrivesAt(e, settings, zone)?.let { e to it } }

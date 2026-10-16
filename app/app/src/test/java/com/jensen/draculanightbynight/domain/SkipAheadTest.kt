@@ -61,4 +61,26 @@ class SkipAheadTest {
         assertEquals(0L, SkipAhead.toNext(TestStory.small, UserState(), free, dayTwoAfternoon, utc))
         assertEquals(0L, SkipAhead.toEndOf(LocalDate.of(1893, 5, 9), TestStory.small, free, dayTwoAfternoon, utc))
     }
+
+    @Test
+    fun skippingToAnEntryMakesItReadable() {
+        val noon = Instant.parse("2026-10-15T12:00:00Z")
+        val may05 = TestStory.small.entry("may05")!!
+        val minutes = SkipAhead.toEntry(may05, tempo, noon, utc)
+        assertEquals(22 * 60L, minutes)
+        assertTrue(isReadable(may05, tempo.copy(skipAhead = Duration.ofMinutes(minutes)), UserState(), noon, utc))
+    }
+
+    @Test
+    fun skippingToAnEntryNeverMovesBackwards() {
+        val ahead = tempo.copy(skipAhead = Duration.ofHours(48))
+        assertEquals(48 * 60L, SkipAhead.toEntry(TestStory.small.entry("may04")!!, ahead, Instant.parse("2026-10-15T12:00:00Z"), utc))
+    }
+
+    @Test
+    fun theConfirmationCountsWhatTheSkipUnlocks() {
+        val night = Instant.parse("2026-10-14T23:00:00Z")
+        val minutes = SkipAhead.toEntry(TestStory.small.entry("may05")!!, tempo, night, utc)
+        assertEquals(2, SkipAhead.unlockedBy(minutes, TestStory.small, UserState(), tempo, night, utc))
+    }
 }
