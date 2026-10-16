@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.settings
 
+import com.jensen.draculanightbynight.ui.BackButton
 import android.content.Intent
 import android.content.res.Configuration
 import android.provider.Settings
@@ -92,7 +93,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Settings", Modifier.semantics { heading() }) }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Settings", Modifier.semantics { heading() }) }, navigationIcon = { BackButton(onBack) })
         },
     ) { padding ->
         val s = state

@@ -1,5 +1,8 @@
 package com.jensen.draculanightbynight.bookmarks
 
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import com.jensen.draculanightbynight.ui.notSpoken
+import com.jensen.draculanightbynight.ui.BackButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -62,7 +65,7 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
     var confirmingId by rememberSaveable { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Bookmarks", Modifier.semantics { heading() }) }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
+            TopAppBar(title = { Text("Bookmarks", Modifier.semantics { heading() }) }, navigationIcon = { BackButton(onBack) })
         },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->
@@ -129,7 +132,11 @@ private fun BookmarkRowItem(row: BookmarkRow, showMade: Boolean, onOpen: () -> U
         Column(
             Modifier.weight(1f)
                 .clickable(onClickLabel = if (arrives != null) "Read it now" else "Open", onClick = onOpen)
-                .semantics(mergeDescendants = true) { lockedDescription(row)?.let { contentDescription = it } },
+                .then(
+                    // A locked row's description names the entry too, so it replaces the texts rather than adding to them.
+                    lockedDescription(row)?.let { d -> Modifier.clearAndSetSemantics { contentDescription = d } }
+                        ?: Modifier.semantics(mergeDescendants = true) {},
+                ),
         ) {
             Text("${row.date.format(Dates.DAY)}, ${r.timeLabel}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
             Text("${r.authorName} · ${typeLabel(r.type)}${r.place?.let { " · $it" } ?: ""}", style = MaterialTheme.typography.labelLarge)
@@ -149,7 +156,7 @@ private fun BookmarkRowItem(row: BookmarkRow, showMade: Boolean, onOpen: () -> U
         IconButton(
             onClick = onRemove,
             modifier = Modifier.semantics { contentDescription = "Remove bookmark, ${r.authorName}, ${row.date.format(Dates.DAY)}" },
-        ) { Text("★", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge) }
+        ) { Text("★", Modifier.notSpoken(), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge) }
     }
 }
 
