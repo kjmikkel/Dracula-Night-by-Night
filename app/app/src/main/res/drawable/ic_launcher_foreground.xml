@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A steel pen nib with a drop of blood for ink, inside the adaptive icon's 66 dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF2A1A16"
+        android:fillType="evenOdd"
+        android:pathData="M54,24 L65,45 L54,69 L43,45 Z M51.6,45 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0 Z M53.4,47.4 L54.6,47.4 L54.6,67 L53.4,67 Z" />
+    <path
+        android:fillColor="#FF8E1B1B"
+        android:pathData="M54,71 C51.5,75 50,77.5 50,79.8 A4,4 0 0,0 58,79.8 C58,77.5 56.5,75 54,71 Z" />
+</vector>
