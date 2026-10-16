@@ -104,10 +104,10 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             arguments = listOf(navArgument("filtered") { type = NavType.BoolType; defaultValue = false }),
         ) { entry ->
             val id = entry.arguments?.getString("id").orEmpty()
+            val filtered = entry.arguments?.getBoolean("filtered") ?: false
             ReaderScreen(
-                viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id) },
+                viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered) },
                 onBack = { if (entry.isResumed()) nav.popBackStack() },
-                onOpen = { next -> if (entry.isResumed()) nav.navigate("reader/$next") { popUpTo("timeline") } },
             )
         }
     }

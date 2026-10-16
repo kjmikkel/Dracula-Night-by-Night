@@ -10,28 +10,38 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -45,54 +55,116 @@ import com.jensen.draculanightbynight.ui.LocalReadingStyle
 import com.jensen.draculanightbynight.ui.TelegramStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 
 private const val SAVE_DEBOUNCE_MILLIS = 500L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, onOpen: (String) -> Unit) {
+fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
-    val ready = ui as? ReaderUi.Ready
+    when (val state = ui) {
+        is ReaderUi.Ready -> Pages(state, viewModel, onBack)
+        else -> Scaffold(
+            topBar = { TopAppBar(title = {}, navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } }) },
+        ) { padding ->
+            Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
+                if (state == ReaderUi.Locked) Text("This entry has not arrived yet.") else CircularProgressIndicator()
+            }
+        }
+    }
+}
+
+/** The entries as pages that follow the finger; Previous and Next turn them too. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit) {
+    val latest by rememberUpdatedState(ready)
+    val pagerState = rememberPagerState(initialPage = ready.pager.index) { latest.pager.pages.size }
+    val scope = rememberCoroutineScope()
+    // Only the page the reader comes to rest on is current and counts as read; pages dragged past do not.
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page -> latest.pager.pages.getOrNull(page)?.let(viewModel::onPageSettled) }
+    }
+    // A newly arrived entry or the switch can move the current entry to another position: follow the entry.
+    LaunchedEffect(ready.pager) {
+        if (!pagerState.isScrollInProgress && pagerState.currentPage != ready.pager.index) pagerState.scrollToPage(ready.pager.index)
+    }
+    val reader = ready.reader
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(ready?.reader?.authorName.orEmpty()) },
+                title = { Text(reader.authorName) },
                 navigationIcon = { TextButton(onClick = onBack) { Text("‹ Back") } },
                 actions = {
-                    if (ready != null) {
-                        TextButton(onClick = viewModel::toggleBookmark) { Text(if (ready.reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
-                    }
+                    TextButton(onClick = viewModel::toggleBookmark) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
                 },
             )
         },
         bottomBar = {
-            if (ready != null) {
-                BottomAppBar {
-                    TextButton(onClick = { ready.reader.previousId?.let(onOpen) }, enabled = ready.reader.previousId != null) { Text("‹ Previous") }
-                    Box(Modifier.weight(1f))
-                    TextButton(onClick = { ready.reader.nextId?.let(onOpen) }, enabled = ready.reader.nextId != null) { Text("Next ›") }
+            BottomAppBar {
+                val page = pagerState.currentPage
+                val order = ready.pager.filterLabel?.takeIf { ready.pager.following == Following.FILTER }
+                    ?.let { if ('+' in it) "filtered" else it }
+                TextButton(
+                    onClick = { scope.launch { pagerState.animateScrollToPage(page - 1) } },
+                    enabled = page > 0,
+                    modifier = Modifier.semantics { contentDescription = order?.let { "Previous $it entry" } ?: "Previous entry in the story" },
+                ) { Text("‹ Previous") }
+                Box(Modifier.weight(1f), Alignment.Center) {
+                    ready.pager.filterLabel?.let { FollowSwitch(it, ready.pager.following, viewModel::follow) }
                 }
+                TextButton(
+                    onClick = { scope.launch { pagerState.animateScrollToPage(page + 1) } },
+                    enabled = page < ready.pager.pages.lastIndex,
+                    modifier = Modifier.semantics { contentDescription = order?.let { "Next $it entry" } ?: "Next entry in the story" },
+                ) { Text("Next ›") }
             }
         },
     ) { padding ->
-        when (val state = ui) {
-            ReaderUi.Loading -> Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) { CircularProgressIndicator() }
-            ReaderUi.Locked -> Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) { Text("This entry has not arrived yet.") }
-            is ReaderUi.Ready -> Body(state.reader, viewModel, Modifier.padding(padding))
+        HorizontalPager(
+            pagerState,
+            Modifier.fillMaxSize().padding(padding),
+            key = { latest.pager.pages.getOrElse(it) { "page-$it" } },
+        ) { page ->
+            val shown = latest.pager.pages.getOrNull(page)?.let { latest.pages[it] }
+            if (shown == null) {
+                Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+            } else {
+                Body(shown, viewModel)
+            }
         }
+    }
+}
+
+/** [filter | All]: which order Previous, Next and swipe follow. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FollowSwitch(filterLabel: String, following: Following, onFollow: (Following) -> Unit) {
+    SingleChoiceSegmentedButtonRow {
+        SegmentedButton(
+            selected = following == Following.FILTER,
+            onClick = { onFollow(Following.FILTER) },
+            shape = SegmentedButtonDefaults.itemShape(0, 2),
+        ) { Text(filterLabel, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        SegmentedButton(
+            selected = following == Following.ALL,
+            onClick = { onFollow(Following.ALL) },
+            shape = SegmentedButtonDefaults.itemShape(1, 2),
+        ) { Text("All", maxLines = 1) }
     }
 }
 
 @OptIn(FlowPreview::class)
 @Composable
-private fun Body(reader: ReaderState, viewModel: ReaderViewModel, modifier: Modifier) {
+private fun Body(reader: ReaderState, viewModel: ReaderViewModel) {
     val (startItem, startOffset) = listPosition(reader.startBlock, reader.startOffset)
     val listState = rememberLazyListState(startItem, startOffset)
     fun save() {
         val (block, offset) = savedPosition(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
-        viewModel.savePosition(block, offset)
+        viewModel.savePosition(reader.entry.id, block, offset)
     }
-    // Save while reading (debounced), when the app goes to the background, and once more on leaving,
+    // Save while reading (debounced), when the app goes to the background, and once more on leaving the page,
     // so a killed app still resumes where the reader was.
     LaunchedEffect(reader.entry.id) {
         snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
@@ -103,7 +175,7 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, modifier: Modi
     DisposableEffect(reader.entry.id) {
         onDispose { save() }
     }
-    LazyColumn(modifier.fillMaxSize().padding(horizontal = 20.dp), state = listState) {
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 20.dp), state = listState) {
         item { Header(reader) }
         itemsIndexed(reader.entry.body) { _, block -> BlockText(block) }
     }
