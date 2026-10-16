@@ -141,23 +141,15 @@ private fun Timeline(
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
-    // Item index of each row: one header item per day, then its rows.
-    val firstUnreadIndex = remember(state.firstUnreadId, state.days) {
-        var index = 0
-        var found = -1
-        for (day in state.days) {
-            index++
-            for (row in day.rows) {
-                if (row.id == state.firstUnreadId) found = index
-                index++
-            }
+    // Opens at the first unread entry, and again whenever the filter changes (the old position means nothing in
+    // the new list); otherwise the list stays where the reader left it.
+    var anchoredFor by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(state.filter) {
+        val key = state.filter.summary
+        if (anchoredFor != key) {
+            listState.scrollToItem(openingItem(state))
+            anchoredFor = key
         }
-        found
-    }
-    var scrolled by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(firstUnreadIndex) {
-        if (!scrolled && firstUnreadIndex > 0) listState.scrollToItem((firstUnreadIndex - 1).coerceAtLeast(0))
-        scrolled = true
     }
 
     // The season card and the ahead banner stay pinned above the list: the list opens scrolled to the first
