@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.ui.focusRings
 import com.jensen.draculanightbynight.ui.notSpoken
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -108,6 +109,7 @@ fun TimelineScreen(
                 )
                 if (confirmingSkip) {
                     AlertDialog(
+                        modifier = Modifier.focusRings(),
                         onDismissRequest = { confirmingSkip = false },
                         title = { Text("Read it now?") },
                         text = { Text("The next entry arrives early, and later ones keep the same head start. Back to real time undoes it.") },

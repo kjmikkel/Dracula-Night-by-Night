@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.ui.focusRings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -37,7 +38,11 @@ fun FilterSheet(
     onDismiss: () -> Unit,
 ) {
     // Opens fully: at large text a half-open sheet would hide the last chips and Clear all.
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        modifier = Modifier.focusRings(),
+    ) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 24.dp)) {
             Heading("Voices")
             Chips(Voice.entries, { it.label }, filter.voices, onToggleVoice)
