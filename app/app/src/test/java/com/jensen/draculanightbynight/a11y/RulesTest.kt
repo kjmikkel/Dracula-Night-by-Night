@@ -12,6 +12,10 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.platform.ViewConfiguration
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
@@ -67,7 +71,16 @@ class RulesTest {
     // target
 
     @Test fun targetFiresBelow48dp() {
-        assertEquals(listOf(Finding("target", "x")), findings { Box(Modifier.size(40.dp).clickable(role = Role.Button) {}.semantics { contentDescription = "x" }) }.rule("target"))
+        // Compose widens every control's touch area to the minimum touch size; the rule guards against losing that.
+        val found = findings {
+            val small = object : ViewConfiguration by LocalViewConfiguration.current {
+                override val minimumTouchTargetSize = DpSize(0.dp, 0.dp)
+            }
+            CompositionLocalProvider(LocalViewConfiguration provides small) {
+                Box(Modifier.size(40.dp).clickable(role = Role.Button) {}.semantics { contentDescription = "x" })
+            }
+        }
+        assertEquals(listOf(Finding("target", "x")), found.rule("target"))
     }
 
     @Test fun targetPassesAt48dp() {
