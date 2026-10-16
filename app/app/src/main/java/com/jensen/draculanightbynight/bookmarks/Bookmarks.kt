@@ -1,6 +1,8 @@
 package com.jensen.draculanightbynight.bookmarks
 
+import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.Story
+import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.domain.isReadable
@@ -36,4 +38,13 @@ fun bookmarks(story: Story, user: UserState, settings: ReadingSettings, now: Ins
         // Stable sort: rows that tie (no time stamp) keep story order.
         BookmarkSort.RECENT -> rows.sortedWith(compareByDescending<BookmarkRow> { it.bookmarkedAt != null }.thenByDescending { it.bookmarkedAt })
     }
+}
+
+/**
+ * What TalkBack says for a locked row: that it is locked and when it comes back, then which entry it is (a
+ * description replaces the row's own text, so it has to name the entry). Null for a readable row.
+ */
+fun lockedDescription(row: BookmarkRow): String? = row.arrivesAt?.let { at ->
+    "Locked, arrives again ${at.format(Dates.WEEKDAY_TIME)}. ${row.date.format(Dates.DAY)}, ${row.row.timeLabel}, " +
+        "${row.row.authorName}, ${typeLabel(row.row.type)}"
 }

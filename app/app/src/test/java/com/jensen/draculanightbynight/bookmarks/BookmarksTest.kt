@@ -62,4 +62,16 @@ class BookmarksTest {
     fun bookmarksOfEntriesNoLongerInTheStoryAreIgnored() {
         assertEquals(listOf("may03"), ids(marked("gone" to 1L, "may03" to 2L), BookmarkSort.STORY))
     }
+
+    @Test
+    fun aLockedBookmarkIsAnnouncedWithItsEntryAndWhenItArrives() {
+        val user = UserState(progress = mapOf("may05" to EntryProgress(bookmarked = true)))
+        val row = bookmarks(TestStory.small, user, tempo, Instant.parse("2026-10-15T12:00:00Z"), utc, BookmarkSort.STORY).single()
+        assertEquals("Locked, arrives again Friday 16 October, 10:00. 5 May, 10:00, Jonathan Harker, Journal", lockedDescription(row))
+    }
+
+    @Test
+    fun aReadableBookmarkNeedsNoLockedDescription() {
+        assertNull(lockedDescription(bookmarks(TestStory.small, marked("may03" to 1L), free, later, utc, BookmarkSort.STORY).single()))
+    }
 }
