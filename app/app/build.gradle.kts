@@ -1,7 +1,26 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+}
+
+/**
+ * The release signing key, from app/keystore.properties (git-ignored) or the DNBN_* environment variables.
+ * Null when neither is complete: the release build is then unsigned, which CI uses to check it builds.
+ */
+val releaseKey: Map<String, String>? = run {
+    val file = rootProject.file("keystore.properties")
+    val props = Properties().apply { if (file.exists()) file.inputStream().use(::load) }
+    val keys = mapOf(
+        "storeFile" to "DNBN_STORE_FILE",
+        "storePassword" to "DNBN_STORE_PASSWORD",
+        "keyAlias" to "DNBN_KEY_ALIAS",
+        "keyPassword" to "DNBN_KEY_PASSWORD",
+    )
+    val values = keys.mapValues { (prop, env) -> props.getProperty(prop) ?: System.getenv(env) }
+    if (values.values.all { !it.isNullOrBlank() }) values.mapValues { it.value!! } else null
 }
 
 android {
@@ -13,7 +32,35 @@ android {
         minSdk = 26
         targetSdk = 37
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "1.0.0"
+    }
+
+    signingConfigs {
+        releaseKey?.let { key ->
+            create("release") {
+                storeFile = file(key.getValue("storeFile"))
+                storePassword = key.getValue("storePassword")
+                keyAlias = key.getValue("keyAlias")
+                keyPassword = key.getValue("keyPassword")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (releaseKey != null) signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
+    // One bundle for every language: the app is English only and sets an English configuration for the date
+    // picker, which language splits would undermine (lint AppBundleLocaleChanges).
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     buildFeatures {

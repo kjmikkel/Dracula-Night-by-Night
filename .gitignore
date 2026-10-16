@@ -45,3 +45,8 @@ app/.kotlin/
 app/build/
 app/app/build/
 !app/gradle/wrapper/gradle-wrapper.jar
+
+# Release signing: never commit keys
+keystore.properties
+*.jks
+*.keystore
