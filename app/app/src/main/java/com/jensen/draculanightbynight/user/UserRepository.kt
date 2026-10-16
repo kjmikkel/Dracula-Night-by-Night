@@ -1,6 +1,7 @@
 package com.jensen.draculanightbynight.user
 
 import androidx.datastore.core.DataStore
+import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.domain.startedOver
@@ -56,8 +57,25 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { s -> s.updateProgress(id) { it.copy(blockIndex = blockIndex, blockOffset = blockOffset) } }
     }
 
+    /** Bookmarking stamps the time (for Recently bookmarked); removing clears it. */
     suspend fun toggleBookmark(id: String) {
-        store.updateData { s -> s.updateProgress(id) { it.copy(bookmarked = !it.bookmarked) } }
+        store.updateData { s ->
+            s.updateProgress(id) { if (it.bookmarked) it.copy(bookmarked = false, bookmarkedAtMillis = null) else it.copy(bookmarked = true, bookmarkedAtMillis = time.millis()) }
+        }
+    }
+
+    /** Undo of a removal: the bookmark comes back with the time it was first made. */
+    suspend fun restoreBookmark(id: String, atMillis: Long?) {
+        store.updateData { s -> s.updateProgress(id) { it.copy(bookmarked = true, bookmarkedAtMillis = atMillis) } }
+    }
+
+    /** The filter only changes what the timeline shows, so the notification baseline stays. */
+    suspend fun setFilter(filter: EntryFilter) {
+        store.updateData { it.withFilter(filter) }
+    }
+
+    suspend fun setBookmarkSort(sort: BookmarkSort) {
+        store.updateData { it.copy(bookmarkSort = sort) }
     }
 
     /** Start over: see [startedOver]. [tempoStart] is the Same tempo restart date (ignored in other modes). */

@@ -52,4 +52,10 @@ class StartOverTest {
         val state = reader(ReadingMode.Free).startedOver(removeBookmarks = false, today, tempoStart = today, nowMillis = 7)
         assertEquals(ReadingMode.Free, state.readingMode)
     }
+
+    @Test
+    fun keptBookmarksKeepWhenTheyWereMade() {
+        val s = UserState(progress = mapOf("may03" to EntryProgress(readAtMillis = 1, bookmarked = true, bookmarkedAtMillis = 42)))
+        assertEquals(EntryProgress(bookmarked = true, bookmarkedAtMillis = 42), s.startedOver(false, today, today, 99).progressOf("may03"))
+    }
 }
