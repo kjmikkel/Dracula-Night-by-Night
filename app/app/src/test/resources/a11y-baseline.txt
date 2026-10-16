@@ -6,20 +6,6 @@
 # The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
-# card-stops — #119
-timeline | DARK | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline | DARK_HC | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline | DARK_LARGE | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline | LIGHT | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline | LIGHT_HC | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline | LIGHT_LARGE | card-stops | tonight-card: 5 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | DARK | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | DARK_HC | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | DARK_LARGE | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | LIGHT | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | LIGHT_HC | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-timeline-tonight | LIGHT_LARGE | card-stops | tonight-card: 4 stops | #119 | Tonight card is more than three TalkBack stops
-
 # words — #120
 timeline | DARK | words | 14:45 → about | #120 | estimated time is not said as "about"
 timeline | DARK_HC | words | 14:45 → about | #120 | estimated time is not said as "about"
