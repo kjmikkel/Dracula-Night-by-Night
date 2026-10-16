@@ -101,3 +101,19 @@ fun buildTimeline(
         hiddenCount = unlocked.size - shown.size,
     )
 }
+
+/**
+ * The list item the timeline opens at: the item just above the first unread entry (its day's header when it is the
+ * day's first row), or the top when nothing is unread. The list has one header item per day, then its rows.
+ */
+fun openingItem(state: TimelineState): Int {
+    var index = 0
+    for (day in state.days) {
+        index++
+        for (row in day.rows) {
+            if (row.id == state.firstUnreadId) return index - 1
+            index++
+        }
+    }
+    return 0
+}

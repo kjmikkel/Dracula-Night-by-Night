@@ -123,4 +123,19 @@ class TimelineTest {
         assertEquals("Jonathan Harker", t.next?.authorName)
         assertFalse(t.finished)
     }
+
+    @Test
+    fun theListOpensAtTheDayOfTheFirstUnreadEntry() {
+        // Items: [3 May header, may03, 4 May header, may04, 5 May header, may05, 9 May header, may09]
+        val read = UserState(progress = mapOf("may03" to EntryProgress(readAtMillis = 1), "may04" to EntryProgress(readAtMillis = 1)))
+        assertEquals(4, openingItem(buildTimeline(TestStory.small, read, free, Instant.parse("2026-10-16T12:00:00Z"), utc)))
+    }
+
+    @Test
+    fun aFilteredListOpensAtItsFirstUnreadMatchOrTheTop() {
+        // Filtered to Mina: [9 May header, may09]
+        assertEquals(0, openingItem(buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)))
+        val allRead = UserState(progress = mapOf("may09" to EntryProgress(readAtMillis = 1)))
+        assertEquals(0, openingItem(buildTimeline(TestStory.small, allRead, free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)))
+    }
 }
