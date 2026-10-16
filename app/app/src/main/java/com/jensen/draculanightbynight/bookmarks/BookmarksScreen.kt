@@ -123,9 +123,9 @@ private fun BookmarkRowItem(row: BookmarkRow, showMade: Boolean, onOpen: () -> U
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
-            Modifier.weight(1f).clickable(onClick = onOpen).semantics(mergeDescendants = true) {
-                if (arrives != null) contentDescription = "Locked, arrives again $arrives"
-            },
+            Modifier.weight(1f)
+                .clickable(onClickLabel = if (arrives != null) "Read it now" else "Open", onClick = onOpen)
+                .semantics(mergeDescendants = true) { lockedDescription(row)?.let { contentDescription = it } },
         ) {
             Text("${row.date.format(Dates.DAY)}, ${r.timeLabel}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
             Text("${r.authorName} · ${typeLabel(r.type)}${r.place?.let { " · $it" } ?: ""}", style = MaterialTheme.typography.labelLarge)
