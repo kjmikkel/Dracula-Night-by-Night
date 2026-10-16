@@ -1,5 +1,7 @@
 package com.jensen.draculanightbynight.reader
 
+import com.jensen.draculanightbynight.ui.notSpoken
+import com.jensen.draculanightbynight.ui.BackButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,7 +77,7 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
     when (val state = ui) {
         is ReaderUi.Ready -> Pages(state, viewModel, onBack)
         else -> Scaffold(
-            topBar = { TopAppBar(title = {}, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } }) },
+            topBar = { TopAppBar(title = {}, navigationIcon = { BackButton(onBack) }) },
         ) { padding ->
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
                 if (state == ReaderUi.Locked) Text("This entry has not arrived yet.") else CircularProgressIndicator()
@@ -106,7 +108,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
         topBar = {
             TopAppBar(
                 title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } },
+                navigationIcon = { BackButton(onBack) },
                 actions = {
                     TextButton(onClick = viewModel::toggleBookmark) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark") }
                 },
@@ -123,7 +125,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                     onClick = { scope.launch { pagerState.animateScrollToPage(page - 1) } },
                     enabled = page > 0,
                     modifier = Modifier.semantics { contentDescription = order?.let { "Previous $it entry" } ?: "Previous entry in the story" },
-                ) { Text(if (compact) "‹" else "‹ Previous") }
+                ) { Text(if (compact) "‹" else "‹ Previous", Modifier.notSpoken()) }
                 Box(Modifier.weight(1f), Alignment.Center) {
                     ready.pager.filterLabel?.let { FollowSwitch(it, ready.pager.following, viewModel::follow) }
                 }
@@ -131,7 +133,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                     onClick = { scope.launch { pagerState.animateScrollToPage(page + 1) } },
                     enabled = page < ready.pager.pages.lastIndex,
                     modifier = Modifier.semantics { contentDescription = order?.let { "Next $it entry" } ?: "Next entry in the story" },
-                ) { Text(if (compact) "›" else "Next ›") }
+                ) { Text(if (compact) "›" else "Next ›", Modifier.notSpoken()) }
             }
         },
     ) { padding ->

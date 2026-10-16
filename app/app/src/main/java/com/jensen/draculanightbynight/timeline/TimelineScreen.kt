@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
+import com.jensen.draculanightbynight.ui.notSpoken
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -196,7 +197,7 @@ private fun TonightCardView(card: TonightCard, onOpen: (String) -> Unit) {
             Button(
                 onClick = { onOpen(card.entryId) },
                 modifier = Modifier.padding(top = 8.dp).semantics { contentDescription = "Read ${card.authorName}, ${typeLabel(card.type)}" },
-            ) { Text("Read") }
+            ) { Text("Read", Modifier.notSpoken()) }
         }
     }
 }

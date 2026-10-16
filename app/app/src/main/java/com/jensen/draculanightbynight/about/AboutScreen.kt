@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.about
 
+import com.jensen.draculanightbynight.ui.BackButton
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
@@ -44,7 +45,7 @@ fun AboutScreen(onBack: () -> Unit) {
         topBar = {
             TopAppBar(
                 title = { Text("About", Modifier.semantics { heading() }) },
-                navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } },
+                navigationIcon = { BackButton(onBack) },
             )
         },
     ) { padding ->
