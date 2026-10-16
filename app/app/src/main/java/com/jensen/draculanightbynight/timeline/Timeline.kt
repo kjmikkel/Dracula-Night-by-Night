@@ -4,8 +4,10 @@ import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.Arrivals
+import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.domain.SeasonPrompt
+import com.jensen.draculanightbynight.domain.readingOrder
 import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Duration
@@ -43,12 +45,27 @@ data class TimelineState(
     val finished: Boolean = false,
     /** The new-season card shows at the top. */
     val seasonPromptDue: Boolean = false,
+    /** The saved filter; it narrows [days] only. */
+    val filter: EntryFilter = EntryFilter(),
+    /** Readable entries the filter hides. */
+    val hiddenCount: Int = 0,
 )
 
-/** What the timeline shows at [now]: readable entries grouped by in-story day, plus the next one to unlock. */
-fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId): TimelineState {
+/**
+ * What the timeline shows at [now]: readable entries matching [filter], grouped by in-story day, plus the next one
+ * to unlock. Everything but the list (Next card, end, skip ahead, season card) uses the whole story.
+ */
+fun buildTimeline(
+    story: Story,
+    user: UserState,
+    settings: ReadingSettings,
+    now: Instant,
+    zone: ZoneId,
+    filter: EntryFilter = EntryFilter(),
+): TimelineState {
     val (unlocked, locked) = story.entries.partition { isReadable(it, settings, user, now, zone) }
-    val rows = unlocked.map { e ->
+    val shown = readingOrder(story, user, settings, now, zone, filter)
+    val rows = shown.map { e ->
         val progress = user.progressOf(e.id)
         e.date to TimelineRow(
             id = e.id,
@@ -76,5 +93,7 @@ fun buildTimeline(story: Story, user: UserState, settings: ReadingSettings, now:
         skipAhead = settings.skipAhead,
         finished = next == null,
         seasonPromptDue = SeasonPrompt.isDue(user, now.atZone(zone).toLocalDate()),
+        filter = filter,
+        hiddenCount = unlocked.size - shown.size,
     )
 }
