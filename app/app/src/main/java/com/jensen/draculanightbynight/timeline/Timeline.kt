@@ -50,6 +50,8 @@ data class TimelineState(
     val filter: EntryFilter = EntryFilter(),
     /** Readable entries the filter hides. */
     val hiddenCount: Int = 0,
+    /** The card that leads straight into what has arrived; null when nothing unread is waiting. */
+    val tonight: TonightCard? = null,
 )
 
 /** One entry as a list row; the timeline and the bookmarks list build rows the same way. */
@@ -99,6 +101,7 @@ fun buildTimeline(
         seasonPromptDue = SeasonPrompt.isDue(user, now.atZone(zone).toLocalDate()),
         filter = filter,
         hiddenCount = unlocked.size - shown.size,
+        tonight = tonightCard(story, user, settings, now, zone, filter),
     )
 }
 
