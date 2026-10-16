@@ -3,7 +3,9 @@ package com.jensen.draculanightbynight.timeline
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jensen.draculanightbynight.AppContainer
+import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.domain.EntryFilter
+import com.jensen.draculanightbynight.domain.Voice
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.SkipAhead
 import kotlinx.coroutines.flow.SharingStarted
@@ -62,6 +64,14 @@ class TimelineViewModel(private val app: AppContainer) : ViewModel() {
     }
 
     fun clearFilter() = setFilter(EntryFilter())
+
+    fun toggleVoice(voice: Voice) {
+        viewModelScope.launch { app.users.toggleFilterVoice(voice) }
+    }
+
+    fun toggleType(type: DocumentType) {
+        viewModelScope.launch { app.users.toggleFilterType(type) }
+    }
 
     /** "Not now" on the new-season card. */
     fun dismissSeasonPrompt() {

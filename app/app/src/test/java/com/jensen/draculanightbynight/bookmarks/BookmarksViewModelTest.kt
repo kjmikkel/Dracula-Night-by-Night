@@ -73,7 +73,7 @@ class BookmarksViewModelTest {
         val may03 = (vm.state.first { it is BookmarksUi.Ready } as BookmarksUi.Ready).rows.last()
         vm.remove(may03)
         assertEquals(listOf("may05"), vm.rows { it.rows.size == 1 })
-        vm.undo()
+        vm.undo(may03)
         assertEquals(listOf("may05", "may03"), vm.rows { it.rows.size == 2 })
         assertEquals(5L, users.state.first().progressOf("may03").bookmarkedAtMillis)
     }
@@ -100,5 +100,22 @@ class BookmarksViewModelTest {
         val vm = viewModel(users)
         vm.setSort(BookmarkSort.RECENT)
         assertEquals(BookmarkSort.RECENT, users.state.first { it.bookmarkSort == BookmarkSort.RECENT }.bookmarkSort)
+    }
+
+    @Test
+    fun eachUndoRestoresItsOwnRow() = runTest {
+        val users = users()
+        users.setMode(ReadingMode.Free)
+        users.restoreBookmark("may03", 5)
+        users.restoreBookmark("may05", 9)
+        val vm = viewModel(users)
+        val rows = (vm.state.first { it is BookmarksUi.Ready } as BookmarksUi.Ready).rows
+        vm.remove(rows.first { it.row.id == "may03" })
+        vm.remove(rows.first { it.row.id == "may05" })
+        vm.rows { it.rows.isEmpty() }
+        vm.undo(rows.first { it.row.id == "may03" })
+        assertEquals(listOf("may03"), vm.rows { it.rows.size == 1 })
+        assertEquals(5L, users.state.first().progressOf("may03").bookmarkedAtMillis)
+        assertEquals(false, users.state.first().progressOf("may05").bookmarked)
     }
 }

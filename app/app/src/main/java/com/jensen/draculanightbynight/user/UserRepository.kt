@@ -1,7 +1,9 @@
 package com.jensen.draculanightbynight.user
 
 import androidx.datastore.core.DataStore
+import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.domain.EntryFilter
+import com.jensen.draculanightbynight.domain.Voice
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.domain.startedOver
@@ -43,9 +45,9 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { s -> if (on) s.copy(notify = true, lastNotifiedAt = time.millis()) else s.copy(notify = false) }
     }
 
-    /** After a notification run: entries up to [atMillis] have been announced. */
+    /** After a notification run: entries up to [atMillis] have been announced. The baseline never moves back. */
     suspend fun markNotified(atMillis: Long) {
-        store.updateData { it.copy(lastNotifiedAt = atMillis) }
+        store.updateData { it.copy(lastNotifiedAt = maxOf(it.lastNotifiedAt ?: atMillis, atMillis)) }
     }
 
     /** Records the first time an entry was opened; reopening keeps the original time. */
@@ -62,6 +64,20 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { s ->
             s.updateProgress(id) { if (it.bookmarked) it.copy(bookmarked = false, bookmarkedAtMillis = null) else it.copy(bookmarked = true, bookmarkedAtMillis = time.millis()) }
         }
+    }
+
+    /** Removes a bookmark; removing one that is already gone changes nothing (a double tap). */
+    suspend fun removeBookmark(id: String) {
+        store.updateData { s -> s.updateProgress(id) { it.copy(bookmarked = false, bookmarkedAtMillis = null) } }
+    }
+
+    /** A voice chip: applied to the saved filter itself, so quick taps never work from a stale copy. */
+    suspend fun toggleFilterVoice(voice: Voice) {
+        store.updateData { s -> s.filter.let { f -> s.withFilter(f.copy(voices = if (voice in f.voices) f.voices - voice else f.voices + voice)) } }
+    }
+
+    suspend fun toggleFilterType(type: DocumentType) {
+        store.updateData { s -> s.filter.let { f -> s.withFilter(f.copy(types = if (type in f.types) f.types - type else f.types + type)) } }
     }
 
     /** Undo of a removal: the bookmark comes back with the time it was first made. */

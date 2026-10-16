@@ -1,5 +1,6 @@
 package com.jensen.draculanightbynight.bookmarks
 
+import java.time.ZoneId
 import com.jensen.draculanightbynight.TestStory
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.ReadingSettings
@@ -73,5 +74,13 @@ class BookmarksTest {
     @Test
     fun aReadableBookmarkNeedsNoLockedDescription() {
         assertNull(lockedDescription(bookmarks(TestStory.small, marked("may03" to 1L), free, later, utc, BookmarkSort.STORY).single()))
+    }
+
+    @Test
+    fun theBookmarkDayIsInTheReadersZone() {
+        val user = UserState(progress = mapOf("may03" to EntryProgress(readAtMillis = 1, bookmarked = true,
+            bookmarkedAtMillis = Instant.parse("2026-10-14T23:30:00Z").toEpochMilli())))
+        val row = bookmarks(TestStory.small, user, free, later, ZoneId.of("Asia/Tokyo"), BookmarkSort.STORY).single()
+        assertEquals(LocalDate.of(2026, 10, 15), row.bookmarkedOn)
     }
 }
