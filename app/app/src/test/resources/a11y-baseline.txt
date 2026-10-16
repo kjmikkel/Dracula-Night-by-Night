@@ -6,14 +6,6 @@
 # The ratchet (a11y/RatchetTest) fails on any violation that isn't listed here, and on any line here that no
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
-# words — #120
-timeline | DARK | words | 14:45 → about | #120 | estimated time is not said as "about"
-timeline | DARK_HC | words | 14:45 → about | #120 | estimated time is not said as "about"
-timeline | DARK_LARGE | words | 14:45 → about | #120 | estimated time is not said as "about"
-timeline | LIGHT | words | 14:45 → about | #120 | estimated time is not said as "about"
-timeline | LIGHT_HC | words | 14:45 → about | #120 | estimated time is not said as "about"
-timeline | LIGHT_LARGE | words | 14:45 → about | #120 | estimated time is not said as "about"
-
 # group — #121
 settings | DARK | group | Serif/Sans-serif/Atkinson Hyperlegible/OpenDyslexic | #121 | options are not one selectable group
 settings | DARK | group | Small/Normal/Large/Extra large | #121 | options are not one selectable group
