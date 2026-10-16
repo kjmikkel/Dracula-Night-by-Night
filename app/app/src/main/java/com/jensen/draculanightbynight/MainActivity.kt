@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.jensen.draculanightbynight.about.AboutScreen
 import com.jensen.draculanightbynight.bookmarks.BookmarksScreen
 import com.jensen.draculanightbynight.bookmarks.BookmarksViewModel
 import com.jensen.draculanightbynight.notify.Notifications
@@ -108,7 +109,14 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
             )
         }
         composable("settings") { entry ->
-            SettingsScreen(viewModel { SettingsViewModel(app) }, onBack = { if (entry.isResumed()) nav.popBackStack() })
+            SettingsScreen(
+                viewModel { SettingsViewModel(app) },
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+                onAbout = { if (entry.isResumed()) nav.navigate("about") { launchSingleTop = true } },
+            )
+        }
+        composable("about") { entry ->
+            AboutScreen(onBack = { if (entry.isResumed()) nav.popBackStack() })
         }
         composable(
             "reader/{id}?filtered={filtered}",
