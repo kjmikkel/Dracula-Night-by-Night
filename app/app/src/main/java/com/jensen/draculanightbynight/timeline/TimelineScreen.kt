@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
@@ -185,7 +186,8 @@ private const val SHORT_WINDOW_DP = 480
 
 @Composable
 private fun TonightCardView(card: TonightCard, onOpen: (String) -> Unit) {
-    Card(Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
+    // The tag lets the accessibility ratchet count the card's TalkBack stops.
+    Card(Modifier.testTag("tonight-card").fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 4.dp)) {
         Column(Modifier.padding(16.dp)) {
             Text(card.heading, Modifier.semantics { heading() }, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
             if (card.waiting > 1) Text("${card.waiting} entries waiting", style = MaterialTheme.typography.bodyMedium)

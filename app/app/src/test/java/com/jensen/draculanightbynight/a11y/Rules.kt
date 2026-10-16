@@ -1,5 +1,8 @@
 package com.jensen.draculanightbynight.a11y
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsNode
 import androidx.compose.ui.semantics.SemanticsProperties
@@ -33,22 +36,24 @@ private const val MAX_CARD_STOPS = 3
  */
 fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectations, density: Density): List<Finding> {
     val nodes = merged.descendants()
+    val window = Rect(Offset.Zero, Size(merged.size.width.toFloat(), merged.size.height.toFloat()))
     val own = (listOf(unmerged) + unmerged.descendants()).associateBy { it.id }
     val clickables = nodes.filter { it.isClickable() }
     val minTarget = with(density) { 48.dp.toPx() } - 0.5f
     return buildList {
         for (n in clickables) {
             if (n.label().isBlank()) add(Finding("label", "unlabelled in ${n.ancestors().firstOrNull { it.label().isNotBlank() }?.name() ?: "screen"}"))
-            if (n.role() == null && n.ancestors().none { it.config.contains(SemanticsProperties.CollectionInfo) }) add(Finding("role", n.name()))
-            // The visible size, as ATF and the spike measured it: Compose widens a small control's touch area, but not
-            // what a screen reader outlines or what a sighted user aims at.
-            if (n.boundsInRoot.width < minTarget || n.boundsInRoot.height < minTarget) add(Finding("target", n.name()))
+            if (n.role() == null && n.ancestors().none { it.config.contains(SemanticsProperties.CollectionInfo) }) add(Finding("role", n.name(own)))
+            // The touch area, which Compose also reports to TalkBack: Material widens a 40 dp button's to 48 dp.
+            // Only nodes fully in view: a row half scrolled out of a list has a cut-off touch area, not a small one.
+            val whole = n.boundsInRoot.width >= n.size.width - 1f && n.boundsInRoot.height >= n.size.height - 1f
+            if (whole && (n.touchBoundsInRoot.width < minTarget || n.touchBoundsInRoot.height < minTarget)) add(Finding("target", n.name(own)))
             val ownDescription = own[n.id]?.descriptions().orEmpty()
-            if (ownDescription.isNotEmpty() && n.texts().isNotEmpty()) add(Finding("double-label", n.name()))
-            if (n.descriptions().any { "button" in it.lowercase() }) add(Finding("redundant-description", n.name()))
+            if (ownDescription.isNotEmpty() && n.texts().isNotEmpty()) add(Finding("double-label", n.name(own)))
+            if (n.descriptions().any { "button" in it.lowercase() }) add(Finding("redundant-description", n.name(own)))
         }
         clickables.groupBy { it.boundsInRoot }.filterKeys { it.width > 0 && it.height > 0 }.values
-            .filter { it.size > 1 }.forEach { same -> same.drop(1).forEach { add(Finding("duplicate-bounds", it.name())) } }
+            .filter { it.size > 1 }.forEach { same -> same.drop(1).forEach { add(Finding("duplicate-bounds", it.name(own))) } }
 
         for (h in expect.headings) {
             if (nodes.none { it.texts().joinToString(" ").trim() == h && it.config.contains(SemanticsProperties.Heading) }) add(Finding("headings", h))
@@ -69,10 +74,10 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
             if (found.none { word.lowercase() in it.label().lowercase() }) add(Finding("words", "$fragment → $word"))
         }
         for (n in nodes) {
-            if (n.label().isNotBlank() && n.isClippedAcrossItsScroll()) add(Finding("clipped", n.name()))
+            if (n.label().isNotBlank() && n.isClippedAcrossItsScroll(window)) add(Finding("clipped", n.name(own)))
         }
         for (n in own.values) {
-            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name()))
+            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name(own)))
         }
         expect.cardTag?.let { tag ->
             val card = nodes.firstOrNull { it.config.getOrNull(SemanticsProperties.TestTag) == tag }
@@ -84,17 +89,22 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
 
 /**
  * Cut off along an axis nothing lets the reader scroll: by its parent, or by the edge of the window. Being scrolled
- * out of a list's view is not clipping.
+ * out of a list's view is not clipping; a star pushed past the right edge of a vertical list is.
  */
-private fun SemanticsNode.isClippedAcrossItsScroll(): Boolean {
+private fun SemanticsNode.isClippedAcrossItsScroll(window: Rect): Boolean {
     val scroller = ancestors().firstOrNull {
         it.config.contains(SemanticsProperties.VerticalScrollAxisRange) || it.config.contains(SemanticsProperties.HorizontalScrollAxisRange)
     }
     val scrollsVertically = scroller?.config?.contains(SemanticsProperties.VerticalScrollAxisRange) == true
     val scrollsHorizontally = scroller?.config?.contains(SemanticsProperties.HorizontalScrollAxisRange) == true
+    val whole = Rect(positionInRoot, Size(size.width.toFloat(), size.height.toFloat()))
+    // Squeezed to nothing by its neighbours: there, but not shown at all.
+    if (size.width == 0 || size.height == 0) return true
     val shown = boundsInRoot
-    val cutWidth = size.width - shown.width > 1f
-    val cutHeight = size.height - shown.height > 1f
+    // Judged per axis: the visible part against the whole, and the whole against the window (a wholly hidden
+    // node's visible part is empty in both directions, so that alone says nothing about which way it went).
+    val cutWidth = (!shown.isEmpty && whole.width - shown.width > 1f) || whole.left < window.left - 1f || whole.right > window.right + 1f
+    val cutHeight = (!shown.isEmpty && whole.height - shown.height > 1f) || whole.top < window.top - 1f || whole.bottom > window.bottom + 1f
     return (cutWidth && !scrollsHorizontally) || (cutHeight && !scrollsVertically)
 }
 
@@ -127,5 +137,10 @@ private fun SemanticsNode.descriptions(): List<String> = config.getOrNull(Semant
 /** What TalkBack would read: descriptions, then texts. */
 private fun SemanticsNode.label(): String = (descriptions() + texts()).joinToString(" ")
 
-/** A short, stable name: the node's own description, else its text. */
-private fun SemanticsNode.name(): String = (descriptions().firstOrNull() ?: texts().firstOrNull() ?: role()?.toString() ?: "?").take(40)
+/**
+ * A short, stable name: the node's own description (from [own], the unmerged tree), else its first two texts, so
+ * rows aren't all called by a child's "Unread".
+ */
+private fun SemanticsNode.name(own: Map<Int, SemanticsNode> = emptyMap()): String =
+    ((own[id] ?: this).descriptions().firstOrNull() ?: texts().take(2).joinToString(" ").ifEmpty { null }
+        ?: descriptions().firstOrNull() ?: role()?.toString() ?: "?").take(40)

@@ -89,18 +89,40 @@ help?
   says it wasn't confirmed.
 - **Landscape at 200 %:** only seen in passing. The known card position is #108.
 
-## Ratchet tests (next step)
+## The ratchet
 
-#37 also asks for ratchet tests, so that what a machine can check never quietly regresses. The app has no Compose UI
-tests yet, so this needs Robolectric, `ui-test-junit4` and the Accessibility Test Framework. It gets its own spec and
-plan.
+What a machine can check now runs on every PR, inside `app-tests`, as the accessibility ratchet (#37,
+`app/app/src/test/java/com/jensen/draculanightbynight/a11y/`). Spec:
+`docs/superpowers/specs/2026-10-16-accessibility-ratchet-design.md`.
 
-From this spike, the mechanical checks would be:
-- **Headings:** the heading nodes on each screen (finding 3).
-- **Labels:** no clickable whose description repeats its own text (finding 4).
-- **State:** the bookmark exposes a toggle state (finding 5), and radio groups are a selectable group (finding 9).
-- **Large text:** no clipped text or icons at font scale 2.0 with Extra large text (finding 6).
-- **Spoken text:** "about" in the label of an estimated row (finding 8).
-- **Already passing:** labels on every clickable and 48 dp targets, held so they stay that way.
+**What it checks:**
+- **Every screen, sheet and dialog** (`Cases.kt`), in six looks:
+  - light, dark and both high-contrast palettes;
+  - light and dark at font size 200 % with Extra large text, on the largest display size.
+  - The reader also runs in each reading font.
+- **Rules** (`Rules.kt`):
+  - per node: labels, roles, touch targets, labels read twice, labels that say "button", controls stacked on top of
+    each other, and text or icons cut off;
+  - per screen: the headings, toggles, option groups and spoken words it should have, and the Tonight card's
+    TalkBack stops.
+- **Every scroll position:** each case scrolls every list to its end, so rows below the fold are checked too.
 
-Findings 1 and 2 (focus visibility and keyboard scrolling) and 11 (the font) stay manual checks in this report.
+**Not checked:** Google's Accessibility Test Framework can't see Compose's nodes under Robolectric, so it isn't
+used; the rules cover its checks instead. Text contrast stays in `PaletteTest`. Focus visibility (#113), the
+OpenDyslexic spacing (#123) and TalkBack's own wording stay manual checks.
+
+**The baseline:** `app/app/src/test/resources/a11y-baseline.txt` lists every known violation:
+
+```
+screen | look | rule | node | #issue | reason
+```
+
+**When the ratchet fails:**
+- **"New accessibility violations"** lists lines in that format, with `#???` and `reason?` to fill in. Fix the
+  problem, or, if it's known and accepted for now, add the line with an issue link and a reason.
+- **"Fixed — remove these lines"** means something got better: delete the listed lines.
+- A screen added to the app without a case, or a baseline line for a case or look that no longer runs, also fails.
+
+The test output prints `Accessibility baseline: N known violations`, so every PR shows the number going down.
+
+Run it locally with `./gradlew :app:testDebugUnitTest --tests "*a11y*"` from `app/`.
