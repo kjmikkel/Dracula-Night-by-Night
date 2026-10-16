@@ -46,12 +46,20 @@ help?
 | 8 | Estimated times are shown only by italics; TalkBack doesn't say "about" | Low | #120 |
 | 9 | Radio groups aren't grouped ("1 of 4" missing) | Low | #121 |
 | 10 | Start over's checkbox doesn't say "not checked" when off | Low (check on a phone) | #122 |
-| 11 | OpenDyslexic shows very wide letter spacing | To check | #123 |
+| 11 | OpenDyslexic shows very wide letter spacing | None: as designed (see below) | #123 |
 
 **Impact** describes what a reader meets:
 - **High:** blocks reading, or makes moving through the app much slower.
 - **Medium:** costs time or hides information.
 - **Low:** an annoyance.
+
+**OpenDyslexic's spacing (#123):** the bundled font (0.990, built with Glyphs 3.3.1) is spaced this way on
+purpose. Measured from `res/font/opendyslexic_regular.otf` with fontTools: every lowercase letter has the same
+gap, 306 units per 1000 (153 on each side), around ink 500–860 units wide; ink fills 64 % of each advance against
+82 % for Atkinson Hyperlegible. An even gap on every letter is deliberate tracking, not a broken build, which would
+show uneven gaps or a scale mismatch. Wide spacing is one of the font's design aims, and extra letter spacing has
+been found to help dyslexic readers (Zorzi et al., 2012), so the app keeps it and adds no spacing of its own.
+Whether it reads well for the people it is meant for is still worth asking a dyslexic reader.
 
 ## What already works
 
@@ -110,7 +118,7 @@ What a machine can check now runs on every PR, inside `app-tests`, as the access
 **Not checked:** Google's Accessibility Test Framework can't see Compose's nodes under Robolectric, so it isn't
 used; the rules cover its checks instead. Text contrast stays in `PaletteTest`. Focus visibility (#113), keyboard
 scrolling in the reader (#114: Robolectric can't deliver keyboard focus and keys the way a phone does, so a test
-couldn't see a fix), the OpenDyslexic spacing (#123) and TalkBack's own wording stay manual checks.
+couldn't see a fix), how OpenDyslexic reads for dyslexic readers (#123) and TalkBack's own wording stay manual checks.
 
 **The baseline:** `app/app/src/test/resources/a11y-baseline.txt` lists every known violation:
 
