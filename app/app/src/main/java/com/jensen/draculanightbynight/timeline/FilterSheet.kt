@@ -29,15 +29,21 @@ import com.jensen.draculanightbynight.domain.typeChipLabel
 /** The timeline filter: voice and document chips that apply at once, wrapping onto as many lines as they need. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterSheet(filter: EntryFilter, onChange: (EntryFilter) -> Unit, onDismiss: () -> Unit) {
+fun FilterSheet(
+    filter: EntryFilter,
+    onToggleVoice: (Voice) -> Unit,
+    onToggleType: (DocumentType) -> Unit,
+    onClear: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     // Opens fully: at large text a half-open sheet would hide the last chips and Clear all.
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)) {
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 24.dp)) {
             Heading("Voices")
-            Chips(Voice.entries, { it.label }, filter.voices) { onChange(filter.copy(voices = it)) }
+            Chips(Voice.entries, { it.label }, filter.voices, onToggleVoice)
             Heading("Documents")
-            Chips(DocumentType.entries, ::typeChipLabel, filter.types) { onChange(filter.copy(types = it)) }
-            TextButton(onClick = { onChange(EntryFilter()) }, enabled = filter.isActive, modifier = Modifier.align(Alignment.End)) {
+            Chips(DocumentType.entries, ::typeChipLabel, filter.types, onToggleType)
+            TextButton(onClick = onClear, enabled = filter.isActive, modifier = Modifier.align(Alignment.End)) {
                 Text("Clear all")
             }
         }
@@ -56,13 +62,13 @@ private fun Heading(text: String) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun <T> Chips(all: List<T>, label: (T) -> String, selected: Set<T>, onChange: (Set<T>) -> Unit) {
+private fun <T> Chips(all: List<T>, label: (T) -> String, selected: Set<T>, onToggle: (T) -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (choice in all) {
             val on = choice in selected
             FilterChip(
                 selected = on,
-                onClick = { onChange(if (on) selected - choice else selected + choice) },
+                onClick = { onToggle(choice) },
                 label = { Text(label(choice)) },
             )
         }

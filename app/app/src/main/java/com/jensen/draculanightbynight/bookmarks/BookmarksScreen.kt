@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +50,6 @@ import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.user.BookmarkSort
 import kotlinx.coroutines.launch
-import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +57,8 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
     val ui by viewModel.state.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    var confirming by remember { mutableStateOf<BookmarkRow?>(null) }
+    // The entry id, so the dialog survives rotation; the row itself is looked up in the current list.
+    var confirmingId by rememberSaveable { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Bookmarks") }, navigationIcon = { TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back") } })
@@ -80,12 +81,13 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
                         BookmarkRowItem(
                             row,
                             showMade = state.sort == BookmarkSort.RECENT,
-                            onOpen = { if (row.arrivesAt == null) onOpen(row.row.id) else confirming = row },
+                            onOpen = { if (row.arrivesAt == null) onOpen(row.row.id) else confirmingId = row.row.id },
                             onRemove = {
                                 viewModel.remove(row)
                                 scope.launch {
                                     snackbar.currentSnackbarData?.dismiss()
-                                    if (snackbar.showSnackbar("Bookmark removed", actionLabel = "Undo") == SnackbarResult.ActionPerformed) viewModel.undo()
+                                    val named = "Removed ${row.row.authorName}, ${row.date.format(Dates.DAY)}"
+                                    if (snackbar.showSnackbar(named, actionLabel = "Undo") == SnackbarResult.ActionPerformed) viewModel.undo(row)
                                 }
                             },
                             modifier = Modifier.animateItem(),
@@ -96,8 +98,9 @@ fun BookmarksScreen(viewModel: BookmarksViewModel, onBack: () -> Unit, onOpen: (
             }
         }
     }
-    confirming?.let { row -> ReadNowDialog(row, viewModel.skipCount(row) - 1, onDismiss = { confirming = null }) {
-        confirming = null
+    val confirming = confirmingId?.let { id -> (ui as? BookmarksUi.Ready)?.rows?.firstOrNull { it.row.id == id && it.arrivesAt != null } }
+    confirming?.let { row -> ReadNowDialog(row, viewModel.skipCount(row) - 1, onDismiss = { confirmingId = null }) {
+        confirmingId = null
         viewModel.readNow(row, onOpen)
     } }
 }
@@ -137,8 +140,8 @@ private fun BookmarkRowItem(row: BookmarkRow, showMade: Boolean, onOpen: () -> U
                 }
             }
             if (showMade) {
-                row.bookmarkedAt?.let {
-                    Text("Bookmarked ${it.atZone(ZoneId.systemDefault()).format(Dates.DAY)}", style = MaterialTheme.typography.bodySmall)
+                row.bookmarkedOn?.let {
+                    Text("Bookmarked ${it.format(Dates.SHORT_DAY)}", style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

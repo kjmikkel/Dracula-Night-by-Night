@@ -19,7 +19,14 @@ import java.time.ZonedDateTime
  * A bookmarked entry. [arrivesAt] is null when it can be read now; otherwise (after Start over, which keeps
  * bookmarks but clears read state) it is when the schedule brings it back.
  */
-data class BookmarkRow(val row: TimelineRow, val date: LocalDate, val bookmarkedAt: Instant?, val arrivesAt: ZonedDateTime?)
+data class BookmarkRow(
+    val row: TimelineRow,
+    val date: LocalDate,
+    val bookmarkedAt: Instant?,
+    val arrivesAt: ZonedDateTime?,
+    /** The reader's own day the bookmark was made, in their zone. */
+    val bookmarkedOn: LocalDate? = null,
+)
 
 /** Every bookmarked entry still in the story, in story order or newest bookmark first (undated ones last). */
 fun bookmarks(story: Story, user: UserState, settings: ReadingSettings, now: Instant, zone: ZoneId, sort: BookmarkSort): List<BookmarkRow> {
@@ -31,6 +38,7 @@ fun bookmarks(story: Story, user: UserState, settings: ReadingSettings, now: Ins
                 date = entry.date,
                 bookmarkedAt = user.progressOf(entry.id).bookmarkedAtMillis?.let(Instant::ofEpochMilli),
                 arrivesAt = if (isReadable(entry, settings, user, now, zone)) null else Arrivals.arrivesAt(entry, settings, zone)?.atZone(zone),
+                bookmarkedOn = user.progressOf(entry.id).bookmarkedAtMillis?.let { Instant.ofEpochMilli(it).atZone(zone).toLocalDate() },
             )
         }
     return when (sort) {

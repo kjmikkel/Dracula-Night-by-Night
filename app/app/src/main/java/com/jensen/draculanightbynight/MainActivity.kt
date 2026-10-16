@@ -88,8 +88,10 @@ private fun AppNavigation(app: AppContainer, openRequests: MutableStateFlow<Stri
         }
     }
     NavHost(nav, startDestination = start) {
-        composable("welcome") {
-            WelcomeScreen(viewModel { WelcomeViewModel(app) }, onBegun = { nav.navigate("timeline") { popUpTo("welcome") { inclusive = true } } })
+        composable("welcome") { entry ->
+            WelcomeScreen(viewModel { WelcomeViewModel(app) }, onBegun = {
+                if (entry.isResumed()) nav.navigate("timeline") { popUpTo("welcome") { inclusive = true } }
+            })
         }
         // Taps on a screen that is still entering or already leaving (a double tap) are ignored,
         // so a row cannot open two readers and Back cannot pop the timeline as well.

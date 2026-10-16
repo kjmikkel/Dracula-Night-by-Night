@@ -40,21 +40,17 @@ class BookmarksViewModel(
         BookmarksUi.Ready(bookmarks(story, user, settings, now.toInstant(), now.zone, user.bookmarkSort), user.bookmarkSort)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), BookmarksUi.Loading)
 
-    private var removed: BookmarkRow? = null
-
     fun setSort(sort: BookmarkSort) {
         viewModelScope.launch { users.setBookmarkSort(sort) }
     }
 
-    /** Removes the bookmark at once; [undo] brings it back with the time it was made. */
+    /** Removes the bookmark at once (a second tap changes nothing); [undo] brings it back. */
     fun remove(row: BookmarkRow) {
-        removed = row
-        viewModelScope.launch { users.toggleBookmark(row.row.id) }
+        viewModelScope.launch { users.removeBookmark(row.row.id) }
     }
 
-    fun undo() {
-        val row = removed ?: return
-        removed = null
+    /** Undo for one removal: [row] comes back with the time it was first made. */
+    fun undo(row: BookmarkRow) {
         viewModelScope.launch { users.restoreBookmark(row.row.id, row.bookmarkedAt?.toEpochMilli()) }
     }
 

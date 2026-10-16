@@ -220,4 +220,31 @@ class UserRepositoryTest {
         repo.setFilter(EntryFilter(setOf(Voice.MINA)))
         assertEquals(baseline, repo.state.first().lastNotifiedAt)
     }
+
+    @Test
+    fun theBaselineNeverMovesBack() = runTest {
+        val repo = repository()
+        repo.markNotified(10_000)
+        repo.markNotified(5_000)
+        assertEquals(10_000L, repo.state.first().lastNotifiedAt)
+    }
+
+    @Test
+    fun removingABookmarkTwiceLeavesItRemoved() = runTest {
+        val repo = repository()
+        repo.toggleBookmark("may03")
+        repo.removeBookmark("may03")
+        repo.removeBookmark("may03")
+        assertEquals(EntryProgress(), repo.state.first().progressOf("may03"))
+    }
+
+    @Test
+    fun chipTogglesApplyToTheSavedFilter() = runTest {
+        val repo = repository()
+        repo.setFilter(EntryFilter(setOf(Voice.MINA)))
+        repo.toggleFilterType(DocumentType.LETTER)
+        assertEquals(EntryFilter(setOf(Voice.MINA), setOf(DocumentType.LETTER)), repo.state.first().filter)
+        repo.toggleFilterVoice(Voice.MINA)
+        assertEquals(EntryFilter(types = setOf(DocumentType.LETTER)), repo.state.first().filter)
+    }
 }

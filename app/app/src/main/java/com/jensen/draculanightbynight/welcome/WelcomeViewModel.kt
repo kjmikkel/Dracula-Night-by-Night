@@ -17,7 +17,12 @@ class WelcomeViewModel(private val app: AppContainer) : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), null)
 
     /** Begin: saves the choices, then [onDone] leaves the Welcome screen. */
+    private var beginning = false
+
     fun begin(mode: ReadingMode, notify: Boolean, onDone: () -> Unit) {
+        // A double tap on Begin starts once.
+        if (beginning) return
+        beginning = true
         viewModelScope.launch {
             app.users.completeOnboarding(mode, notify)
             onDone()

@@ -10,6 +10,7 @@ import com.jensen.draculanightbynight.domain.ShiftableClock
 import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.notify.Notifications
 import com.jensen.draculanightbynight.notify.Notifier
+import com.jensen.draculanightbynight.notify.scheduleKey
 import com.jensen.draculanightbynight.user.UserRepository
 import com.jensen.draculanightbynight.user.UserState
 import com.jensen.draculanightbynight.user.UserStateSerializer
@@ -63,7 +64,7 @@ class AppContainer(context: Context) {
         // positions do not count.
         scope.launch {
             users.state
-                .map { it.copy(progress = emptyMap()) to it.progress.filterValues { p -> p.readAtMillis != null }.keys }
+                .map(::scheduleKey)
                 .distinctUntilChanged()
                 .collect { notifier.reschedule() }
         }

@@ -117,7 +117,9 @@ fun TimelineScreen(
                         dismissButton = { TextButton(onClick = { confirmingSkip = false }) { Text("Cancel") } },
                     )
                 }
-                if (filtering) FilterSheet(state.timeline.filter, viewModel::setFilter) { filtering = false }
+                if (filtering) {
+                    FilterSheet(state.timeline.filter, viewModel::toggleVoice, viewModel::toggleType, viewModel::clearFilter) { filtering = false }
+                }
                 if (startingOver) {
                     StartOverDialog(
                         bookmarks = state.bookmarks,
