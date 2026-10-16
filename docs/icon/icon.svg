@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512">
+  <!-- Dracula Night by Night: a steel pen nib with a drop of blood. Same paths as res/drawable/ic_launcher_foreground.xml. -->
+  <rect width="108" height="108" fill="#F4ECDD"/>
+  <path fill="#2A1A16" fill-rule="evenodd" d="M54,24 L65,45 L54,69 L43,45 Z M51.6,45 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0 Z M53.4,47.4 L54.6,47.4 L54.6,67 L53.4,67 Z"/>
+  <path fill="#8E1B1B" d="M54,71 C51.5,75 50,77.5 50,79.8 A4,4 0 0,0 58,79.8 C58,77.5 56.5,75 54,71 Z"/>
+</svg>
