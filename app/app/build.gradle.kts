@@ -68,6 +68,13 @@ android {
         buildConfig = true
     }
 
+    // The accessibility ratchet renders real screens under Robolectric: it needs the app's resources and assets.
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     // The app's text is English; keep only English resources, so library dialogs (the date picker) match.
     androidResources {
         localeFilters += "en"
@@ -118,4 +125,8 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
