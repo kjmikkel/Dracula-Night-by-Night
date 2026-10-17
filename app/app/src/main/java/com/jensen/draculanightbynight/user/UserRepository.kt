@@ -120,4 +120,9 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
     suspend fun setHighContrast(on: Boolean) {
         store.updateData { it.copy(highContrast = on) }
     }
+
+    /** Whether the timeline is hidden beside an open entry (two panes only). */
+    suspend fun setTimelineHidden(hidden: Boolean) {
+        store.updateData { it.copy(timelineHidden = hidden) }
+    }
 }
