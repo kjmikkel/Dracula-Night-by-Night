@@ -76,6 +76,10 @@ def _story_divs(soup: BeautifulSoup) -> list[tuple[Tag, Tag | None]]:
     return out
 
 
+# The book's break between passages: lines of spaced dots and nothing else (#178).
+_DOTS = re.compile(r"[.\s]*\.[.\s]*")
+
+
 def _role(el: Tag, text: str) -> str:
     classes = set(el.get("class", []))
     if "letra" in classes:
@@ -84,6 +88,8 @@ def _role(el: Tag, text: str) -> str:
         return "note" if text.startswith("(") else "header"
     if "r" in classes:
         return "signoff"
+    if _DOTS.fullmatch(text):
+        return "divider"
     if "nind" in classes and len(text) < 60 and text.rstrip("”\" ").endswith((",—", ",", ":—")):
         return "salutation"
     return "para"
