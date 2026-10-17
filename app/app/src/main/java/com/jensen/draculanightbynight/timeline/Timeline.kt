@@ -120,3 +120,19 @@ fun openingItem(state: TimelineState): Int {
     }
     return 0
 }
+
+/**
+ * The list item of the row for [id], counted like [openingItem] (one header per day, then its rows, without the
+ * optional cards item); null when the list does not show it.
+ */
+fun rowItem(state: TimelineState, id: String): Int? {
+    var index = 0
+    for (day in state.days) {
+        index++
+        for (row in day.rows) {
+            if (row.id == id) return index
+            index++
+        }
+    }
+    return null
+}

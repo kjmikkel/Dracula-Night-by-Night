@@ -51,6 +51,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -71,6 +72,8 @@ fun TimelineScreen(
     onOpen: (id: String, filtered: Boolean) -> Unit,
     onBookmarks: () -> Unit,
     onSettings: () -> Unit,
+    /** The entry open in the other pane; its row is highlighted and kept in view. Null on a phone. */
+    selectedId: String? = null,
 ) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var startingOver by rememberSaveable { mutableStateOf(false) }
@@ -107,6 +110,7 @@ fun TimelineScreen(
                     onBackToRealTime = viewModel::backToRealTime,
                     onStartOver = { startingOver = true },
                     onNotNow = viewModel::dismissSeasonPrompt,
+                    selectedId = selectedId,
                     modifier = Modifier.padding(padding),
                 )
                 if (confirmingSkip) {
@@ -153,6 +157,7 @@ private fun Timeline(
     onStartOver: () -> Unit,
     onNotNow: () -> Unit,
     onClearFilter: () -> Unit,
+    selectedId: String?,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -180,6 +185,11 @@ private fun Timeline(
         if (cardsInList && !cardsWereInList) listState.scrollToItem(0)
         cardsWereInList = cardsInList
     }
+    // Keeps the open entry's row on screen as the reader moves between entries; runs after the opening position.
+    LaunchedEffect(selectedId) {
+        val item = selectedId?.let { rowItem(state, it) }?.let { if (cardsInList) it + 1 else it } ?: return@LaunchedEffect
+        if (listState.layoutInfo.visibleItemsInfo.none { it.index == item }) listState.animateScrollToItem(item)
+    }
     val cards: @Composable () -> Unit = {
         if (large) AppTitle(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         state.tonight?.let { TonightCardView(it, onOpen) }
@@ -193,7 +203,7 @@ private fun Timeline(
     // otherwise hide them exactly when they matter.
     Column(modifier.fillMaxSize()) {
         if (!cardsInList) cards()
-        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
+        TimelineList(state, listState, canSkip, selectedId, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
     }
 }
 
@@ -230,6 +240,7 @@ private fun TimelineList(
     state: TimelineState,
     listState: LazyListState,
     canSkip: Boolean,
+    selectedId: String?,
     onOpen: (String) -> Unit,
     onReadItNow: () -> Unit,
     onStartOver: () -> Unit,
@@ -258,7 +269,7 @@ private fun TimelineList(
                 )
             }
             items(day.rows, key = { it.id }) { row ->
-                EntryRow(row, onClick = { onOpen(row.id) })
+                EntryRow(row, selected = row.id == selectedId, onClick = { onOpen(row.id) })
                 HorizontalDivider()
             }
         }
@@ -267,9 +278,11 @@ private fun TimelineList(
 }
 
 @Composable
-private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
+private fun EntryRow(row: TimelineRow, selected: Boolean, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
+        Modifier.fillMaxWidth()
+            .then(if (selected) Modifier.background(MaterialTheme.colorScheme.secondaryContainer).semantics { this.selected = true } else Modifier)
+            .clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Column(Modifier.widthIn(min = 52.dp)) {
