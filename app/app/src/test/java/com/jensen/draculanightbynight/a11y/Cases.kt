@@ -187,6 +187,11 @@ val cases: List<Case> = listOf(
         expect = Expectations(headings = listOf(readerAuthors.getValue(type)), toggles = listOf("Bookmark")),
     ) { Reader(it, id) }
 } + listOf(
+    // A break inside the entry, drawn as the ornament (#178).
+    Case(
+        "reader-divider", setOf("ReaderScreen"), ready = "Next", seed = { free() },
+        expect = Expectations(headings = listOf("Mina Harker"), toggles = listOf("Bookmark")),
+    ) { Reader(it, "1893-10-31-mina_harker-02") },
     Case(
         "reader-filtered", setOf("ReaderScreen"), ready = "Next Mina entry",
         seed = { free(); users.setFilter(EntryFilter(voices = setOf(Voice.MINA))) },

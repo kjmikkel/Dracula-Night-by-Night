@@ -18496,7 +18496,7 @@
         ]
       },
       {
-        "role": "para",
+        "role": "divider",
         "spans": [
           {
             "italic": false,
@@ -19463,7 +19463,7 @@
         ]
       },
       {
-        "role": "para",
+        "role": "divider",
         "spans": [
           {
             "italic": false,
@@ -21385,7 +21385,7 @@
         ]
       },
       {
-        "role": "para",
+        "role": "divider",
         "spans": [
           {
             "italic": false,

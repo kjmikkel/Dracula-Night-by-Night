@@ -56,6 +56,13 @@ def test_roles_by_class():
     ]
 
 
+def test_a_line_of_dots_is_a_divider():
+    # The book marks a break with a centred block of spaced dots (#178); its text stays, so the book still matches.
+    inner = '<p>Before.</p>\n<p class="cb">\n. . . . .<br>\n. . . . .<br>\n</p>\n<p>After.</p>'
+    blocks = parse_book(page(chapter(1, inner, subtitle=None)))
+    assert roles_and_texts(blocks) == [("para", "Before."), ("divider", ". . . . .\n. . . . ."), ("para", "After.")]
+
+
 def test_multiline_signoff_keeps_line_breaks():
     inner = '<p class="r">\n“Your friend,<br>\n“<span class="smcap">Dracula</span>.”<br>\n</p>'
     [block] = parse_book(page(chapter(1, inner, subtitle=None)))

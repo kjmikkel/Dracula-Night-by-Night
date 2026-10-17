@@ -97,6 +97,16 @@ def test_no_entry_is_placed_in_a_document_kind(run):
     assert [e.id for e in run.entries if e.place in ("Telegram", "Letter")] == []
 
 
+def test_the_three_dot_breaks_are_dividers(run):
+    # Where each falls decides whether the reader shows it (#178): inside an entry, or at its end.
+    found = [(e.id, i, len(e.blocks)) for e in run.entries for i, b in enumerate(e.blocks) if b.role == "divider"]
+    assert found == [
+        ("1893-10-05-mina_harker-01", 11, 14),
+        ("1893-10-16-jonathan_harker-01", 1, 2),
+        ("1893-10-31-mina_harker-02", 1, 3),
+    ]
+
+
 def test_preface_comes_first(run):
     first = min(run.entries, key=lambda e: (e.date, e.time, e.order))
     assert first.text().startswith("How these papers have been placed in sequence")
