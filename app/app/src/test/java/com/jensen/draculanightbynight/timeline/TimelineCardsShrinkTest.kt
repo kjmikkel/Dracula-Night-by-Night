@@ -143,6 +143,8 @@ class TimelineCardsShrinkTest {
         show(restoration = restoration)
         scrollListTo(6)
         restoration.emulateSavedInstanceStateRestore()
+        // The restored screen has a new view model, which loads the story off the main thread: wait for the list again.
+        compose.waitUntil(30_000) { shows("timeline-list") }
         compose.waitForIdle()
         assertTrue("strip after restore", shows("tonight-strip"))
         assertTrue(compose.onAllNodes(hasTestTag("tonight-card")).fetchSemanticsNodes().isEmpty())
