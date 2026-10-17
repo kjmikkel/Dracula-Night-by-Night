@@ -1,5 +1,9 @@
 package com.jensen.draculanightbynight.timeline
 
+import kotlinx.coroutines.flow.drop
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.animation.animateContentSize
 import com.jensen.draculanightbynight.ui.largeText
 import com.jensen.draculanightbynight.ui.focusRings
 import com.jensen.draculanightbynight.ui.notSpoken
@@ -175,11 +179,15 @@ private fun Timeline(
     val large = largeText()
     val cardsInList = large || with(density) { LocalWindowInfo.current.containerSize.height.toDp() } / density.fontScale < SHORT_WINDOW_DP.dp
     var anchoredFor by rememberSaveable { mutableStateOf<String?>(null) }
+    // Pinned cards shrink to a line once the reader scrolls the list, and grow again back at its top (#180).
+    var cardsShrunk by rememberSaveable { mutableStateOf(false) }
+    val ownScroll = remember(listState) { OwnScroll(listState) }
     LaunchedEffect(state.filter) {
         val key = state.filter.summary
         if (anchoredFor != key) {
             // With the cards in the list it opens at the top, so they show; the Tonight card leads to the first unread.
-            listState.scrollToItem(if (cardsInList) 0 else openingItem(state))
+            ownScroll { scrollToItem(if (cardsInList) 0 else openingItem(state)) }
+            cardsShrunk = false
             anchoredFor = key
         }
     }
@@ -187,8 +195,27 @@ private fun Timeline(
     // just above the screen: scroll up so they show, as when the timeline opens in a short window.
     var cardsWereInList by rememberSaveable { mutableStateOf(cardsInList) }
     LaunchedEffect(cardsInList) {
-        if (cardsInList && !cardsWereInList) listState.scrollToItem(0)
+        if (cardsInList && !cardsWereInList) {
+            ownScroll { scrollToItem(0) }
+            cardsShrunk = false
+        }
         cardsWereInList = cardsInList
+    }
+    // Only the reader's own scrolling counts: positions are watched from after the opening anchor, the first one seen
+    // (the anchor's, or the one restored after rotation) is skipped, and so are the app's own scrolls.
+    LaunchedEffect(cardsInList, state.filter.summary) {
+        if (cardsInList) return@LaunchedEffect
+        val key = state.filter.summary
+        snapshotFlow { anchoredFor == key }.first { it }
+        // A list that fits once the cards shrink is pushed back to its top by that alone; growing them then would make it
+        // scroll again, and the cards would flicker between the two. So they only grow back while there's still more below.
+        snapshotFlow { Triple(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset, listState.canScrollForward) }
+            .drop(1)
+            .collect { (index, offset, more) ->
+                if (ownScroll.explains(index, offset)) return@collect
+                val atTop = index == 0 && offset == 0
+                if (!atTop) cardsShrunk = true else if (more) cardsShrunk = false
+            }
     }
     // Keeps the open entry's row on screen as the reader moves between entries; runs after the opening position.
     LaunchedEffect(selectedId) {
@@ -197,21 +224,24 @@ private fun Timeline(
         // scroll position (rotation, folding) must not be replaced.
         val key = state.filter.summary
         snapshotFlow { anchoredFor == key && listState.layoutInfo.visibleItemsInfo.isNotEmpty() }.first { it }
-        if (listState.layoutInfo.visibleItemsInfo.none { it.index == item }) listState.animateScrollToItem(item)
+        if (listState.layoutInfo.visibleItemsInfo.none { it.index == item }) ownScroll { animateScrollToItem(item) }
     }
+    // In the list (short window) the cards scroll away instead, so they never shrink.
+    val shrink = cardsShrunk && !cardsInList
     val cards: @Composable () -> Unit = {
         if (large) AppTitle(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-        state.tonight?.let { TonightCardView(it, onOpen) }
-        if (state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
-        if (!state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
-        if (state.filter.isActive) FilteredLine(state, onClearFilter)
-        Ornament()
+        state.tonight?.let { if (shrink) TonightStrip(it, onOpen) else TonightCardView(it, onOpen) }
+        if (!shrink && state.seasonPromptDue) SeasonCard(onStartOver, onNotNow)
+        if (!shrink && !state.skipAhead.isZero) AheadBanner(state, onBackToRealTime)
+        if (state.filter.isActive) FilteredLine(state, onClearFilter, oneLine = shrink)
+        if (!shrink) Ornament()
     }
 
     // The cards stay pinned above the list: the list opens scrolled to the first unread entry, which would
     // otherwise hide them exactly when they matter.
     Column(modifier.fillMaxSize()) {
-        if (!cardsInList) cards()
+        // Shrinking and growing animate, so the list doesn't jump under the reader's finger.
+        if (!cardsInList) Column(Modifier.animateContentSize()) { cards() }
         TimelineList(state, listState, canSkip, selectedId, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
     }
 }
@@ -236,12 +266,53 @@ private fun TonightCardView(card: TonightCard, onOpen: (String) -> Unit) {
                 Text("${card.authorName} · ${typeLabel(card.type)}", style = MaterialTheme.typography.labelLarge)
                 Text(card.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
-            Button(
-                onClick = { onOpen(card.entryId) },
-                modifier = Modifier.padding(top = 8.dp).semantics { contentDescription = "Read ${card.authorName}, ${typeLabel(card.type)}" },
-            ) { Text("Read", Modifier.notSpoken()) }
+            ReadButton(card, onOpen, Modifier.padding(top = 8.dp))
         }
     }
+}
+
+/** Tells the app's own scrolls of [list] (the opening anchor, following the open entry) from the reader's. */
+private class OwnScroll(private val list: LazyListState) {
+    private var running = 0
+    private var landedAt: Pair<Int, Int>? = null
+
+    suspend operator fun invoke(scroll: suspend LazyListState.() -> Unit) {
+        running++
+        try { list.scroll() } finally {
+            running--
+            landedAt = list.firstVisibleItemIndex to list.firstVisibleItemScrollOffset
+        }
+    }
+
+    /** Whether the list being at [index] and [offset] is down to one of the app's scrolls rather than the reader. */
+    fun explains(index: Int, offset: Int): Boolean {
+        if (running > 0) return true
+        val landed = landedAt == index to offset
+        landedAt = null
+        return landed
+    }
+}
+
+/** The Tonight card shrunk to one line while the reader scrolls the list (#180): still the way to read it. */
+@Composable
+private fun TonightStrip(card: TonightCard, onOpen: (String) -> Unit) {
+    Card(Modifier.testTag("tonight-strip").fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)) {
+        Row(Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 4.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(card.heading, Modifier.semantics { heading() }, style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(" · ${card.authorName}", Modifier.weight(1f), style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            ReadButton(card, onOpen)
+        }
+    }
+}
+
+/** TalkBack names what Read opens, since the button's own text doesn't say. */
+@Composable
+private fun ReadButton(card: TonightCard, onOpen: (String) -> Unit, modifier: Modifier = Modifier) {
+    Button(
+        onClick = { onOpen(card.entryId) },
+        modifier = modifier.semantics { contentDescription = "Read ${card.authorName}, ${typeLabel(card.type)}" },
+    ) { Text("Read", Modifier.notSpoken()) }
 }
 
 @Composable
@@ -256,7 +327,7 @@ private fun TimelineList(
     onClearFilter: () -> Unit,
     header: (@Composable () -> Unit)? = null,
 ) {
-    LazyColumn(Modifier.fillMaxSize(), state = listState) {
+    LazyColumn(Modifier.fillMaxSize().testTag("timeline-list"), state = listState) {
         header?.let { cards -> item(key = "cards") { Column { cards() } } }
         if (state.days.isEmpty() && state.hiddenCount > 0) {
             item(key = "no-match") {
@@ -363,15 +434,19 @@ private fun SeasonCard(onStartOver: () -> Unit, onNotNow: () -> Unit) {
 }
 
 @Composable
-private fun FilteredLine(state: TimelineState, onClear: () -> Unit) {
+private fun FilteredLine(state: TimelineState, onClear: () -> Unit, oneLine: Boolean = false) {
     Row(
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainer).padding(start = 16.dp, end = 4.dp),
+        Modifier.testTag("filtered-line").fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainer).padding(start = 16.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // Shrunk to one line (#180), a long summary scrolls sideways rather than wrapping; Clear stays in reach.
+        val text = Modifier.weight(1f).then(if (oneLine) Modifier.horizontalScroll(rememberScrollState()) else Modifier)
         Text(
             "Filtered: ${state.filter.summary} · ${state.hiddenCount} hidden",
-            Modifier.weight(1f).padding(vertical = 10.dp),
+            text.padding(vertical = 10.dp),
             style = MaterialTheme.typography.bodyMedium,
+            maxLines = if (oneLine) 1 else Int.MAX_VALUE,
+            softWrap = !oneLine,
         )
         TextButton(onClick = onClear) { Text("Clear") }
     }

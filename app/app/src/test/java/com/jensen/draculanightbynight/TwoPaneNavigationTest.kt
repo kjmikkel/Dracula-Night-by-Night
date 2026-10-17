@@ -329,7 +329,8 @@ class TwoPaneNavigationTest {
     }
 
     @Test fun theTimelineKeepsItsPlaceAcrossTheSplit() {
-        show()
+        // A month ahead, so the list is long enough to scroll even with the cards shrunk (#180).
+        show { users.setSkipAhead(30 * 24 * 60) }
         compose.onAllNodes(timelineList).onFirst().performScrollToIndex(4)
         compose.waitForIdle()
         val before = firstVisibleItem()

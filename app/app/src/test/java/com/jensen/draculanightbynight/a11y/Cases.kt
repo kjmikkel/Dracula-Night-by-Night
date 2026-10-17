@@ -8,6 +8,9 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.DpSize
@@ -157,6 +160,16 @@ val cases: List<Case> = listOf(
     Case(
         "timeline-ahead", setOf("TimelineScreen"), ready = "Back to real time",
         seed = { tempo(); users.setSkipAhead(2 * 24 * 60) },
+    ) { Timeline(it) },
+    // Scrolled, the cards shrink to one line each (#180). In the large looks they are in the list, so nothing shrinks.
+    Case(
+        "timeline-scrolled", setOf("TimelineScreen"), ready = " · Jonathan Harker",
+        looks = listOf(Look.LIGHT, Look.DARK, Look.LIGHT_HC, Look.DARK_HC),
+        seed = { tempo(); users.setFilter(EntryFilter(voices = setOf(Voice.JONATHAN))) },
+        open = {
+            waitUntil(TAP_WAIT_MS * TAP_ATTEMPTS) { onAllNodesWithTag("timeline-list").fetchSemanticsNodes().isNotEmpty() }
+            onNodeWithTag("timeline-list").performScrollToIndex(3)
+        },
     ) { Timeline(it) },
     Case(
         "read-it-now", setOf("TimelineScreen"), ready = "Read it now?",
