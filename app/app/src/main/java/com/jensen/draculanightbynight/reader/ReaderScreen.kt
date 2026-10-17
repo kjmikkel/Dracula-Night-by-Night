@@ -104,11 +104,12 @@ private fun NavigationControls(onBack: () -> Unit, pane: PaneControls?) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls? = null) {
+fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls? = null, modifier: Modifier = Modifier) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     when (val state = ui) {
-        is ReaderUi.Ready -> Pages(state, viewModel, onBack, pane)
+        is ReaderUi.Ready -> Pages(state, viewModel, onBack, pane, modifier)
         else -> Scaffold(
+            modifier = modifier,
             topBar = { TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }) },
         ) { padding ->
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
@@ -121,7 +122,7 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneContr
 /** The entries as pages that follow the finger; Previous and Next turn them too. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls?) {
+private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls?, modifier: Modifier) {
     val latest by rememberUpdatedState(ready)
     // Not saved by the pager itself: after Android kills the app the view model's saved page is the truth, and a
     // restored index could point at another entry once new ones have arrived.
@@ -141,6 +142,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
     // Next from TalkBack too, whose scrolling moves them.
     val large = largeText()
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },

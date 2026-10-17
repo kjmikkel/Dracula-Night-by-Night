@@ -77,6 +77,7 @@ fun TimelineScreen(
     onSettings: () -> Unit,
     /** The entry open in the other pane; its row is highlighted and kept in view. Null on a phone. */
     selectedId: String? = null,
+    modifier: Modifier = Modifier,
 ) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var startingOver by rememberSaveable { mutableStateOf(false) }
@@ -85,6 +86,7 @@ fun TimelineScreen(
     val filter = (ui as? TimelineUi.Ready)?.timeline?.filter ?: EntryFilter()
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 // At large text the title wraps to three lines here; it moves to the top of the list instead (#151).
