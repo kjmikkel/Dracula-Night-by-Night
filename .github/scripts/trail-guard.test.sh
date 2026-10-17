@@ -37,4 +37,29 @@ expect fail "others may not change CLAUDE.local.md" someone kjmikkel CLAUDE.loca
 expect fail "others may not change AGENTS.md"     someone  kjmikkel AGENTS.md
 expect fail "others may not change .mcp.json"     someone  kjmikkel .mcp.json
 
+# a symlink or submodule is one path with no trailing slash; node and Claude follow it
+expect fail "symlink named node_modules"          someone  kjmikkel node_modules
+expect fail "symlink named .trail"                someone  kjmikkel .trail
+expect fail "symlink named dist"                  someone  kjmikkel dist
+expect fail "symlink named dist/claude"           someone  kjmikkel dist/claude
+expect fail "symlink named .claude"               someone  kjmikkel .claude
+expect fail "nested symlink named .claude"        someone  kjmikkel app/.claude
+expect pass "others may change a dist/ file"      someone  kjmikkel dist/other/x.js
+
+# case-insensitive APFS case-folds (long s to s) and HFS+ ignores zero-width characters
+expect fail "long s in .mcp.json"                 someone  kjmikkel $'.mcp.j\xc5\xbfon'
+expect fail "long s in agents.md"                 someone  kjmikkel $'agent\xc5\xbf.md'
+expect fail "zero-width non-joiner in .trail/"    someone  kjmikkel $'.tr\xe2\x80\x8cail/learnings/a.md'
+expect fail "dotless i in .trail/"                someone  kjmikkel $'.tra\xc4\xb1l/learnings/a.md'
+expect fail "fullwidth C in CLAUDE.md"            someone  kjmikkel $'\xef\xbc\xa3LAUDE.md'
+expect pass "others may add non-ASCII elsewhere"  someone  kjmikkel $'docs/Harker\xe2\x80\x99s journal.md'
+
+# .trail/hook.cjs runs npm through cmd.exe, which looks in the current directory first
+expect fail "planted npm.cmd at the root"         someone  kjmikkel npm.cmd
+expect fail "planted node.EXE at the root"        someone  kjmikkel node.EXE
+expect fail "planted npm.bat. at the root"        someone  kjmikkel "npm.bat."
+expect fail "planted git.js at the root"          someone  kjmikkel git.js
+expect pass "others may change app/gradlew.bat"   someone  kjmikkel app/gradlew.bat
+expect pass "owner may add a root script"         kjmikkel kjmikkel setup.cmd
+
 [ "$failures" -eq 0 ] && echo "all passed" || { echo "$failures failed"; exit 1; }
