@@ -41,8 +41,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.first
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -51,6 +54,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -71,6 +75,9 @@ fun TimelineScreen(
     onOpen: (id: String, filtered: Boolean) -> Unit,
     onBookmarks: () -> Unit,
     onSettings: () -> Unit,
+    /** The entry open in the other pane; its row is highlighted and kept in view. Null on a phone. */
+    selectedId: String? = null,
+    modifier: Modifier = Modifier,
 ) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     var startingOver by rememberSaveable { mutableStateOf(false) }
@@ -79,6 +86,7 @@ fun TimelineScreen(
     val filter = (ui as? TimelineUi.Ready)?.timeline?.filter ?: EntryFilter()
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 // At large text the title wraps to three lines here; it moves to the top of the list instead (#151).
@@ -107,6 +115,7 @@ fun TimelineScreen(
                     onBackToRealTime = viewModel::backToRealTime,
                     onStartOver = { startingOver = true },
                     onNotNow = viewModel::dismissSeasonPrompt,
+                    selectedId = selectedId,
                     modifier = Modifier.padding(padding),
                 )
                 if (confirmingSkip) {
@@ -153,6 +162,7 @@ private fun Timeline(
     onStartOver: () -> Unit,
     onNotNow: () -> Unit,
     onClearFilter: () -> Unit,
+    selectedId: String?,
     modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
@@ -180,6 +190,15 @@ private fun Timeline(
         if (cardsInList && !cardsWereInList) listState.scrollToItem(0)
         cardsWereInList = cardsInList
     }
+    // Keeps the open entry's row on screen as the reader moves between entries; runs after the opening position.
+    LaunchedEffect(selectedId) {
+        val item = selectedId?.let { rowItem(state, it) }?.let { if (cardsInList) it + 1 else it } ?: return@LaunchedEffect
+        // Wait for a real layout after the opening anchor ran: before that nothing is visible yet, and a restored
+        // scroll position (rotation, folding) must not be replaced.
+        val key = state.filter.summary
+        snapshotFlow { anchoredFor == key && listState.layoutInfo.visibleItemsInfo.isNotEmpty() }.first { it }
+        if (listState.layoutInfo.visibleItemsInfo.none { it.index == item }) listState.animateScrollToItem(item)
+    }
     val cards: @Composable () -> Unit = {
         if (large) AppTitle(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         state.tonight?.let { TonightCardView(it, onOpen) }
@@ -193,7 +212,7 @@ private fun Timeline(
     // otherwise hide them exactly when they matter.
     Column(modifier.fillMaxSize()) {
         if (!cardsInList) cards()
-        TimelineList(state, listState, canSkip, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
+        TimelineList(state, listState, canSkip, selectedId, onOpen, onReadItNow, onStartOver, onClearFilter, header = cards.takeIf { cardsInList })
     }
 }
 
@@ -230,6 +249,7 @@ private fun TimelineList(
     state: TimelineState,
     listState: LazyListState,
     canSkip: Boolean,
+    selectedId: String?,
     onOpen: (String) -> Unit,
     onReadItNow: () -> Unit,
     onStartOver: () -> Unit,
@@ -258,7 +278,7 @@ private fun TimelineList(
                 )
             }
             items(day.rows, key = { it.id }) { row ->
-                EntryRow(row, onClick = { onOpen(row.id) })
+                EntryRow(row, selected = row.id == selectedId, onClick = { onOpen(row.id) })
                 HorizontalDivider()
             }
         }
@@ -267,9 +287,13 @@ private fun TimelineList(
 }
 
 @Composable
-private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
+private fun EntryRow(row: TimelineRow, selected: Boolean, onClick: () -> Unit) {
+    // On the highlight everything uses the one colour the palette checks against it.
+    val onSelected = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else null
     Row(
-        Modifier.fillMaxWidth().clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
+        Modifier.fillMaxWidth()
+            .then(if (selected) Modifier.background(MaterialTheme.colorScheme.secondaryContainer).semantics { this.selected = true } else Modifier)
+            .clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Column(Modifier.widthIn(min = 52.dp)) {
@@ -281,21 +305,21 @@ private fun EntryRow(row: TimelineRow, onClick: () -> Unit) {
                 softWrap = false,
                 style = MaterialTheme.typography.bodyMedium,
                 fontStyle = if (row.timeEstimated) FontStyle.Italic else FontStyle.Normal,
-                color = if (row.timeEstimated) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                color = onSelected ?: if (row.timeEstimated) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
             )
         }
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 if (row.unread) {
-                    Box(Modifier.size(8.dp).background(MaterialTheme.colorScheme.primary, CircleShape).semantics { contentDescription = "Unread" })
+                    Box(Modifier.size(8.dp).background(onSelected ?: MaterialTheme.colorScheme.primary, CircleShape).semantics { contentDescription = "Unread" })
                 }
                 // Wraps rather than pushing the star off the edge at large text.
                 Text("${row.authorName} · ${typeLabel(row.type)}${row.place?.let { " · $it" } ?: ""}", Modifier.weight(1f, fill = false),
-                    style = MaterialTheme.typography.labelLarge)
-                if (row.bookmarked) Text("★", color = MaterialTheme.colorScheme.primary, modifier = Modifier.semantics { contentDescription = "Bookmarked" })
+                    style = MaterialTheme.typography.labelLarge, color = onSelected ?: Color.Unspecified)
+                if (row.bookmarked) Text("★", color = onSelected ?: MaterialTheme.colorScheme.primary, modifier = Modifier.semantics { contentDescription = "Bookmarked" })
             }
             Text(row.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                color = onSelected ?: MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

@@ -32,6 +32,7 @@ sealed interface ReaderUi {
  * @param ticks the current time and zone, re-emitted as time passes ([com.jensen.draculanightbynight.domain.TimeSource.ticks]).
  * @param appScope outlives the screen, for saves made as it closes.
  * @param filtered opened from a filtered timeline: Previous, Next and swipe follow the filter until switched to All.
+ * @param followingAll opened already switched to All, e.g. when the split view hands its reader over.
  */
 class ReaderViewModel(
     stories: StoryRepository,
@@ -41,16 +42,23 @@ class ReaderViewModel(
     startId: String,
     filtered: Boolean,
     private val saved: SavedStateHandle,
+    followingAll: Boolean = false,
 ) : ViewModel() {
     // Kept in the saved state, so a reader whose app Android killed comes back to the page they were on.
     private val current = saved.getStateFlow(KEY_CURRENT, startId)
-    private val following = saved.getStateFlow(KEY_FOLLOWING, if (filtered) Following.FILTER.name else Following.ALL.name)
+    private val following = saved.getStateFlow(KEY_FOLLOWING, if (filtered && !followingAll) Following.FILTER.name else Following.ALL.name)
+
+    // In the saved state, not a constructor value read once, so that open() can change it.
+    private val switchable = saved.getStateFlow(KEY_SWITCHABLE, filtered)
+
+    /** The entry the pager rests on. */
+    val currentId: StateFlow<String> = current
 
     val state: StateFlow<ReaderUi> =
-        combine(flow { emit(stories.story()) }, users.state, ticks, current, following) { story, user, now, id, followName ->
+        combine(flow { emit(stories.story()) }, users.state, ticks, current, combine(following, switchable, ::Pair)) { story, user, now, id, (followName, canSwitch) ->
             val follows = Following.valueOf(followName)
             val settings = user.settings ?: return@combine ReaderUi.Loading
-            val pager = buildPager(story, user, settings, now.toInstant(), now.zone, id, follows, switchable = filtered)
+            val pager = buildPager(story, user, settings, now.toInstant(), now.zone, id, follows, switchable = canSwitch)
                 ?: return@combine ReaderUi.Locked
             val window = pager.pages.subList((pager.index - NEIGHBOURS).coerceAtLeast(0), (pager.index + NEIGHBOURS + 1).coerceAtMost(pager.pages.size))
             ReaderUi.Ready(pager, window.mapNotNull { story.entry(it) }.associate { it.id to readerFor(story, user, it) })
@@ -61,6 +69,25 @@ class ReaderViewModel(
         saved[KEY_CURRENT] = id
         viewModelScope.launch { users.markRead(id) }
     }
+
+    /**
+     * Moves the reader to the entry a timeline tap asked for. A request whose [OpenEntry.seq] was already applied
+     * is ignored, so running it again after a rotation does not undo the swipes made since.
+     */
+    fun open(request: OpenEntry) {
+        if (saved.get<Long>(KEY_REQUEST) == request.seq) return
+        saved[KEY_REQUEST] = request.seq
+        saved[KEY_CURRENT] = request.id
+        saved[KEY_SWITCHABLE] = request.filtered
+        saved[KEY_FOLLOWING] = (if (request.filtered && !request.followingAll) Following.FILTER else Following.ALL).name
+    }
+
+    /** Where the reader is now, for handing it to another layout. */
+    fun openEntry(): OpenEntry = OpenEntry(
+        id = current.value,
+        filtered = switchable.value,
+        followingAll = Following.valueOf(following.value) == Following.ALL,
+    )
 
     /** The switch: keeps the current entry and rebuilds the order around it. */
     fun follow(order: Following) {
@@ -89,6 +116,8 @@ class ReaderViewModel(
         const val STOP_TIMEOUT_MILLIS = 5_000L
         const val KEY_CURRENT = "current"
         const val KEY_FOLLOWING = "following"
+        const val KEY_SWITCHABLE = "switchable"
+        const val KEY_REQUEST = "request"
 
         /** Pages either side of the current one that the pager may show while it is dragged. */
         const val NEIGHBOURS = 2

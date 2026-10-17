@@ -78,4 +78,9 @@ class UserStateTest {
         val f = EntryFilter(setOf(Voice.VAN_HELSING), setOf(DocumentType.PHONOGRAPH))
         assertEquals(f, read(write(UserState().withFilter(f))).filter)
     }
+
+    @Test
+    fun anOldFileShowsTheTimeline() {
+        assertFalse(read("""{"onboarded":true}""").timelineHidden)
+    }
 }

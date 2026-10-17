@@ -19,6 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import java.util.TimeZone
 
 /**
@@ -38,7 +39,9 @@ class RatchetTest(private val caseName: String, private val lookKey: String) {
         val app = testApp()
         val found = try {
             runBlocking { case.seed(app) }
-            compose.showInLook(look, font) { case.content(app) }
+            // Before showInLook, whose font scale must land on top of the qualifiers.
+            case.window?.let { RuntimeEnvironment.setQualifiers("w${it.width.value.toInt()}dp-h${it.height.value.toInt()}dp") }
+            compose.showInLook(look, font, case.window) { case.content(app) }
             compose.waitForIdle()
             case.open?.invoke(compose)
             val ready = hasText(case.ready, substring = true) or hasContentDescription(case.ready, substring = true)

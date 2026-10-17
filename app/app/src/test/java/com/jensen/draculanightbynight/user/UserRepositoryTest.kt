@@ -247,4 +247,13 @@ class UserRepositoryTest {
         repo.toggleFilterVoice(Voice.MINA)
         assertEquals(EntryFilter(types = setOf(DocumentType.LETTER)), repo.state.first().filter)
     }
+
+    @Test
+    fun theTimelineHiddenChoiceIsSaved() = runTest {
+        val users = repository()
+        users.setTimelineHidden(true)
+        assertTrue(users.state.first().timelineHidden)
+        users.setTimelineHidden(false)
+        assertFalse(users.state.first().timelineHidden)
+    }
 }

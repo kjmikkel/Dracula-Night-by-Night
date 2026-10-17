@@ -14,5 +14,11 @@ fun BackButton(onBack: () -> Unit) {
     TextButton(onClick = onBack, modifier = Modifier.semantics { contentDescription = "Back" }) { Text("‹ Back", Modifier.notSpoken()) }
 }
 
+/** The top bar's "✕" in the split view, where the reader closes instead of going back. */
+@Composable
+fun CloseButton(onClose: () -> Unit) {
+    TextButton(onClick = onClose, modifier = Modifier.semantics { contentDescription = "Close entry" }) { Text("✕", Modifier.notSpoken()) }
+}
+
 /** For text inside a control whose own description already says it: keeps the text out of what TalkBack reads. */
 fun Modifier.notSpoken(): Modifier = clearAndSetSemantics {}

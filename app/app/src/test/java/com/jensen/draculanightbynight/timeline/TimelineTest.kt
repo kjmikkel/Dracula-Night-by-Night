@@ -138,4 +138,20 @@ class TimelineTest {
         val allRead = UserState(progress = mapOf("may09" to EntryProgress(readAtMillis = 1)))
         assertEquals(0, openingItem(buildTimeline(TestStory.small, allRead, free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)))
     }
+
+    @Test
+    fun rowItemCountsDayHeadersAndRows() {
+        val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc)
+        // Items: [3 May header, may03, 4 May header, may04, 5 May header, may05, 9 May header, may09]
+        assertEquals(1, rowItem(t, "may03"))
+        assertEquals(2 + t.days[0].rows.size, rowItem(t, "may04"))
+        assertEquals(7, rowItem(t, "may09"))
+    }
+
+    @Test
+    fun rowItemIsNullForAnEntryTheListDoesNotShow() {
+        val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)
+        assertNull(rowItem(t, "may03"))
+        assertEquals(1, rowItem(t, "may09"))
+    }
 }

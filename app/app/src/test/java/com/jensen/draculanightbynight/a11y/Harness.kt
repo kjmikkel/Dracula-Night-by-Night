@@ -39,14 +39,18 @@ private val LARGEST_DISPLAY = DpSize(329.dp, 731.dp)
 /** The instant every ratchet case runs at: 8 May 2026, noon UTC. */
 val FIXED_NOW: Instant = Instant.parse("2026-05-08T12:00:00Z")
 
-/** [content] in the app's theme as [look] would show it, with the system font scale [look] asks for. */
+/**
+ * [content] in the app's theme as [look] would show it, with the system font scale [look] asks for. [window] is the
+ * case's own window size, if it has one; the caller sets the window to it (see [showInLook]).
+ */
 @Composable
-fun InLook(look: Look, font: ReadingFont = ReadingFont.SERIF, content: @Composable () -> Unit) {
+fun InLook(look: Look, font: ReadingFont = ReadingFont.SERIF, window: DpSize? = null, content: @Composable () -> Unit) {
     val density = LocalDensity.current
     CompositionLocalProvider(LocalDensity provides Density(density.density, look.fontScale)) {
         DraculaTheme(theme = look.theme, highContrast = look.highContrast, readingFont = font, textSize = look.textSize) {
             if (look.fontScale > 1f) {
-                Box(Modifier.requiredSize(LARGEST_DISPLAY).clipToBounds()) { content() }
+                // A case with its own window (a tablet) keeps it at large text; only phones shrink to the spike's.
+                Box(Modifier.requiredSize(window ?: LARGEST_DISPLAY).clipToBounds()) { content() }
             } else {
                 content()
             }
@@ -54,11 +58,16 @@ fun InLook(look: Look, font: ReadingFont = ReadingFont.SERIF, content: @Composab
     }
 }
 
-fun ComposeContentTestRule.showInLook(look: Look, font: ReadingFont = ReadingFont.SERIF, content: @Composable () -> Unit) {
+fun ComposeContentTestRule.showInLook(
+    look: Look,
+    font: ReadingFont = ReadingFont.SERIF,
+    window: DpSize? = null,
+    content: @Composable () -> Unit,
+) {
     // The system font size too, not only InLook's density: dialogs and sheets are windows of their own and read
     // their density from the activity's configuration.
     RuntimeEnvironment.setFontScale(look.fontScale)
-    setContent { InLook(look, font, content) }
+    setContent { InLook(look, font, window, content) }
 }
 
 /**

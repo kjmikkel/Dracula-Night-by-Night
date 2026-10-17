@@ -59,6 +59,8 @@ data class UserState(
     val filterVoices: Set<String> = emptySet(),
     val filterTypes: Set<String> = emptySet(),
     val bookmarkSort: BookmarkSort = BookmarkSort.STORY,
+    /** The reader hid the timeline beside an open entry (two panes only). */
+    val timelineHidden: Boolean = false,
 ) {
     /** Readers from before the Welcome screen already chose a mode, so they count as onboarded. */
     val isOnboarded: Boolean

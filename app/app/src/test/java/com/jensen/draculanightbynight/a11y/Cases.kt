@@ -10,6 +10,8 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.SavedStateHandle
 import com.jensen.draculanightbynight.AppContainer
 import com.jensen.draculanightbynight.about.AboutScreen
@@ -25,6 +27,7 @@ import com.jensen.draculanightbynight.settings.SettingsScreen
 import com.jensen.draculanightbynight.settings.SettingsViewModel
 import com.jensen.draculanightbynight.timeline.TimelineScreen
 import com.jensen.draculanightbynight.timeline.TimelineViewModel
+import com.jensen.draculanightbynight.timeline.TwoPaneScreen
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.welcome.WelcomeScreen
 import com.jensen.draculanightbynight.welcome.WelcomeViewModel
@@ -45,6 +48,8 @@ data class Case(
     val seed: suspend AppContainer.() -> Unit = { tempo() },
     /** Opens a dialog or sheet over the screen; [ready] must then be text only that window shows. */
     val open: (ComposeContentTestRule.() -> Unit)? = null,
+    /** The window the case runs in, if not the test's default phone: a tablet, say. It holds at large text too. */
+    val window: DpSize? = null,
     val content: @Composable (AppContainer) -> Unit,
 )
 
@@ -75,6 +80,16 @@ private const val JONATHAN_8_MAY = "1893-05-08-jonathan_harker-01"
 
 @Composable private fun Reader(app: AppContainer, id: String, filtered: Boolean = false) =
     ReaderScreen(remember { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered, SavedStateHandle()) }, onBack = {})
+
+@Composable private fun TwoPanes(app: AppContainer, timelineHidden: Boolean) = TwoPaneScreen(
+    timeline = remember { TimelineViewModel(app) },
+    reader = remember { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, JONATHAN_4_MAY, false, SavedStateHandle()) },
+    timelineHidden = timelineHidden,
+    onOpen = { _, _ -> }, onClose = {}, onToggleTimeline = {}, onBookmarks = {}, onSettings = {},
+)
+
+private val LANDSCAPE_TABLET = DpSize(1280.dp, 800.dp)
+private val PORTRAIT_TABLET = DpSize(800.dp, 1280.dp)
 
 /**
  * Taps the first control showing [label]. Screens load their state in the background, so it waits for the control
@@ -199,4 +214,15 @@ val cases: List<Case> = listOf(
         expect = Expectations(headings = listOf("About", "The text", "The app", "Fonts")),
     ) { AboutScreen(onBack = {}) },
     Case("licence", setOf("LicenceDialog"), ready = "January 2004", seed = {}, open = { tap("Special Elite") }) { AboutScreen(onBack = {}) },
-)
+) + listOf("landscape" to LANDSCAPE_TABLET, "portrait" to PORTRAIT_TABLET).flatMap { (orientation, window) ->
+    listOf(false, true).map { hidden ->
+        Case(
+            if (hidden) "two-pane-hidden-$orientation" else "two-pane-$orientation", setOf("TwoPaneScreen"), ready = "Close entry",
+            window = window,
+            expect = Expectations(
+                headings = listOfNotNull("Dracula Night by Night".takeUnless { hidden }, "Jonathan Harker"),
+                toggles = listOf("Bookmark", "Show timeline"),
+            ),
+        ) { TwoPanes(it, hidden) }
+    }
+}
