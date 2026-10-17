@@ -62,4 +62,15 @@ expect fail "planted git.js at the root"          someone  kjmikkel git.js
 expect pass "others may change app/gradlew.bat"   someone  kjmikkel app/gradlew.bat
 expect pass "owner may add a root script"         kjmikkel kjmikkel setup.cmd
 
+# hook.cjs resolves trail from the repo root: a package.json there named like
+# trail self-references, and its "exports" can point at an unguarded dist/claude
+expect fail "others may not add a root package.json"  someone kjmikkel package.json
+expect pass "others may change a nested package.json" someone kjmikkel tools/package.json
+
+# Python and bash must split the path list at the same places
+expect fail "file separator before a .trail path" someone  kjmikkel $'a\x1cb' .trail/x
+expect fail "line separator before a .trail path" someone  kjmikkel $'a\xe2\x80\xa8b' .trail/x
+expect fail "next line (U+0085) before .claude"   someone  kjmikkel $'a\xc2\x85b' .claude/settings.json
+expect pass "others may name a file with \x1c"    someone  kjmikkel $'docs/a\x1cb.md'
+
 [ "$failures" -eq 0 ] && echo "all passed" || { echo "$failures failed"; exit 1; }

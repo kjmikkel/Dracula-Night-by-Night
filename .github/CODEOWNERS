@@ -1,11 +1,12 @@
 # Paths that feed coding agents code or instructions: Trail injects .trail/
 # learnings at session start and .trail/hook.cjs imports trail from
-# node_modules/ or dist/claude/; Claude Code loads the rest. Review like code.
+# node_modules/, dist/claude/ or a root package.json; Claude Code loads the rest. Review like code.
 # No trailing slash, so a symlink with the same name is covered too.
 # Enforced for outside contributors by the guard / trail-owner-only CI job.
 /.trail @kjmikkel
 /node_modules @kjmikkel
 /dist/claude @kjmikkel
+/package.json @kjmikkel
 .claude @kjmikkel
 CLAUDE.md @kjmikkel
 CLAUDE.local.md @kjmikkel
