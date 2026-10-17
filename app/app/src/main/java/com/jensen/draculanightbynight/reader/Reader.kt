@@ -1,5 +1,7 @@
 package com.jensen.draculanightbynight.reader
 
+import com.jensen.draculanightbynight.content.Block
+import com.jensen.draculanightbynight.content.BlockRole
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
@@ -67,3 +69,10 @@ fun savedPosition(firstVisibleItem: Int, offset: Int): Pair<Int, Int> =
 
 /** The list item and offset to open at for a stored (block, offset). */
 fun listPosition(block: Int, offset: Int): Pair<Int, Int> = (block + if (block > 0 || offset > 0) 1 else 0) to offset
+
+/**
+ * Whether block [index] of [body] starts with an indent (#179): a paragraph straight after another, as in print. The
+ * first paragraph, and one after a dateline, salutation, verse, note or break, starts flush.
+ */
+fun indentsFirstLine(body: List<Block>, index: Int): Boolean =
+    body.getOrNull(index)?.role == BlockRole.PARA && body.getOrNull(index - 1)?.role == BlockRole.PARA

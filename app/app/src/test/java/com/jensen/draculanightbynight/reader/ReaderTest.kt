@@ -1,12 +1,16 @@
 package com.jensen.draculanightbynight.reader
 
 import com.jensen.draculanightbynight.TestStory
+import com.jensen.draculanightbynight.content.Block
+import com.jensen.draculanightbynight.content.BlockRole
 import com.jensen.draculanightbynight.content.DocumentType
+import com.jensen.draculanightbynight.content.Span
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.user.EntryProgress
 import com.jensen.draculanightbynight.user.UserState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -73,5 +77,16 @@ class ReaderTest {
         assertEquals("THE DAILYGRAPH" to "A STORM AT WHITBY", mastheadOf(paper.copy(header = "THE DAILYGRAPH\nA STORM AT WHITBY")))
         assertEquals("Newspaper" to null, mastheadOf(paper.copy(header = null)))
         assertEquals("THE PALL MALL GAZETTE" to null, mastheadOf(paper.copy(header = "\nTHE PALL MALL GAZETTE\n")))
+    }
+
+    @Test
+    fun onlyAParagraphThatFollowsAParagraphIsIndented() {
+        // As in print (#179): the first paragraph, and one after a dateline, salutation, verse, note or break, starts flush.
+        val roles = listOf(BlockRole.DATELINE, BlockRole.SALUTATION, BlockRole.PARA, BlockRole.PARA, BlockRole.VERSE,
+            BlockRole.PARA, BlockRole.DIVIDER, BlockRole.PARA, BlockRole.PARA, BlockRole.SIGNOFF)
+        val body = roles.map { Block(it, listOf(Span("x", false))) }
+        assertEquals(listOf(3, 8), body.indices.filter { indentsFirstLine(body, it) })
+        assertFalse(indentsFirstLine(body, -1))
+        assertFalse(indentsFirstLine(body, body.size))
     }
 }
