@@ -6,7 +6,7 @@ failures=0
 
 expect() { # expect <pass|fail> <description> <author> <owner> <changed files...>
   local want=$1 desc=$2 author=$3 owner=$4; shift 4
-  if printf '%s\n' "$@" | bash "$guard" "$author" "$owner" >/dev/null 2>&1; then got=pass; else got=fail; fi
+  if printf '%s\0' "$@" | bash "$guard" "$author" "$owner" >/dev/null 2>&1; then got=pass; else got=fail; fi
   if [ "$got" = "$want" ]; then echo "ok   $desc"; else echo "FAIL $desc (wanted $want, got $got)"; failures=$((failures + 1)); fi
 }
 
@@ -61,5 +61,18 @@ expect fail "planted npm.bat. at the root"        someone  kjmikkel "npm.bat."
 expect fail "planted git.js at the root"          someone  kjmikkel git.js
 expect pass "others may change app/gradlew.bat"   someone  kjmikkel app/gradlew.bat
 expect pass "owner may add a root script"         kjmikkel kjmikkel setup.cmd
+
+# every path is checked against its own folded form, however names are split
+expect fail "U+2028 in an earlier name"           someone  kjmikkel $'x\xe2\x80\xa8y' .trail/hook.cjs
+expect fail "newline inside a name"               someone  kjmikkel $'.tr\nail/hook.cjs'
+expect fail "carriage return in a name"           someone  kjmikkel $'docs/a\rb.md' .trail/hook.cjs
+expect fail "U+0085 in a name"                    someone  kjmikkel $'docs/a\xc2\x85b.md'
+expect fail "file separator (U+001C) in a name"  someone  kjmikkel $'a\x1cb' .trail/hook.cjs
+
+# hook.cjs resolves trail's own package name through the nearest package.json
+expect fail "others may not add a root package.json" someone kjmikkel package.json
+expect fail "upper-case PACKAGE.JSON"             someone  kjmikkel PACKAGE.JSON
+expect pass "others may add a nested package.json" someone kjmikkel app/package.json
+expect pass "owner may add a root package.json"   kjmikkel kjmikkel package.json
 
 [ "$failures" -eq 0 ] && echo "all passed" || { echo "$failures failed"; exit 1; }
