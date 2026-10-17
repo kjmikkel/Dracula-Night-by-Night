@@ -44,6 +44,9 @@ app/.gradle/
 app/.kotlin/
 app/build/
 app/app/build/
+app/buildSrc/.gradle/
+app/buildSrc/.kotlin/
+app/buildSrc/build/
 !app/gradle/wrapper/gradle-wrapper.jar
 
 # Release signing: never commit keys
