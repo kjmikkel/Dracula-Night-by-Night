@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ReleaseKeyTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-17T13:15:17.925Z" hostname="GAMEZAR" time="0.065">
+  <properties/>
+  <testcase name="allFromTheFile" classname="ReleaseKeyTest" time="0.037"/>
+  <testcase name="aBlankValueInTheFileFallsBackToTheEnvironment" classname="ReleaseKeyTest" time="0.005"/>
+  <testcase name="blankValuesCountAsNothingSet" classname="ReleaseKeyTest" time="0.003"/>
+  <testcase name="aPartialConfigFailsAndNamesWhatIsMissing" classname="ReleaseKeyTest" time="0.009"/>
+  <testcase name="nothingSetMeansUnsigned" classname="ReleaseKeyTest" time="0.001"/>
+  <testcase name="aRelativeStoreFileResolvesNextToKeystoreProperties" classname="ReleaseKeyTest" time="0.002"/>
+  <testcase name="allFromTheEnvironment" classname="ReleaseKeyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
