@@ -11,6 +11,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.Role
 import com.jensen.draculanightbynight.ui.notSpoken
 import com.jensen.draculanightbynight.ui.BackButton
+import com.jensen.draculanightbynight.ui.CloseButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -77,14 +78,38 @@ import kotlinx.coroutines.launch
 private const val SAVE_DEBOUNCE_MILLIS = 500L
 private val NEWSPAPER_COLUMN = 520.dp
 
+/** The split view's controls for the reader on the right: close the entry, and show or hide the timeline. */
+data class PaneControls(val timelineShown: Boolean, val onToggleTimeline: () -> Unit, val onClose: () -> Unit)
+
+/** The top bar's start: Back, or in the split view ✕ then the ☰ timeline switch. */
+@Composable
+private fun NavigationControls(onBack: () -> Unit, pane: PaneControls?) {
+    if (pane == null) {
+        BackButton(onBack)
+    } else {
+        Row {
+            CloseButton(pane.onClose)
+            // A switch for TalkBack: "Show timeline, on/off", without the glyph.
+            TextButton(
+                onClick = pane.onToggleTimeline,
+                modifier = Modifier.semantics {
+                    contentDescription = "Show timeline"
+                    role = Role.Switch
+                    toggleableState = ToggleableState(pane.timelineShown)
+                },
+            ) { Text("☰", Modifier.notSpoken()) }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
+fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls? = null) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     when (val state = ui) {
-        is ReaderUi.Ready -> Pages(state, viewModel, onBack)
+        is ReaderUi.Ready -> Pages(state, viewModel, onBack, pane)
         else -> Scaffold(
-            topBar = { TopAppBar(title = {}, navigationIcon = { BackButton(onBack) }) },
+            topBar = { TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }) },
         ) { padding ->
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
                 if (state == ReaderUi.Locked) Text("This entry has not arrived yet.") else CircularProgressIndicator()
@@ -96,7 +121,7 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit) {
 /** The entries as pages that follow the finger; Previous and Next turn them too. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit) {
+private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls?) {
     val latest by rememberUpdatedState(ready)
     // Not saved by the pager itself: after Android kills the app the view model's saved page is the truth, and a
     // restored index could point at another entry once new ones have arrived.
@@ -119,7 +144,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
         topBar = {
             TopAppBar(
                 title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = { BackButton(onBack) },
+                navigationIcon = { NavigationControls(onBack, pane) },
                 actions = {
                     // A switch for TalkBack: "Bookmark, on/off", without the star.
                     TextButton(
