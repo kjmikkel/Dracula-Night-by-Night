@@ -62,4 +62,11 @@ expect fail "planted git.js at the root"          someone  kjmikkel git.js
 expect pass "others may change app/gradlew.bat"   someone  kjmikkel app/gradlew.bat
 expect pass "owner may add a root script"         kjmikkel kjmikkel setup.cmd
 
+# require.resolve('@trailhq/trail-code/package.json', { paths: [repoRoot] }) tries package
+# self-reference through the root package.json first, so a root package.json named
+# @trailhq/trail-code with "exports" can redirect the hook to attacker code
+expect fail "others may not add a root package.json" someone kjmikkel package.json
+expect fail "upper-case PACKAGE.JSON"             someone  kjmikkel PACKAGE.JSON
+expect pass "others may add a nested package.json" someone kjmikkel app/web/package.json
+
 [ "$failures" -eq 0 ] && echo "all passed" || { echo "$failures failed"; exit 1; }

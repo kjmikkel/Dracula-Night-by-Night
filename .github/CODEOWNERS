@@ -23,3 +23,5 @@ AGENTS.md @kjmikkel
 /*.wsf @kjmikkel
 /*.wsh @kjmikkel
 /*.msc @kjmikkel
+# require.resolve in .trail/hook.cjs honours package self-reference via the root package.json
+/package.json @kjmikkel

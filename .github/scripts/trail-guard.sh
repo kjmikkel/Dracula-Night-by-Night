@@ -11,7 +11,10 @@ owner=$2
 
 # (/|$): a symlink or submodule named node_modules, .claude or dist is one path
 # with no slash, and node and Claude follow it.
-protected='^\.trail(/|$)|^node_modules(/|$)|^dist$|^dist/claude(/|$)|(^|/)\.claude(/|$)|(^|/)claude(\.local)?\.md$|(^|/)agents\.md$|(^|/)\.mcp\.json$'
+# ^package\.json$: require.resolve in .trail/hook.cjs tries package self-reference
+# through the root package.json first, so a root package named @trailhq/trail-code
+# with "exports" can redirect the hook to attacker code. Nested ones are not on that path.
+protected='^\.trail(/|$)|^node_modules(/|$)|^dist$|^dist/claude(/|$)|(^|/)\.claude(/|$)|(^|/)claude(\.local)?\.md$|(^|/)agents\.md$|(^|/)\.mcp\.json$|^package\.json$'
 short_name='(^|/)[^/]*~[0-9][^/]*(/|$)' # 8.3 alias such as TRAIL~1, which Windows may resolve to .trail
 # .trail/hook.cjs runs `npm root -g` through cmd.exe, which tries the current
 # directory first with every default PATHEXT extension.
