@@ -11,11 +11,30 @@ expect() { # expect <pass|fail> <description> <author> <owner> <changed files...
 }
 
 expect pass "owner may change .trail/"            kjmikkel kjmikkel .trail/learnings/a.md
+expect pass "owner may change agent config"       kjmikkel kjmikkel CLAUDE.md .claude/settings.json
 expect pass "others may change files outside"     someone  kjmikkel app/build.gradle.kts README.md
-expect pass "others may touch a look-alike path"  someone  kjmikkel docs/.trail/x.md .trailer
+expect pass "others may touch a look-alike path"  someone  kjmikkel docs/.trail/x.md .trailer app/dist/x.js
 expect pass "no changed files"                    someone  kjmikkel ""
 expect fail "others may not add a learning"       someone  kjmikkel README.md .trail/learnings/a.md
 expect fail "others may not change the hook"      someone  kjmikkel .trail/hook.cjs
 expect fail "a look-alike login is not the owner" KJMIKKEL-fake kjmikkel .trail/hook.cjs
+
+# hook.cjs imports trail from <repo>/node_modules and, last, <repo>/dist/claude
+expect fail "others may not plant a trail package" someone kjmikkel node_modules/@trailhq/trail-code/package.json
+expect fail "others may not plant dist/claude"     someone kjmikkel dist/claude/hooks.js
+
+# Windows checkouts are case-insensitive and drop trailing dots and spaces
+expect fail "upper-case .TRAIL/"                  someone  kjmikkel .TRAIL/learnings/a.md
+expect fail "trailing dot .trail./"               someone  kjmikkel .trail./learnings/a.md
+expect fail "trailing space '.trail /'"           someone  kjmikkel ".trail /learnings/a.md"
+expect fail "8.3 short name TRAIL~1/"             someone  kjmikkel TRAIL~1/learnings/a.md
+
+# other files Claude Code loads as instructions, hooks or MCP servers
+expect fail "others may not change .claude/"      someone  kjmikkel .claude/settings.json
+expect fail "others may not change nested .claude/" someone kjmikkel app/.claude/settings.json
+expect fail "others may not change CLAUDE.md"     someone  kjmikkel app/CLAUDE.md
+expect fail "others may not change CLAUDE.local.md" someone kjmikkel CLAUDE.local.md
+expect fail "others may not change AGENTS.md"     someone  kjmikkel AGENTS.md
+expect fail "others may not change .mcp.json"     someone  kjmikkel .mcp.json
 
 [ "$failures" -eq 0 ] && echo "all passed" || { echo "$failures failed"; exit 1; }
