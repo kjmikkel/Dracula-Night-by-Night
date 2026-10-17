@@ -12,3 +12,6 @@ val Licences = listOf(
 
 const val SOURCE_URL = "https://github.com/kjmikkel/Dracula-Night-by-Night"
 const val PRIVACY_URL = "https://github.com/kjmikkel/Dracula-Night-by-Night/blob/main/docs/privacy.md"
+
+/** Shown when a link has nothing to open it, such as a device with no browser. */
+const val NO_BROWSER = "No browser is installed to open this link."
