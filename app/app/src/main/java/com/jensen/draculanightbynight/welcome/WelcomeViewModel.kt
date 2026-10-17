@@ -20,12 +20,17 @@ class WelcomeViewModel(private val app: AppContainer) : ViewModel() {
     private var beginning = false
 
     fun begin(mode: ReadingMode, notify: Boolean, onDone: () -> Unit) {
-        // A double tap on Begin starts once.
+        // A double tap on Begin starts once. The guard clears when Begin has finished: if the app left the
+        // screen just then, MainActivity skips the navigation, and Begin must work again on return.
         if (beginning) return
         beginning = true
         viewModelScope.launch {
-            app.users.completeOnboarding(mode, notify)
-            onDone()
+            try {
+                app.users.completeOnboarding(mode, notify)
+                onDone()
+            } finally {
+                beginning = false
+            }
         }
     }
 
