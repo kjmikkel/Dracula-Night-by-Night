@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from datetime import date, time
 
 TYPES = ("diary", "phonograph", "letter", "telegram", "newspaper", "memo", "log")
-ROLES = ("note", "para", "dateline", "salutation", "signoff", "verse")
+ROLES = ("note", "para", "dateline", "salutation", "signoff", "verse", "divider")
 
 
 @dataclass(frozen=True)

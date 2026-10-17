@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 enum class DocumentType { DIARY, PHONOGRAPH, LETTER, TELEGRAM, NEWSPAPER, MEMO, LOG }
 
-enum class BlockRole { NOTE, PARA, DATELINE, SALUTATION, SIGNOFF, VERSE }
+enum class BlockRole { NOTE, PARA, DATELINE, SALUTATION, SIGNOFF, VERSE, DIVIDER }
 
 data class Span(val text: String, val italic: Boolean)
 

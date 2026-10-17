@@ -70,6 +70,7 @@ import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.ui.DisplayCapsFamily
 import com.jensen.draculanightbynight.ui.LocalReadingStyle
 import com.jensen.draculanightbynight.ui.Ornament
+import androidx.compose.ui.platform.testTag
 import com.jensen.draculanightbynight.ui.TelegramStyle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -256,7 +257,7 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
                 Header(reader)
             }
         }
-        itemsIndexed(reader.entry.body) { _, block -> BlockText(block) }
+        itemsIndexed(reader.entry.body) { i, block -> BlockText(block, atEdge = i == 0 || i == reader.entry.body.lastIndex) }
     }
 }
 
@@ -306,8 +307,9 @@ private fun annotated(block: Block): AnnotatedString = buildAnnotatedString {
     }
 }
 
+/** One block of the entry; [atEdge] when it's the first or last, where a divider would only part the text from nothing. */
 @Composable
-private fun BlockText(block: Block) {
+private fun BlockText(block: Block, atEdge: Boolean) {
     // The story text uses the reader's font and size; headers keep the theme's.
     val reading = LocalReadingStyle.current
     val body = reading.applyTo(MaterialTheme.typography.bodyLarge)
@@ -317,5 +319,7 @@ private fun BlockText(block: Block) {
         BlockRole.DATELINE, BlockRole.SIGNOFF -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body, textAlign = TextAlign.End)
         BlockRole.VERSE -> Text(annotated(block), Modifier.fillMaxWidth().padding(start = 24.dp, bottom = 12.dp), style = body, fontStyle = FontStyle.Italic)
         BlockRole.SALUTATION, BlockRole.PARA -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body)
+        // The book's lines of dots (#178). Dropped at an edge, but still an item, so saved positions keep their blocks.
+        BlockRole.DIVIDER -> if (!atEdge) Ornament(Modifier.testTag("divider").padding(bottom = 12.dp))
     }
 }
