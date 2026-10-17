@@ -20,10 +20,10 @@ private val TWO_PANE_MIN_HEIGHT = 480.dp
 /** Whether a window of this size has room for the timeline and an entry side by side. */
 fun twoPanes(width: Dp, height: Dp): Boolean = width >= TWO_PANE_MIN_WIDTH && height >= TWO_PANE_MIN_HEIGHT
 
-/** [twoPanes] for the current window, measured in dp that the font scale does not stretch. */
+/** [twoPanes] for the current window, measured in raw window dp (text size must not change the layout). */
 @Composable
 fun windowIsWide(): Boolean {
     val density = LocalDensity.current
     val size = LocalWindowInfo.current.containerSize
-    return with(density) { twoPanes(size.width.toDp() / density.fontScale, size.height.toDp() / density.fontScale) }
+    return with(density) { twoPanes(size.width.toDp(), size.height.toDp()) }
 }
