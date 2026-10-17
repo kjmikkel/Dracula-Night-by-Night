@@ -1,0 +1,29 @@
+name: guard
+
+# pull_request_target runs this file and the guard script as they are on the base
+# branch, so a PR cannot edit its own guard. It never checks out or runs PR code:
+# the changed files come from the API.
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  trail-owner-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash .github/scripts/trail-guard.test.sh
+      - name: Only the owner may change .trail/
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          gh api "repos/$REPO/pulls/$PR/files" --paginate \
+            --jq '.[] | .filename, (.previous_filename // empty)' \
+            | bash .github/scripts/trail-guard.sh "$AUTHOR" "$OWNER"
