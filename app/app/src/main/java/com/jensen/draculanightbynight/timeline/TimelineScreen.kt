@@ -41,8 +41,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.first
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -188,6 +191,10 @@ private fun Timeline(
     // Keeps the open entry's row on screen as the reader moves between entries; runs after the opening position.
     LaunchedEffect(selectedId) {
         val item = selectedId?.let { rowItem(state, it) }?.let { if (cardsInList) it + 1 else it } ?: return@LaunchedEffect
+        // Wait for a real layout after the opening anchor ran: before that nothing is visible yet, and a restored
+        // scroll position (rotation, folding) must not be replaced.
+        val key = state.filter.summary
+        snapshotFlow { anchoredFor == key && listState.layoutInfo.visibleItemsInfo.isNotEmpty() }.first { it }
         if (listState.layoutInfo.visibleItemsInfo.none { it.index == item }) listState.animateScrollToItem(item)
     }
     val cards: @Composable () -> Unit = {
@@ -279,6 +286,8 @@ private fun TimelineList(
 
 @Composable
 private fun EntryRow(row: TimelineRow, selected: Boolean, onClick: () -> Unit) {
+    // On the highlight everything uses the one colour the palette checks against it.
+    val onSelected = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else null
     Row(
         Modifier.fillMaxWidth()
             .then(if (selected) Modifier.background(MaterialTheme.colorScheme.secondaryContainer).semantics { this.selected = true } else Modifier)
@@ -294,21 +303,21 @@ private fun EntryRow(row: TimelineRow, selected: Boolean, onClick: () -> Unit) {
                 softWrap = false,
                 style = MaterialTheme.typography.bodyMedium,
                 fontStyle = if (row.timeEstimated) FontStyle.Italic else FontStyle.Normal,
-                color = if (row.timeEstimated) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                color = onSelected ?: if (row.timeEstimated) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
             )
         }
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 if (row.unread) {
-                    Box(Modifier.size(8.dp).background(MaterialTheme.colorScheme.primary, CircleShape).semantics { contentDescription = "Unread" })
+                    Box(Modifier.size(8.dp).background(onSelected ?: MaterialTheme.colorScheme.primary, CircleShape).semantics { contentDescription = "Unread" })
                 }
                 // Wraps rather than pushing the star off the edge at large text.
                 Text("${row.authorName} · ${typeLabel(row.type)}${row.place?.let { " · $it" } ?: ""}", Modifier.weight(1f, fill = false),
-                    style = MaterialTheme.typography.labelLarge)
-                if (row.bookmarked) Text("★", color = MaterialTheme.colorScheme.primary, modifier = Modifier.semantics { contentDescription = "Bookmarked" })
+                    style = MaterialTheme.typography.labelLarge, color = onSelected ?: Color.Unspecified)
+                if (row.bookmarked) Text("★", color = onSelected ?: MaterialTheme.colorScheme.primary, modifier = Modifier.semantics { contentDescription = "Bookmarked" })
             }
             Text(row.preview, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                color = onSelected ?: MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
