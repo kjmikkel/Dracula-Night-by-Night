@@ -29,11 +29,15 @@ jobs:
           packages: platform-tools platforms;android-37.0 build-tools;36.0.0
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew :app:testDebugUnitTest :app:assembleDebug --console=plain
+      # buildSrc is a separate build, so its tests (release signing settings) run on their own.
+      - run: ./gradlew -p buildSrc test --console=plain
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-reports
-          path: app/app/build/reports/tests/
+          path: |
+            app/app/build/reports/tests/
+            app/buildSrc/build/reports/tests/
 
   app-lint:
     runs-on: ubuntu-latest

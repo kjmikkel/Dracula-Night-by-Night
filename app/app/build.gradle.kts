@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -7,21 +5,11 @@ plugins {
 }
 
 /**
- * The release signing key, from app/keystore.properties (git-ignored) or the DNBN_* environment variables.
- * Null when neither is complete: the release build is then unsigned, which CI uses to check it builds.
+ * The release signing key, from app/keystore.properties (git-ignored) or the DNBN_* environment variables; see
+ * buildSrc/src/main/kotlin/ReleaseKey.kt. Null when nothing is set: the release build is then unsigned, which CI
+ * uses to check it builds.
  */
-val releaseKey: Map<String, String>? = run {
-    val file = rootProject.file("keystore.properties")
-    val props = Properties().apply { if (file.exists()) file.inputStream().use(::load) }
-    val keys = mapOf(
-        "storeFile" to "DNBN_STORE_FILE",
-        "storePassword" to "DNBN_STORE_PASSWORD",
-        "keyAlias" to "DNBN_KEY_ALIAS",
-        "keyPassword" to "DNBN_KEY_PASSWORD",
-    )
-    val values = keys.mapValues { (prop, env) -> props.getProperty(prop) ?: System.getenv(env) }
-    if (values.values.all { !it.isNullOrBlank() }) values.mapValues { it.value!! } else null
-}
+val releaseKey: Map<String, String>? = releaseKey(rootProject.file("keystore.properties"), System::getenv)
 
 android {
     namespace = "com.jensen.draculanightbynight"
@@ -38,7 +26,7 @@ android {
     signingConfigs {
         releaseKey?.let { key ->
             create("release") {
-                storeFile = file(key.getValue("storeFile"))
+                storeFile = File(key.getValue("storeFile"))
                 storePassword = key.getValue("storePassword")
                 keyAlias = key.getValue("keyAlias")
                 keyPassword = key.getValue("keyPassword")
