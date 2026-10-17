@@ -31,11 +31,13 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jensen.draculanightbynight.a11y.InLook
 import com.jensen.draculanightbynight.a11y.Look
 import com.jensen.draculanightbynight.a11y.arrived
+import com.jensen.draculanightbynight.a11y.free
 import com.jensen.draculanightbynight.a11y.tempo
 import com.jensen.draculanightbynight.a11y.testApp
 import com.jensen.draculanightbynight.content.Story
@@ -50,6 +52,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -73,12 +76,22 @@ class TwoPaneNavigationTest {
     private var windowWidth by mutableStateOf(1280)
     private var windowHeight by mutableStateOf(800)
 
+    /** Entries tapped notifications ask to open, as MainActivity passes them. */
+    private val requests = MutableStateFlow<String?>(null)
+
     @After fun tearDown() {
         runBlocking { app.scope.coroutineContext.job.cancelAndJoin() }
         TimeZone.setDefault(defaultZone)
     }
 
-    private fun show(width: Int = 1280, height: Int = 800, restoration: StateRestorationTester? = null, seed: suspend AppContainer.() -> Unit = {}) {
+    /** Shows the app on [start]; a [start] of Welcome stands for Begin having finished while the app was away (#110). */
+    private fun show(
+        width: Int = 1280,
+        height: Int = 800,
+        restoration: StateRestorationTester? = null,
+        start: String = "timeline",
+        seed: suspend AppContainer.() -> Unit = {},
+    ) {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
         windowWidth = width
         windowHeight = height
@@ -103,13 +116,15 @@ class TwoPaneNavigationTest {
                     Box(Modifier.requiredSize(windowWidth.dp, windowHeight.dp).clipToBounds()) {
                         val controller = rememberNavController()
                         nav = controller
-                        AppNavigation(app, remember { MutableStateFlow<String?>(null) }, "timeline", controller)
+                        // As MainActivity does: nothing until the saved state has loaded.
+                        val user by app.users.state.collectAsStateWithLifecycle(initialValue = null)
+                        user?.let { AppNavigation(app, requests, start, it.timelineHidden, controller) }
                     }
                 }
             }
         }
         if (restoration != null) restoration.setContent(content) else compose.setContent(content)
-        waitFor(hasText(ids.first().let(::preview)) and hasClickAction())
+        waitFor(if (start == "welcome") hasText("How would you like to read?") else row(ids.first()))
     }
 
     private fun waitFor(matcher: SemanticsMatcher) {
@@ -172,6 +187,34 @@ class TwoPaneNavigationTest {
     private fun firstVisibleItem(): Int =
         compose.onAllNodes(timelineList).onFirst().fetchSemanticsNode()
             .config[SemanticsProperties.VerticalScrollAxisRange].value().toInt() / 500
+
+    private fun shown(matcher: SemanticsMatcher): Boolean =
+        compose.onAllNodes(matcher).fetchSemanticsNodes().isNotEmpty() && compose.onNode(matcher).isDisplayed()
+
+    /** A notification for [id] is tapped. */
+    private fun notify(id: String) {
+        requests.value = id
+        compose.waitForIdle()
+    }
+
+    /**
+     * Runs [action] and then the frames after it one at a time until [settled], failing if the timeline's title is
+     * on screen in any of them: a hidden timeline must not show for even one frame.
+     */
+    private fun assertTitleNeverShows(settled: SemanticsMatcher, action: () -> Unit) {
+        compose.mainClock.autoAdvance = false
+        try {
+            action()
+            repeat(MAX_FRAMES) { frame ->
+                assertTrue("the hidden timeline showed in frame $frame", compose.onAllNodes(title).fetchSemanticsNodes().isEmpty())
+                if (compose.onAllNodes(settled).fetchSemanticsNodes().isNotEmpty()) return
+                compose.mainClock.advanceTimeByFrame()
+            }
+            fail("never settled")
+        } finally {
+            compose.mainClock.autoAdvance = true
+        }
+    }
 
     /** Two arrived entries by different authors. */
     private fun twoAuthors(): Pair<String, String> {
@@ -322,5 +365,162 @@ class TwoPaneNavigationTest {
         compose.onNodeWithContentDescription("Back").assertExists()
         compose.onNode(split).assertDoesNotExist()
         compose.onNodeWithText("Dracula Night by Night").assertDoesNotExist()
+    }
+
+    @Test fun aNotificationOverWelcomeOpensTheSplit() {
+        show(start = "welcome")
+        val x = ids.first()
+        notify(x)
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun aReaderOverWelcomeWidensIntoTheSplit() {
+        show(400, 800, start = "welcome")
+        val x = ids.first()
+        notify(x)
+        waitFor(readerHeading(x))
+        assertEquals(x, nav.currentBackStackEntry?.arguments?.getString("id"))
+        resize(1280, 800)
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun aSecondNotificationOverWelcomeOpensItsOwnEntry() {
+        show(400, 800, start = "welcome")
+        val (a, b) = twoAuthors()
+        notify(a)
+        waitFor(readerHeading(a))
+        notify(b)
+        waitFor(readerHeading(b))
+        compose.onNode(readerHeading(a)).assertDoesNotExist()
+        assertEquals(b, nav.currentBackStackEntry?.arguments?.getString("id"))
+    }
+
+    @Test fun aHiddenTimelineDoesNotFlashWhenTheSplitReturns() {
+        show(400, 800) { users.setTimelineHidden(true) }
+        val x = ids.first()
+        open(x)
+        assertTitleNeverShows(split and hasClickAction()) {
+            windowWidth = 1280
+        }
+        waitFor(readerHeading(x))
+        compose.onNode(title).assertDoesNotExist()
+    }
+
+    /** Short, so most rows are off screen. */
+    @Config(qualifiers = "w1280dp-h500dp")
+    @Test fun showingTheTimelineAgainScrollsToTheHighlightedRow() {
+        // Read freely, so every entry has arrived and each Next lands on a row.
+        show(1280, 500) { free() }
+        val x = story.entries.first { shown(row(it.id)) }.id
+        val target = story.entries.dropWhile { it.id != x }.drop(1).take(STEPS).map { it.id }
+        open(x)
+        assertFalse(
+            "the row must start off screen for this test to mean anything",
+            shown(row(target.last())),
+        )
+        compose.onNodeWithContentDescription("Show timeline").performClick() // the switch is on: this hides it
+        compose.waitUntil(30_000) { compose.onAllNodes(title).fetchSemanticsNodes().isEmpty() }
+        repeat(STEPS) {
+            compose.onNodeWithContentDescription("Next entry in the story").performClick()
+            compose.waitForIdle()
+        }
+        waitFor(readerHeading(target.last()))
+        compose.onNodeWithContentDescription("Show timeline").performClick()
+        waitFor(selected and row(target.last()))
+        compose.waitUntil(30_000) { shown(selected and row(target.last())) }
+    }
+
+    @Test fun aNotificationWhileWideOpensTheSplit() {
+        show()
+        val x = ids.first()
+        notify(x)
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun aNotificationOverSettingsOpensTheSplit() {
+        show()
+        val x = ids.first()
+        compose.onNodeWithContentDescription("Settings").performClick()
+        compose.waitForIdle()
+        assertEquals("settings", nav.currentDestination?.route)
+        notify(x)
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        assertEquals("timeline", nav.currentDestination?.route)
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun aNotificationOverBookmarksOpensTheSplit() {
+        show()
+        val x = ids.first()
+        compose.onNodeWithContentDescription("Bookmarks").performClick()
+        compose.waitForIdle()
+        assertEquals("bookmarks", nav.currentDestination?.route)
+        notify(x)
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        assertEquals("timeline", nav.currentDestination?.route)
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun aNotificationOnAPhoneOpensTheReaderOverTheTimeline() {
+        show(400, 800)
+        val x = ids.first()
+        compose.onNodeWithContentDescription("Settings").performClick()
+        compose.waitForIdle()
+        notify(x)
+        waitFor(readerHeading(x))
+        compose.onNode(split).assertDoesNotExist()
+        compose.onNodeWithContentDescription("Back").assertExists()
+        assertEquals(x, nav.currentBackStackEntry?.arguments?.getString("id"))
+        assertEquals("timeline", nav.previousBackStackEntry?.destination?.route)
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun openingFromBookmarksWhileWideLandsOnTheSplit() {
+        val x = "1893-05-04-jonathan_harker-01"
+        show { users.toggleBookmark(x) }
+        compose.onNodeWithContentDescription("Bookmarks").performClick()
+        waitFor(row(x))
+        compose.onNode(row(x)).performClick()
+        compose.waitForIdle()
+        assertSplitOn(x)
+        waitFor(readerHeading(x))
+        assertEquals("timeline", nav.currentDestination?.route)
+        assertEquals("Bookmarks should be gone", null, nav.previousBackStackEntry)
+        back()
+        assertFullTimeline()
+    }
+
+    @Test fun closingThenOpeningAnotherShowsTheOther() {
+        show()
+        val (a, b) = twoAuthors()
+        open(a)
+        compose.onNodeWithContentDescription("Close entry").performClick()
+        compose.waitForIdle()
+        compose.onNode(split).assertDoesNotExist()
+        open(b)
+        assertSplitOn(b)
+        compose.onNode(readerHeading(a)).assertDoesNotExist()
+    }
+
+    private companion object {
+        /** Frames [assertTitleNeverShows] waits for the screen to settle: 10 s at 60 fps. */
+        const val MAX_FRAMES = 600
+
+        /** Times Next is pressed in [showingTheTimelineAgainScrollsToTheHighlightedRow]. */
+        const val STEPS = 6
     }
 }

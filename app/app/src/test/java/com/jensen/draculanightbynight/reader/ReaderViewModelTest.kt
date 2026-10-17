@@ -185,6 +185,28 @@ class ReaderViewModelTest {
     }
 
     @Test
+    fun aRestoredPaneReaderStaysWhereItWasMovedTo() = runTest {
+        val users = users()
+        users.setMode(ReadingMode.Free)
+        users.setFilter(EntryFilter(setOf(Voice.MINA)))
+        val saved = SavedStateHandle()
+        val request = OpenEntry("may04", filtered = true, seq = 7)
+        val first = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, "may03", false, saved)
+        first.open(request)
+        first.follow(Following.ALL)
+        first.onPageSettled("may05")
+        // Android killed the app: the pane reader comes back over the same saved state, and the split re-runs the request.
+        val copy = SavedStateHandle(saved.keys().associateWith { saved.get<Any>(it) })
+        val restored = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, request.id, request.filtered, copy, request.followingAll)
+        restored.open(request)
+        assertEquals(OpenEntry("may05", filtered = true, followingAll = true), restored.openEntry())
+        val ready = restored.ready()
+        assertEquals("may05", ready.reader.entry.id)
+        assertEquals(Following.ALL, ready.pager.following)
+        assertNotNull("the filter/All switch is still offered", ready.pager.filterLabel)
+    }
+
+    @Test
     fun openMovesToTheRequestedEntryAndFollowState() = runTest {
         val (viewModel, _) = openFiltered("may03", filtered = false)
         viewModel.open(OpenEntry("may04", filtered = true, seq = 1))

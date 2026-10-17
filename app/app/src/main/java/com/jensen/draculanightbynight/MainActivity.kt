@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 textSize = user?.textSize ?: TextSize.NORMAL,
             ) {
                 // Wait for the saved state before choosing the first screen, so a returning reader never sees Welcome flash.
-                user?.let { AppNavigation(app, openRequests, startRoute = if (it.isOnboarded) "timeline" else "welcome") }
+                user?.let { AppNavigation(app, openRequests, startRoute = if (it.isOnboarded) "timeline" else "welcome", timelineHidden = it.timelineHidden) }
             }
         }
     }
@@ -94,21 +94,36 @@ private const val OPEN_ENTRY = "openEntry"
 private fun NavController.openEntry(request: OpenEntry, wide: Boolean, popUpToTimeline: Boolean = false) {
     val fresh = request.copy(seq = SystemClock.elapsedRealtimeNanos())
     if (wide) {
-        getBackStackEntry("timeline").savedStateHandle[OPEN_ENTRY] = fresh.encode()
+        // Still on Welcome although Begin finished (it ended while the app was away, #110): a notification, or a
+        // reader opened over Welcome on a phone, goes to the timeline as Begin would have, so the split has one.
+        val timeline = try {
+            getBackStackEntry("timeline")
+        } catch (_: IllegalArgumentException) {
+            navigate("timeline") { popUpTo("welcome") { inclusive = true } }
+            getBackStackEntry("timeline")
+        }
+        timeline.savedStateHandle[OPEN_ENTRY] = fresh.encode()
         popBackStack("timeline", inclusive = false)
     } else {
         navigate(fresh.route()) {
-            launchSingleTop = true
+            // A notification always opens a new reader, as before #58: over Welcome there is no timeline to pop to,
+            // and a reused reader would stay on its old entry.
+            launchSingleTop = !popUpToTimeline
             if (popUpToTimeline) popUpTo("timeline")
         }
     }
 }
 
+/**
+ * @param timelineHidden the saved choice, passed in from state already loaded: collecting it here would start as
+ * "shown" each time the timeline enters composition, and a hidden timeline would flash for a frame.
+ */
 @Composable
 internal fun AppNavigation(
     app: AppContainer,
     openRequests: MutableStateFlow<String?>,
     startRoute: String,
+    timelineHidden: Boolean,
     nav: NavHostController = rememberNavController(),
 ) {
     // The first screen is chosen once; later state changes (Begin) navigate instead.
@@ -134,8 +149,6 @@ internal fun AppNavigation(
         composable("timeline") { entry ->
             val handle = entry.savedStateHandle
             val open = handle.getStateFlow<String?>(OPEN_ENTRY, null).collectAsStateWithLifecycle().value?.let(::decodeOpenEntry)
-            val user by app.users.state.collectAsStateWithLifecycle(initialValue = null)
-            val hidden = user?.timelineHidden ?: false
             // One reader for the right pane, moved to each entry asked for; it outlives the entry closing.
             val pane = open?.let { first ->
                 viewModel(key = "pane-reader") {
@@ -155,10 +168,10 @@ internal fun AppNavigation(
             TwoPaneScreen(
                 timeline = viewModel { TimelineViewModel(app) },
                 reader = pane.takeIf { wide },
-                timelineHidden = hidden,
+                timelineHidden = timelineHidden,
                 onOpen = { id, filtered -> if (entry.isResumed()) nav.openEntry(OpenEntry(id, filtered), wide) },
                 onClose = { handle[OPEN_ENTRY] = null },
-                onToggleTimeline = { app.scope.launch { app.users.setTimelineHidden(!hidden) } },
+                onToggleTimeline = { app.scope.launch { app.users.setTimelineHidden(!timelineHidden) } },
                 onBookmarks = { if (entry.isResumed()) nav.navigate("bookmarks") { launchSingleTop = true } },
                 onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
             )
