@@ -16,12 +16,15 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,14 +38,22 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.jensen.draculanightbynight.BuildConfig
 import com.jensen.draculanightbynight.ui.Ornament
+import kotlinx.coroutines.launch
 
 /** What the app is, where its text and code come from, the font licences and the privacy promise. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(onBack: () -> Unit) {
     val links = LocalUriHandler.current
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    // openUri throws IllegalArgumentException when nothing can open the link, such as with no browser installed.
+    val open: (String) -> Unit = { url ->
+        try { links.openUri(url) } catch (_: IllegalArgumentException) { scope.launch { snackbar.showSnackbar(NO_BROWSER) } }
+    }
     var shown by rememberSaveable { mutableStateOf<String?>(null) }
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         topBar = {
             TopAppBar(
                 title = { Text("About", Modifier.semantics { heading() }) },
@@ -74,14 +85,14 @@ fun AboutScreen(onBack: () -> Unit) {
                 ListItem(
                     headlineContent = { Text("Source code") },
                     supportingContent = { Text("Apache License 2.0, on GitHub") },
-                    modifier = Modifier.linkRow("Open the source code on GitHub") { links.openUri(SOURCE_URL) },
+                    modifier = Modifier.linkRow("Open the source code on GitHub") { open(SOURCE_URL) },
                 )
             }
             item {
                 ListItem(
                     headlineContent = { Text("Privacy") },
                     supportingContent = { Text("The app collects nothing and sends nothing anywhere. Read the privacy policy.") },
-                    modifier = Modifier.linkRow("Open the privacy policy") { links.openUri(PRIVACY_URL) },
+                    modifier = Modifier.linkRow("Open the privacy policy") { open(PRIVACY_URL) },
                 )
             }
             item { Section("Fonts") }
