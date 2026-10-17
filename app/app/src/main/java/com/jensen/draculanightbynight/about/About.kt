@@ -6,7 +6,7 @@ data class Licence(val name: String, val licence: String, val asset: String)
 val Licences = listOf(
     Licence("Atkinson Hyperlegible", "SIL Open Font License 1.1", "AtkinsonHyperlegible-OFL.txt"),
     Licence("OpenDyslexic", "SIL Open Font License 1.1", "OpenDyslexic-OFL.txt"),
-    Licence("IM Fell English", "SIL Open Font License 1.1", "IMFellEnglish-OFL.txt"),
+    Licence("IM Fell English, IM Fell English SC", "SIL Open Font License 1.1", "IMFellEnglish-OFL.txt"),
     Licence("Special Elite", "Apache License 2.0", "SpecialElite-LICENSE.txt"),
 )
 
