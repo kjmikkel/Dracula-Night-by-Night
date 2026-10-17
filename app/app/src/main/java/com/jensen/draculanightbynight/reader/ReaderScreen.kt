@@ -57,9 +57,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -257,7 +259,10 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
                 Header(reader)
             }
         }
-        itemsIndexed(reader.entry.body) { i, block -> BlockText(block, atEdge = i == 0 || i == reader.entry.body.lastIndex) }
+        itemsIndexed(reader.entry.body) { i, block ->
+            val body = reader.entry.body
+            BlockText(block, atEdge = i == 0 || i == body.lastIndex, indent = indentsFirstLine(body, i), closeBelow = indentsFirstLine(body, i + 1))
+        }
     }
 }
 
@@ -301,15 +306,22 @@ private fun Header(reader: ReaderState) {
     }
 }
 
+/** In em, so it grows with the reading font and size. */
+private val PARAGRAPH_INDENT = 1.5.em
+
 private fun annotated(block: Block): AnnotatedString = buildAnnotatedString {
     for (span in block.spans) {
         if (span.italic) withStyle(SpanStyle(fontStyle = FontStyle.Italic)) { append(span.text) } else append(span.text)
     }
 }
 
-/** One block of the entry; [atEdge] when it's the first or last, where a divider would only part the text from nothing. */
+/**
+ * One block of the entry; [atEdge] when it's the first or last, where a divider would only part the text from nothing.
+ * A paragraph that runs on from the one before is [indent]ed, and with the indent marking it, the gap above it is
+ * smaller ([closeBelow] on the paragraph before) (#179).
+ */
 @Composable
-private fun BlockText(block: Block, atEdge: Boolean) {
+private fun BlockText(block: Block, atEdge: Boolean, indent: Boolean, closeBelow: Boolean) {
     // The story text uses the reader's font and size; headers keep the theme's.
     val reading = LocalReadingStyle.current
     val body = reading.applyTo(MaterialTheme.typography.bodyLarge)
@@ -318,7 +330,9 @@ private fun BlockText(block: Block, atEdge: Boolean) {
             fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
         BlockRole.DATELINE, BlockRole.SIGNOFF -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body, textAlign = TextAlign.End)
         BlockRole.VERSE -> Text(annotated(block), Modifier.fillMaxWidth().padding(start = 24.dp, bottom = 12.dp), style = body, fontStyle = FontStyle.Italic)
-        BlockRole.SALUTATION, BlockRole.PARA -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body)
+        BlockRole.SALUTATION -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = 12.dp), style = body)
+        BlockRole.PARA -> Text(annotated(block), Modifier.fillMaxWidth().padding(bottom = if (closeBelow) 4.dp else 12.dp),
+            style = if (indent) body.copy(textIndent = TextIndent(firstLine = PARAGRAPH_INDENT)) else body)
         // The book's lines of dots (#178). Dropped at an edge, but still an item, so saved positions keep their blocks.
         BlockRole.DIVIDER -> if (!atEdge) Ornament(Modifier.testTag("divider").padding(bottom = 12.dp))
     }
