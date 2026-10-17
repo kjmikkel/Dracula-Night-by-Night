@@ -183,4 +183,49 @@ class ReaderViewModelTest {
         val restored = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, "may04", false, saved)
         assertEquals("may05", restored.ready().reader.entry.id)
     }
+
+    @Test
+    fun openMovesToTheRequestedEntryAndFollowState() = runTest {
+        val (viewModel, _) = openFiltered("may03", filtered = false)
+        viewModel.open(OpenEntry("may04", filtered = true, seq = 1))
+        val ready = viewModel.state.first { it is ReaderUi.Ready && it.reader.entry.id == "may04" && it.pager.following == Following.FILTER } as ReaderUi.Ready
+        assertNotNull(ready.pager.filterLabel)
+    }
+
+    @Test
+    fun theSameRequestIsAppliedOnlyOnce() = runTest {
+        val (viewModel, _) = openFiltered("may03", filtered = false)
+        val request = OpenEntry("may04", filtered = false, seq = 1)
+        viewModel.open(request)
+        viewModel.onPageSettled("may05")
+        viewModel.open(request) // re-run after a rotation: must not undo the swipe
+        assertEquals("may05", viewModel.currentId.value)
+    }
+
+    @Test
+    fun aNewTapOnTheSameEntryMovesBack() = runTest {
+        val (viewModel, _) = openFiltered("may03", filtered = false)
+        val request = OpenEntry("may04", filtered = false, seq = 1)
+        viewModel.open(request)
+        viewModel.onPageSettled("may05")
+        viewModel.open(request.copy(seq = 2))
+        assertEquals("may04", viewModel.currentId.value)
+    }
+
+    @Test
+    fun openEntryReportsWhereTheReaderIs() = runTest {
+        val (viewModel, _) = openFiltered("may04", filtered = true)
+        viewModel.follow(Following.ALL)
+        viewModel.onPageSettled("may05")
+        assertEquals(OpenEntry("may05", filtered = true, followingAll = true), viewModel.openEntry())
+    }
+
+    @Test
+    fun followingAllStartsOnAll() = runTest {
+        val users = users()
+        users.setMode(ReadingMode.Free)
+        users.setFilter(EntryFilter(setOf(Voice.MINA)))
+        val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), backgroundScope, "may04", true, SavedStateHandle(), followingAll = true)
+        assertEquals(Following.ALL, viewModel.ready().pager.following)
+    }
 }
