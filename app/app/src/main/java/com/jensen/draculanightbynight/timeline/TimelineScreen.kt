@@ -173,6 +173,13 @@ private fun Timeline(
             anchoredFor = key
         }
     }
+    // Rotating into a short window moves the cards into the list, where the kept scroll position would leave them
+    // just above the screen: scroll up so they show, as when the timeline opens in a short window.
+    var cardsWereInList by rememberSaveable { mutableStateOf(cardsInList) }
+    LaunchedEffect(cardsInList) {
+        if (cardsInList && !cardsWereInList) listState.scrollToItem(0)
+        cardsWereInList = cardsInList
+    }
     val cards: @Composable () -> Unit = {
         if (large) AppTitle(Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         state.tonight?.let { TonightCardView(it, onOpen) }
