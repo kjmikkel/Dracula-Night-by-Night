@@ -53,6 +53,18 @@ class TonightTest {
     }
 
     @Test
+    fun theDayStartsAtSixOnTheDayClocksGoForward() {
+        // London, 29 March 2026: 01:00 GMT jumps to 02:00 BST. At 06:30 the night of the 28th is over.
+        assertEquals("Last night", h("2026-03-29T05:30+01:00[Europe/London]", "2026-03-29T06:30+01:00[Europe/London]"))
+    }
+
+    @Test
+    fun theDayStartsAtSixOnTheDayClocksGoBack() {
+        // London, 25 October 2026: 02:00 BST falls back to 01:00 GMT. At 05:30 it is still the night of the 24th.
+        assertEquals("Tonight", h("2026-10-24T22:00+01:00[Europe/London]", "2026-10-25T05:30Z[Europe/London]"))
+    }
+
+    @Test
     fun yesterday() {
         assertEquals("Yesterday afternoon", h("2026-10-16T15:00Z", "2026-10-17T10:00Z"))
         assertEquals("Yesterday morning", h("2026-10-16T06:00Z", "2026-10-17T06:00Z"))

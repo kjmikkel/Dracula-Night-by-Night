@@ -49,8 +49,13 @@ private fun partOf(hour: Int): PartOfDay = when {
     else -> PartOfDay.EVENING
 }
 
-/** The day a moment belongs to when days run from [MORNING_STARTS] to [MORNING_STARTS]. */
-private fun dayOf(time: ZonedDateTime): LocalDate = time.minusHours(MORNING_STARTS.toLong()).toLocalDate()
+/**
+ * The day a moment belongs to when days run from [MORNING_STARTS] to [MORNING_STARTS] on the wall clock. Read the
+ * local hour rather than subtracting six hours, which counts elapsed time and so moves the boundary to 05:00 or
+ * 07:00 on daylight-saving days.
+ */
+private fun dayOf(time: ZonedDateTime): LocalDate =
+    if (time.hour < MORNING_STARTS) time.toLocalDate().minusDays(1) else time.toLocalDate()
 
 /** When an entry arrived, said the way a reader would: "Tonight", "Yesterday evening", "Thursday night", "12 October, evening". */
 fun arrivalHeading(arrivedAt: ZonedDateTime, now: ZonedDateTime): String {
