@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 from pipeline.cli import main
 from tests.markup import chapter, page
@@ -46,3 +47,23 @@ def test_build_succeeds_and_is_deterministic(tmp_path):
     assert (d / "out" / "entries.json").read_bytes() == first
     assert b'"time": "20:35"' in first
     assert (d / "out" / "characters.json").exists()
+
+
+def test_build_writes_an_empty_who_s_who_without_the_yaml(tmp_path):
+    d = make_data_dir(tmp_path, overrides=OVERRIDES)
+    assert main(["build", "--data-dir", str(d)]) == 0
+    assert json.loads((d / "out" / "whos_who.json").read_text(encoding="utf-8")) == {"groups": [], "people": []}
+
+
+def test_build_fails_on_a_who_s_who_tie_to_a_missing_entry(tmp_path, capsys):
+    d = make_data_dir(tmp_path, overrides=OVERRIDES)
+    (d / "whos_who.yaml").write_text(
+        "groups:\n  g:\n    names:\n      - {from: 1893-05-03-jonathan_harker-01, text: G}\n"
+        "people:\n  jonathan_harker:\n    group:\n      - {from: 1893-05-03-jonathan_harker-01, id: g}\n"
+        "    names:\n      - {from: 1893-05-03-jonathan_harker-01, text: Jonathan}\n"
+        "    lines:\n      - {from: gone, text: A line.}\n",
+        encoding="utf-8",
+    )
+    assert main(["build", "--data-dir", str(d)]) == 1
+    assert "gone" in capsys.readouterr().out
+    assert not (d / "out" / "entries.json").exists()

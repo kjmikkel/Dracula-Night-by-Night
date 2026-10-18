@@ -1,0 +1,214 @@
+{
+  "groups": [
+    {
+      "id": "jonathan_mina",
+      "names": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Jonathan and Mina"
+        }
+      ]
+    },
+    {
+      "id": "lucy",
+      "names": [
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "Lucy and her friends"
+        },
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "text": "Lucy and her suitors"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "groups": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "id": "jonathan_mina"
+        }
+      ],
+      "id": "jonathan_harker",
+      "lines": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "An Englishman travelling to Transylvania on business with a Count Dracula. He keeps notes of the journey to tell Mina about."
+        },
+        {
+          "from": "1893-05-05-jonathan_harker-02",
+          "text": "Newly qualified as a solicitor, sent out to explain the purchase of a London estate to the Count."
+        },
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "Mina's fiancé."
+        },
+        {
+          "from": "1893-08-24-mina_harker-01",
+          "text": "Married to Mina, in Buda-Pesth."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Jonathan Harker"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "id": "jonathan_mina"
+        }
+      ],
+      "id": "mina_harker",
+      "lines": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Someone at home in England whom Jonathan means to tell all about his travels."
+        },
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "An assistant schoolmistress, engaged to Jonathan. She is learning shorthand and typing so she can help him in his work."
+        },
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "Lucy's closest friend: they have shared their secrets since they were children."
+        },
+        {
+          "from": "1893-08-24-mina_harker-01",
+          "text": "Married to Jonathan, in Buda-Pesth."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Mina"
+        },
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "Mina Murray"
+        },
+        {
+          "from": "1893-08-24-mina_harker-01",
+          "text": "Mina Harker"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "id": "lucy"
+        }
+      ],
+      "id": "lucy_westenra",
+      "lines": [
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "Mina's dearest friend, to whom she writes."
+        },
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "In love with Arthur Holmwood."
+        },
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "text": "Proposed to three times in one day. She accepts Arthur."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-09-mina_harker-01",
+          "text": "Lucy Westenra"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "id": "lucy"
+        }
+      ],
+      "id": "arthur_holmwood",
+      "lines": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "A friend who often calls on Lucy and her mother. Lucy is in love with him."
+        },
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "text": "Lucy's fiancé. He proposed the same day as Dr Seward and Quincey Morris."
+        },
+        {
+          "from": "1893-05-25-quincey_morris-01",
+          "text": "An old friend of Quincey's and Seward's from their travels."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "Arthur Holmwood"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-24-lucy_westenra-01",
+          "id": "lucy"
+        }
+      ],
+      "id": "john_seward",
+      "lines": [
+        {
+          "from": "1893-05-24-lucy_westenra-01",
+          "text": "A young doctor who runs a lunatic asylum, introduced to Lucy by Arthur. He proposes to her, and she tells him there is someone else."
+        },
+        {
+          "from": "1893-05-25-john_seward-01",
+          "text": "Keeps his diary on a phonograph. After Lucy turns him down, he buries himself in his work at the asylum."
+        },
+        {
+          "from": "1893-05-25-quincey_morris-01",
+          "text": "An old friend of Quincey's and Arthur's, who call him Jack."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-24-lucy_westenra-01",
+          "text": "Dr John Seward"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "id": "lucy"
+        }
+      ],
+      "id": "quincey_morris",
+      "lines": [
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "text": "An American from Texas who has travelled widely. He proposes to Lucy the same day as Seward, and offers to stay her friend when she says no."
+        },
+        {
+          "from": "1893-05-25-quincey_morris-01",
+          "text": "An old friend of Arthur's and Seward's from their travels."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-24-lucy_westenra-02",
+          "text": "Quincey P. Morris"
+        }
+      ]
+    }
+  ]
+}

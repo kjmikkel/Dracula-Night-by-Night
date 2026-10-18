@@ -29,6 +29,7 @@ fun TwoPaneScreen(
     onToggleTimeline: () -> Unit,
     onBookmarks: () -> Unit,
     onSettings: () -> Unit,
+    onWhosWho: (authorId: String) -> Unit = {},
 ) {
     // Keeps the hidden timeline's list position and opening anchor for when it shows again.
     val saveable = rememberSaveableStateHolder()
@@ -46,7 +47,7 @@ fun TwoPaneScreen(
             if (reader != null) VerticalDivider()
         }
         if (reader != null) {
-            ReaderScreen(reader, onBack = onClose, pane = PaneControls(!timelineHidden, onToggleTimeline, onClose), modifier = Modifier.weight(1f))
+            ReaderScreen(reader, onBack = onClose, pane = PaneControls(!timelineHidden, onToggleTimeline, onClose), modifier = Modifier.weight(1f), onWhosWho = onWhosWho)
             BackHandler(onBack = onClose)
         }
     }

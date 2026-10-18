@@ -111,10 +111,17 @@ private fun NavigationControls(onBack: () -> Unit, pane: PaneControls?) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls? = null, modifier: Modifier = Modifier) {
+fun ReaderScreen(
+    viewModel: ReaderViewModel,
+    onBack: () -> Unit,
+    pane: PaneControls? = null,
+    modifier: Modifier = Modifier,
+    /** Opens the who's who on the author of the entry being read (#204). */
+    onWhosWho: (authorId: String) -> Unit = {},
+) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     when (val state = ui) {
-        is ReaderUi.Ready -> Pages(state, viewModel, onBack, pane, modifier)
+        is ReaderUi.Ready -> Pages(state, viewModel, onBack, pane, modifier, onWhosWho)
         else -> Scaffold(
             modifier = modifier,
             topBar = { TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }) },
@@ -139,7 +146,7 @@ private fun Locked(state: ReaderUi.Locked, pane: PaneControls?, onBack: () -> Un
 /** The entries as pages that follow the finger; Previous and Next turn them too. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls?, modifier: Modifier) {
+private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneControls?, modifier: Modifier, onWhosWho: (String) -> Unit) {
     val latest by rememberUpdatedState(ready)
     // Not saved by the pager itself: after Android kills the app the view model's saved page is the truth, and a
     // restored index could point at another entry once new ones have arrived.
@@ -165,6 +172,7 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
                 title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 navigationIcon = { NavigationControls(onBack, pane) },
                 actions = {
+                    TextButton(onClick = { onWhosWho(reader.entry.author) }) { Text("Who's who") }
                     // A switch for TalkBack: "Bookmark, on/off", without the star.
                     TextButton(
                         onClick = viewModel::toggleBookmark,

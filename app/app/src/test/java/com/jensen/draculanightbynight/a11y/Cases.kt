@@ -34,6 +34,8 @@ import com.jensen.draculanightbynight.timeline.TwoPaneScreen
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.welcome.WelcomeScreen
 import com.jensen.draculanightbynight.welcome.WelcomeViewModel
+import com.jensen.draculanightbynight.whoswho.WhosWhoScreen
+import com.jensen.draculanightbynight.whoswho.WhosWhoViewModel
 import java.time.LocalDate
 import java.time.ZoneOffset
 
@@ -80,6 +82,9 @@ private const val JONATHAN_8_MAY = "1893-05-08-jonathan_harker-01"
 
 @Composable private fun Settings(app: AppContainer) =
     SettingsScreen(remember { SettingsViewModel(app) }, onBack = {}, onAbout = {})
+
+@Composable private fun WhosWho(app: AppContainer, open: String? = null) =
+    WhosWhoScreen(remember { WhosWhoViewModel(app.stories, app.users, open, SavedStateHandle()) }, onBack = {})
 
 @Composable private fun Reader(app: AppContainer, id: String, filtered: Boolean = false) =
     ReaderScreen(remember { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered, SavedStateHandle()) }, onBack = {})
@@ -228,6 +233,22 @@ val cases: List<Case> = listOf(
         open = { tap("Start over") },
         expect = Expectations(toggles = listOf("Also remove")),
     ) { Settings(it) },
+    Case("whos-who-empty", setOf("WhosWhoScreen"), ready = "People appear here") { WhosWho(it) },
+    Case(
+        "whos-who-open", setOf("WhosWhoScreen"), ready = "Proposed to three times",
+        // Everything up to Lucy's letters of 24 May read, opened from one of them.
+        seed = {
+            tempo()
+            listOf(
+                "1893-05-03-jonathan_harker-01", "1893-05-05-jonathan_harker-02", "1893-05-09-mina_harker-01",
+                "1893-05-09-lucy_westenra-01", "1893-05-24-lucy_westenra-01", "1893-05-24-lucy_westenra-02",
+            ).forEach { users.markRead(it) }
+        },
+        expect = Expectations(
+            headings = listOf("Who's who", "Jonathan and Mina", "Lucy and her suitors"),
+            toggles = listOf("Jonathan Harker", "Mina Murray", "Lucy Westenra", "Arthur Holmwood", "Dr John Seward", "Quincey P. Morris"),
+        ),
+    ) { WhosWho(it, open = "lucy_westenra") },
     Case(
         "about", setOf("AboutScreen"), ready = "The text", seed = {},
         expect = Expectations(headings = listOf("About", "The text", "The app", "Fonts")),

@@ -33,6 +33,30 @@ class StoryJsonTest {
     }
 
     @Test
+    fun decodesTheWhosWhoKeepingItsOrder() {
+        val whosWho = """
+            {"groups": [{"id": "lucy", "names": [{"from": "a", "text": "Lucy and her friends"}]},
+                        {"id": "band", "names": [{"from": "a", "text": "The band"}]}],
+             "people": [{"id": "arthur_holmwood", "groups": [{"from": "a", "id": "lucy"}],
+                         "names": [{"from": "a", "text": "Arthur Holmwood"}],
+                         "lines": [{"from": "a", "text": "A friend of Lucy's."}, {"from": "b", "text": "Lucy's fiancé."}]}]}
+        """
+        val story = decodeStory("[${entry("a", 0, "1893-05-09", "10:00")}]", characters, whosWho)
+        assertEquals(listOf("lucy", "band"), story.whosWho.groups.map { it.id })
+        assertEquals(listOf(Tie("a", "Lucy and her friends")), story.whosWho.groups[0].names)
+        val arthur = story.whosWho.people.single()
+        assertEquals("arthur_holmwood", arthur.id)
+        assertEquals(listOf(Tie("a", "lucy")), arthur.groups)
+        assertEquals(listOf(Tie("a", "Arthur Holmwood")), arthur.names)
+        assertEquals(listOf(Tie("a", "A friend of Lucy's."), Tie("b", "Lucy's fiancé.")), arthur.lines)
+    }
+
+    @Test
+    fun noWhosWhoIsEmpty() {
+        assertEquals(WhosWho.EMPTY, decodeStory("[${entry("a", 0, "1893-05-09", "10:00")}]", characters).whosWho)
+    }
+
+    @Test
     fun previewSkipsNotesAndFlattensLineBreaks() {
         val story = decodeStory("[${entry("a", 0, "1893-05-09", "10:00")}]", characters)
         assertEquals("9 May.—My dearest Lucy", story.entries.single().preview)

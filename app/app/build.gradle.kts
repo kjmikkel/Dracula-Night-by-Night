@@ -84,7 +84,7 @@ android {
     }
 }
 
-/** Copies the story dataset (data/out/entries.json + characters.json) into the app's assets. */
+/** Copies the story dataset (data/out/entries.json, characters.json, whos_who.json) into the app's assets. */
 abstract class StoryAssetsTask : DefaultTask() {
     @get:InputFiles
     abstract val sources: ConfigurableFileCollection
@@ -101,9 +101,13 @@ abstract class StoryAssetsTask : DefaultTask() {
     }
 }
 
-// Only these two files: data/out also holds the git-ignored review page.
+// Only these three files: data/out also holds the git-ignored review pages.
 val storyAssets = tasks.register<StoryAssetsTask>("storyAssets") {
-    sources.from(rootProject.file("../data/out/entries.json"), rootProject.file("../data/out/characters.json"))
+    sources.from(
+        rootProject.file("../data/out/entries.json"),
+        rootProject.file("../data/out/characters.json"),
+        rootProject.file("../data/out/whos_who.json"),
+    )
 }
 
 androidComponents {

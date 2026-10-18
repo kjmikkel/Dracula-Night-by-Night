@@ -99,6 +99,11 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { it.startedOver(removeBookmarks, time.today(), tempoStart, time.millis()) }
     }
 
+    /** Records that the who's who was opened now: lines read before this are no longer new there (#204). */
+    suspend fun markWhosWhoSeen() {
+        store.updateData { it.copy(whosWhoSeenAt = time.millis()) }
+    }
+
     /** Records that this year's new-season prompt was answered (Start over or Not now). */
     suspend fun answerSeasonPrompt() {
         store.updateData { it.copy(seasonPromptYear = time.today().year) }

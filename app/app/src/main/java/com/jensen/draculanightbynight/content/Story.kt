@@ -73,7 +73,7 @@ val Entry.storyDayTime: String?
     get() = storyTime?.let { "${date.format(Dates.DAY)}, $it" }
 
 /** The whole novel: entries in story order (in-story date, time, then position in the book). */
-class Story(entries: List<Entry>, val characters: Map<String, Character>) {
+class Story(entries: List<Entry>, val characters: Map<String, Character>, val whosWho: WhosWho = WhosWho.EMPTY) {
     val entries: List<Entry> = entries.sortedWith(compareBy<Entry>({ it.date }, { it.time }, { it.order }))
     private val byId = this.entries.associateBy { it.id }
 

@@ -70,6 +70,8 @@ data class UserState(
     val bookmarkSort: BookmarkSort = BookmarkSort.STORY,
     /** The reader hid the timeline beside an open entry (two panes only). */
     val timelineHidden: Boolean = false,
+    /** When the who's who was last opened; lines read since are marked new there (#204). Null: never. */
+    val whosWhoSeenAt: Long? = null,
 ) {
     /** Readers from before the Welcome screen already chose a mode, so they count as onboarded. */
     val isOnboarded: Boolean

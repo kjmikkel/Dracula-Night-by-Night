@@ -43,6 +43,8 @@ import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
 import com.jensen.draculanightbynight.welcome.WelcomeScreen
 import com.jensen.draculanightbynight.welcome.WelcomeViewModel
+import com.jensen.draculanightbynight.whoswho.WhosWhoScreen
+import com.jensen.draculanightbynight.whoswho.WhosWhoViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -174,6 +176,7 @@ internal fun AppNavigation(
                 onToggleTimeline = { app.scope.launch { app.users.setTimelineHidden(!timelineHidden) } },
                 onBookmarks = { if (entry.isResumed()) nav.navigate("bookmarks") { launchSingleTop = true } },
                 onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
+                onWhosWho = { author -> if (entry.isResumed()) nav.navigate("whos-who?open=$author") { launchSingleTop = true } },
             )
         }
         composable("bookmarks") { entry ->
@@ -194,6 +197,16 @@ internal fun AppNavigation(
             AboutScreen(onBack = { if (entry.isResumed()) nav.popBackStack() })
         }
         composable(
+            "whos-who?open={open}",
+            arguments = listOf(navArgument("open") { type = NavType.StringType; nullable = true; defaultValue = null }),
+        ) { entry ->
+            val open = entry.arguments?.getString("open")
+            WhosWhoScreen(
+                viewModel { WhosWhoViewModel(app.stories, app.users, open, createSavedStateHandle()) },
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+            )
+        }
+        composable(
             "reader/{id}?filtered={filtered}&all={all}",
             arguments = listOf(
                 navArgument("filtered") { type = NavType.BoolType; defaultValue = false },
@@ -206,7 +219,11 @@ internal fun AppNavigation(
             val vm = viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered, createSavedStateHandle(), all) }
             // Wide enough again: the reader closes itself into the split, dropping anything between it and the timeline.
             LaunchedEffect(wide) { if (wide) nav.openEntry(vm.openEntry(), wide = true) }
-            ReaderScreen(vm, onBack = { if (entry.isResumed()) nav.popBackStack() })
+            ReaderScreen(
+                vm,
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+                onWhosWho = { author -> if (entry.isResumed()) nav.navigate("whos-who?open=$author") { launchSingleTop = true } },
+            )
         }
     }
 }
