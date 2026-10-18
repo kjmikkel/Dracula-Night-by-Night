@@ -22,6 +22,15 @@ If you have turned on Android's own device backup, Android may include this file
 example to your Google account), so your reading place survives a new phone. That backup is made by Android, under
 your backup provider's privacy policy; you can turn it off in Android's settings.
 
+## Saving, sharing and loading your reading
+
+In Settings, under "Your reading", you can copy that same information to a file: save it where you choose, share
+it (by email, a message or a cloud app, for example), or have the app keep one file you choose up to date as you
+read. You can also load such a file to carry on where it left off. The file goes only where you send it. The app
+uses Android's own file picker and share sheet to do this, and still never goes online itself. If you pick a cloud
+app such as Google Drive, Dropbox or OneDrive, that app does the uploading, under its own privacy policy. A file you
+saved or shared stays where you put it until you delete it; uninstalling the app does not remove it.
+
 ## Notifications
 
 If you allow notifications, the app uses them only to tell you that an entry has arrived. It schedules them on

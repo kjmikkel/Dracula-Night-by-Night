@@ -37,6 +37,9 @@ const val SCREEN_TAG = "a11y-screen"
  * Every rule broken on one screen. [merged] is what TalkBack walks; [unmerged] is the same tree before merging,
  * so a control's own description can be told apart from its children's text.
  */
+/** On screen at all: this node and every layout above it were placed. */
+private fun SemanticsNode.isPlaced() = generateSequence(layoutInfo) { it.parentInfo }.all { it.isPlaced }
+
 fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectations, density: Density): List<Finding> {
     val nodes = merged.descendants()
     val window = Rect(Offset.Zero, Size(merged.size.width.toFloat(), merged.size.height.toFloat()))
@@ -62,7 +65,9 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
             if (ownDescription.isNotEmpty() && n.texts().isNotEmpty()) add(Finding("double-label", n.name(own)))
             if (n.descriptions().any { "button" in it.lowercase() }) add(Finding("redundant-description", n.name(own)))
         }
-        clickables.groupBy { it.boundsInRoot }.filterKeys { it.width > 0 && it.height > 0 }.values
+        // Only placed nodes: a lazy list keeps rows scrolled away for reuse, unplaced, and they all report the
+        // list's top edge.
+        clickables.filter { it.isPlaced() }.groupBy { it.boundsInRoot }.filterKeys { it.width > 0 && it.height > 0 }.values
             .filter { it.size > 1 }.forEach { same -> same.drop(1).forEach { add(Finding("duplicate-bounds", it.name(own))) } }
 
         for (h in expect.headings) {

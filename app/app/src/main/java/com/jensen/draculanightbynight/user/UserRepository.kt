@@ -130,6 +130,11 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { it.copy(skipRepeatedDates = on) }
     }
 
+    /** Loading a backup file (#205): everything is replaced by [backup]; see [restored]. */
+    suspend fun restore(backup: UserState) {
+        store.updateData { restored(backup, time.millis()) }
+    }
+
     /** Whether the timeline is hidden beside an open entry (two panes only). */
     suspend fun setTimelineHidden(hidden: Boolean) {
         store.updateData { it.copy(timelineHidden = hidden) }
