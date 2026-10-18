@@ -37,6 +37,7 @@ __pycache__/
 # Local Claude Code config
 .claude/
 data/out/review.html
+data/out/whos-who-review.html
 
 # Android
 app/local.properties

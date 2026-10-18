@@ -13,7 +13,7 @@ from .review import review_html, review_rows
 from .source import load_source
 from .split import assign_ids, split_entries
 from .validate import Problem, fingerprint_of_json, unmatched_header_problems, validate
-from .whos_who import WhosWho, load_whos_who, whos_who_json, whos_who_problems
+from .whos_who import WhosWho, load_whos_who, whos_who_json, whos_who_problems, whos_who_review_html
 
 DATA_DIR = Path(__file__).resolve().parent.parent
 
@@ -88,6 +88,9 @@ def _review(run: PipelineRun, data_dir: Path) -> int:
     page = out / "review.html"
     page.write_bytes(review_html(review_rows(run.entries, run.chars, overrides)).encode("utf-8"))
     print(f"wrote {page.resolve()} - open it in a browser")
+    people = out / "whos-who-review.html"
+    people.write_bytes(whos_who_review_html(run.whos_who, run.entries, run.chars).encode("utf-8"))
+    print(f"wrote {people.resolve()} - open it in a browser")
     return 0
 
 

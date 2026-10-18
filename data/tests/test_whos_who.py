@@ -1,8 +1,18 @@
 import json
 from datetime import date
 
-from pipeline.model import Entry
-from pipeline.whos_who import Group, Person, Tie, WhosWho, load_whos_who, whos_who_json, whos_who_problems
+from pipeline.characters import load_characters
+from pipeline.model import Block, Entry, Span
+from pipeline.whos_who import (
+    Group,
+    Person,
+    Tie,
+    WhosWho,
+    load_whos_who,
+    whos_who_json,
+    whos_who_problems,
+    whos_who_review_html,
+)
 
 ENTRIES = [Entry(id=eid, order=n, type="diary", author="mina_harker", date=date(1893, 9, 30))
            for n, eid in enumerate(["a", "b", "c"])]
@@ -120,3 +130,19 @@ def test_json_sorts_ties_by_story_order_and_people_by_first_line():
     assert [line["from"] for line in arthur["lines"]] == ["a", "c"]
     assert arthur["groups"] == [{"from": "a", "id": "lucy"}, {"from": "c", "id": "band"}]
     assert arthur["names"] == [{"from": "a", "text": "Arthur Holmwood"}]
+
+
+def test_review_page_lists_each_line_with_its_entry():
+    chars = load_characters("mina_harker:\n  name: Mina Harker\n  short: Mina\n")
+    entries = [Entry(id="a", order=0, type="diary", author="mina_harker", date=date(1893, 9, 30),
+                     blocks=[Block("para", (Span("Lucy came to stay."),), 1)])]
+    text = ("groups:\n  lucy:\n    names:\n      - {from: a, text: Lucy}\n"
+            "people:\n  lucy_westenra:\n    group:\n      - {from: a, id: lucy}\n"
+            "    names:\n      - {from: a, text: Lucy}\n"
+            "    lines:\n      - {from: a, text: \"Mina's <b>closest</b> friend.\"}\n")
+    page = whos_who_review_html(load_whos_who(text), entries, chars)
+    assert "closest" in page
+    assert "<b>closest</b>" not in page
+    assert "1893-09-30" in page
+    assert "Mina Harker" in page
+    assert "Lucy came to stay." in page
