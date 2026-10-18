@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        What shows before Compose draws its first frame (#192): the palette's background rather than the platform
+        theme's, so a cold start doesn't flash another colour. Android 12+ uses it for the splash screen too.
+        Follows the system's day or night; a reader's own Light or Dark choice takes over from the first frame.
+        Keep in step with Palettes.Light / Palettes.Dark (WindowBackgroundTest).
+    -->
+    <style name="Theme.Dracula" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <!-- Parchment -->
+    <color name="window_background">#F4ECDD</color>
+</resources>
