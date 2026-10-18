@@ -100,14 +100,29 @@ class ReaderRepeatsTest {
         assertEquals(1, shown("Letter, Lucy Westenra to Mina Murray."))
     }
 
-    @Test fun aTelegramKeepsItsFromToLine() {
+    @Test fun aTelegramShowsStokersHeading() {
+        open(LATE_TELEGRAM)
+        assertEquals(1, shown("Telegram, Van Helsing, Antwerp, to Seward, Carfax."))
+        assertEquals(1, shown("delivered late by twenty-two hours"))
+        assertEquals(1, shown("From Abraham Van Helsing"))
+    }
+
+    @Test fun aTelegramsFromToLineGoesWhenTheHeadingNamesBoth() {
         open(TELEGRAM) { users.setHidePartiesLine(true) }
-        assertEquals(1, shown("From Arthur Holmwood"))
+        assertEquals(0, shown("From Arthur Holmwood"))
+        assertEquals(1, shown("Telegram from Arthur Holmwood to Quincey P. Morris."))
+    }
+
+    @Test fun aTelegramWithoutAHeadingKeepsItsFromToLine() {
+        open(UNHEADED_TELEGRAM) { users.setHidePartiesLine(true) }
+        assertEquals(1, shown("From Rufus Smith"))
     }
 
     private companion object {
         const val DIARY = "1893-05-04-jonathan_harker-01"
         const val LETTER = "1893-05-24-lucy_westenra-01"
         const val TELEGRAM = "1893-05-26-arthur_holmwood-01"
+        const val LATE_TELEGRAM = "1893-09-17-van_helsing-01"
+        const val UNHEADED_TELEGRAM = "1893-10-24-jonathan_harker-02"
     }
 }

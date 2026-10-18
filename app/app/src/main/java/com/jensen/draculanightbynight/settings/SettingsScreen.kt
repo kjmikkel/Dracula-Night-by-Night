@@ -142,8 +142,8 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
             }
             item {
                 ListItem(
-                    headlineContent = { Text("Hide “From … to …” in letters") },
-                    supportingContent = { Text("When the letter's heading already names both") },
+                    headlineContent = { Text("Hide “From … to …” in letters and telegrams") },
+                    supportingContent = { Text("When Stoker's heading already names both") },
                     trailingContent = { Switch(checked = s.hidePartiesLine, onCheckedChange = null) },
                     modifier = Modifier.toggleable(value = s.hidePartiesLine, role = Role.Switch, onValueChange = viewModel::setHidePartiesLine),
                 )
