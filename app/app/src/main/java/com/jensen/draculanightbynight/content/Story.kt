@@ -80,4 +80,7 @@ class Story(entries: List<Entry>, val characters: Map<String, Character>) {
     fun entry(id: String): Entry? = byId[id]
 
     fun nameOf(characterId: String?): String? = characterId?.let { characters[it]?.name ?: it }
+
+    /** The story's first entry with a date and time of its own: Harker's 3 May, after the undated preface (#199). */
+    val firstTimedEntry: Entry? get() = entries.firstOrNull { !it.undated }
 }

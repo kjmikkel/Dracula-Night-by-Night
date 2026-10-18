@@ -51,7 +51,7 @@ fun buildSettings(story: Story, user: UserState, now: ZonedDateTime): SettingsSt
     val mode = user.readingMode ?: ReadingMode.Free
     val today = now.toLocalDate()
     val tempoStart = (mode as? ReadingMode.SameTempo)?.startDate
-    val first = story.entries.firstOrNull { !it.undated }
+    val first = story.firstTimedEntry
     return SettingsState(
         mode = mode,
         modeLabel = modeLabel(mode),
