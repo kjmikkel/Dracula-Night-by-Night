@@ -3,7 +3,9 @@ package com.jensen.draculanightbynight.reader
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.StoryRepository
+import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.user.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -20,13 +22,17 @@ import java.time.ZonedDateTime
 
 sealed interface ReaderUi {
     data object Loading : ReaderUi
-    data object Locked : ReaderUi
+    /** Not readable yet; [arrivesAt] is when it will be (null for an entry that isn't in the story). */
+    data class Locked(val arrivesAt: ZonedDateTime?) : ReaderUi
 
     /** [pages] holds the reader for the current page and its neighbours, the ones the pager can show. */
     data class Ready(val pager: ReaderPager, val pages: Map<String, ReaderState>) : ReaderUi {
         val reader: ReaderState get() = pages.getValue(pager.pages[pager.index])
     }
 }
+
+/** What the locked reader adds about when the entry arrives (#195). */
+fun lockedNote(arrivesAt: ZonedDateTime?): String? = arrivesAt?.let { "It arrives on ${it.format(Dates.WEEKDAY_TIME)}." }
 
 /**
  * @param ticks the current time and zone, re-emitted as time passes ([com.jensen.draculanightbynight.domain.TimeSource.ticks]).
@@ -59,7 +65,7 @@ class ReaderViewModel(
             val follows = Following.valueOf(followName)
             val settings = user.settings ?: return@combine ReaderUi.Loading
             val pager = buildPager(story, user, settings, now.toInstant(), now.zone, id, follows, switchable = canSwitch)
-                ?: return@combine ReaderUi.Locked
+                ?: return@combine ReaderUi.Locked(story.entry(id)?.let { Arrivals.arrivesAt(it, settings, now.zone) }?.atZone(now.zone))
             val window = pager.pages.subList((pager.index - NEIGHBOURS).coerceAtLeast(0), (pager.index + NEIGHBOURS + 1).coerceAtMost(pager.pages.size))
             ReaderUi.Ready(pager, window.mapNotNull { story.entry(it) }.associate { it.id to readerFor(story, user, it) })
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), ReaderUi.Loading)

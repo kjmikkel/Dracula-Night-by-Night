@@ -93,8 +93,20 @@ class ReaderViewModelTest {
     @Test
     fun aLockedEntryIsNotMarkedRead() = runTest {
         val (ui, user) = open("may09")
-        assertEquals(ReaderUi.Locked, ui)
+        assertEquals(ReaderUi.Locked(ZonedDateTime.parse("2026-10-20T10:00Z")), ui)
         assertNull(user.progressOf("may09").readAtMillis)
+    }
+
+    @Test
+    fun aLockedEntrySaysWhenItArrives() {
+        // #195; Arrivals.arrivesAt already moves it earlier by any skip ahead.
+        assertEquals("It arrives on Tuesday 20 October, 10:00.", lockedNote(ZonedDateTime.parse("2026-10-20T10:00Z")))
+        assertNull(lockedNote(null))
+    }
+
+    @Test
+    fun anEntryThatDoesNotExistIsLockedWithNoTime() = runTest {
+        assertEquals(ReaderUi.Locked(null), open("gone").first)
     }
 
     /** Runs the newest queued task first: the worst order a multi-threaded dispatcher could produce. */

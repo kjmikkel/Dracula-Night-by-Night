@@ -120,9 +120,19 @@ fun ReaderScreen(viewModel: ReaderViewModel, onBack: () -> Unit, pane: PaneContr
             topBar = { TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }) },
         ) { padding ->
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) {
-                if (state == ReaderUi.Locked) Text("This entry has not arrived yet.") else CircularProgressIndicator()
+                if (state is ReaderUi.Locked) Locked(state, pane, onBack) else CircularProgressIndicator()
             }
         }
+    }
+}
+
+/** An entry that hasn't arrived: when it will, and the way back (#195): Back, or in the split view Close. */
+@Composable
+private fun Locked(state: ReaderUi.Locked, pane: PaneControls?, onBack: () -> Unit) {
+    Column(Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("This entry has not arrived yet.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+        lockedNote(state.arrivesAt)?.let { Text(it, Modifier.padding(top = 4.dp), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center) }
+        TextButton(onClick = pane?.onClose ?: onBack, Modifier.padding(top = 8.dp)) { Text(if (pane != null) "Close" else "Back") }
     }
 }
 
