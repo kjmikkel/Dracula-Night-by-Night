@@ -11,6 +11,8 @@ val Licences = listOf(
 )
 
 const val SOURCE_URL = "https://github.com/kjmikkel/Dracula-Night-by-Night"
+// Project Gutenberg asks for a link to the book's page when it's credited (#112).
+const val GUTENBERG_URL = "https://www.gutenberg.org/ebooks/345"
 const val PRIVACY_URL = "https://github.com/kjmikkel/Dracula-Night-by-Night/blob/main/docs/privacy.md"
 
 /** Shown when a link has nothing to open it, such as a device with no browser. */

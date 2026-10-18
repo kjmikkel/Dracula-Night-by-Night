@@ -28,6 +28,11 @@ class AboutLinksTest {
         compose.onNodeWithText(NO_BROWSER).assertExists()
     }
 
+    @Test fun sourceTextLinkWithoutBrowserShowsMessage() {
+        compose.onNodeWithText("Project Gutenberg eBook #345").performClick()
+        compose.onNodeWithText(NO_BROWSER).assertExists()
+    }
+
     @Test fun privacyLinkWithoutBrowserShowsMessage() {
         compose.onNodeWithText("Privacy").performClick()
         compose.onNodeWithText(NO_BROWSER).assertExists()

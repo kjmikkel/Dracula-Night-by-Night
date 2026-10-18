@@ -77,7 +77,9 @@ fun AboutScreen(onBack: () -> Unit) {
             item {
                 ListItem(
                     headlineContent = { Text("Project Gutenberg eBook #345") },
-                    supportingContent = { Text("Public domain in the United States. Project Gutenberg's header and licence have been removed, as its terms allow for copies that do not carry its name.") },
+                    // Project Gutenberg's permission page: crediting it as the source needs no permission (#112).
+                    supportingContent = { Text("Public domain in the United States. Project Gutenberg is credited as the source; its header and licence are not included.") },
+                    modifier = Modifier.linkRow("Open the book on Project Gutenberg") { open(GUTENBERG_URL) },
                 )
             }
             item { Section("The app") }
