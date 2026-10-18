@@ -12,8 +12,17 @@ import com.jensen.draculanightbynight.user.UserState
 import java.time.Instant
 import java.time.ZoneId
 
-/** What one notification says. [openEntryId] is the entry a tap opens; null opens the timeline. */
-data class NotificationContent(val title: String, val text: String, val lines: List<String> = emptyList(), val openEntryId: String? = null)
+/**
+ * What one notification says. [openEntryId] is the entry a tap opens; null opens the timeline. [subText] is the small
+ * line beside the app's name (an arrival's in-story date and time).
+ */
+data class NotificationContent(
+    val title: String,
+    val text: String,
+    val lines: List<String> = emptyList(),
+    val openEntryId: String? = null,
+    val subText: String? = null,
+)
 
 /** What an alarm run posts: the arrivals since the last run, and the new-season prompt if it fell due. */
 data class NotificationPlan(val arrivals: NotificationContent?, val seasonPrompt: NotificationContent?)
@@ -38,8 +47,9 @@ fun planNotifications(story: Story, user: UserState, now: Instant, zone: ZoneId)
 
 private fun arrivalsContent(story: Story, arrived: List<Entry>): NotificationContent? = when (arrived.size) {
     0 -> null
+    // One entry: its opening says what is waiting; the date is kept aside (#194).
     1 -> arrived.single().let { e ->
-        NotificationContent(arrivalTitle(e.type, story.nameOf(e.author) ?: e.author), e.storyDayTime ?: e.preview, openEntryId = e.id)
+        NotificationContent(arrivalTitle(e.type, story.nameOf(e.author) ?: e.author), e.preview, openEntryId = e.id, subText = e.storyDayTime)
     }
     else -> NotificationContent(
         title = "${arrived.size} new entries",

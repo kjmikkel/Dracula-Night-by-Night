@@ -70,8 +70,12 @@ object Notifications {
             .setContentText(content.text)
             .setContentIntent(tap)
             .setAutoCancel(true)
+        content.subText?.let(builder::setSubText)
+        // Several arrivals list one line each; otherwise the text can expand in full (an entry's two-line preview).
         if (content.lines.isNotEmpty()) {
             builder.setStyle(NotificationCompat.InboxStyle().also { style -> content.lines.forEach(style::addLine) })
+        } else {
+            builder.setStyle(NotificationCompat.BigTextStyle().bigText(content.text))
         }
         return builder.build()
     }
