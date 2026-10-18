@@ -33,7 +33,7 @@ fun buildWelcome(story: Story, now: ZonedDateTime): WelcomeState {
     val today = now.toLocalDate()
     val seasonYear = UnlockSchedule.seasonYearFor(today)
     val seasonStart = UnlockSchedule.STORY_START.withYear(seasonYear)
-    val first = story.entries.firstOrNull { !it.undated }
+    val first = story.firstTimedEntry
     return WelcomeState(
         today = today,
         seasonYear = seasonYear,

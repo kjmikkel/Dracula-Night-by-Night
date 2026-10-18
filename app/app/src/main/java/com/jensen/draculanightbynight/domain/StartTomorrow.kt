@@ -14,7 +14,7 @@ private val CLOSE: Duration = Duration.ofHours(1)
  * past: the moment to offer "Start tomorrow?".
  */
 fun firstEntryIsClose(story: Story, today: LocalDate, now: Instant, zone: ZoneId): Boolean {
-    val first = story.entries.firstOrNull { !it.undated } ?: return false
+    val first = story.firstTimedEntry ?: return false
     val at = UnlockSchedule.unlockInstant(first, ReadingMode.SameTempo(today), zone) ?: return false
     return Duration.between(now, at) < CLOSE
 }
