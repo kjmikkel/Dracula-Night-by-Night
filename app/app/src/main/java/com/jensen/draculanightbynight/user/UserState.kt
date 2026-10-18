@@ -26,6 +26,11 @@ data class EntryProgress(
     val readAtMillis: Long? = null,
     val blockIndex: Int = 0,
     val blockOffset: Int = 0,
+    /**
+     * How far into the block, in thousandths of its height: unlike [blockOffset] (pixels) it means the same place at any
+     * text size, font or screen (#200). Null for places saved before; then [blockOffset] is all there is.
+     */
+    val blockPermille: Int? = null,
     val bookmarked: Boolean = false,
     /** When the bookmark was made (app clock); null for bookmarks from before plan B. */
     val bookmarkedAtMillis: Long? = null,

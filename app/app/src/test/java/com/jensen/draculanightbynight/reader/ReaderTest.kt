@@ -54,12 +54,19 @@ class ReaderTest {
     @Test
     fun aHalfScrolledHeaderResumesAtTheTopNotInsideTheFirstBlock() {
         // List item 0 is the header; scrolled 50 px into it is still the top of the entry.
-        assertEquals(0 to 0, savedPosition(firstVisibleItem = 0, offset = 50))
+        assertEquals(SavedPlace(0, 0, 0), savedPosition(firstVisibleItem = 0, offset = 50, itemHeight = 400))
+    }
+
+    @Test
+    fun aPlaceIsAlsoSavedAsAShareOfItsBlock() {
+        // 120 px into a block 480 px tall: a quarter of the way, whatever the text size (#200).
+        assertEquals(SavedPlace(3, 120, 250), savedPosition(firstVisibleItem = 4, offset = 120, itemHeight = 480))
+        assertEquals(240, offsetInto(itemHeight = 960, permille = 250))
+        assertEquals(SavedPlace(3, 0, 0), savedPosition(firstVisibleItem = 4, offset = 0, itemHeight = 0))
     }
 
     @Test
     fun positionsInTheBodyRoundTrip() {
-        assertEquals(3 to 120, savedPosition(firstVisibleItem = 4, offset = 120))
         assertEquals(4 to 120, listPosition(block = 3, offset = 120))
         assertEquals(0 to 0, listPosition(block = 0, offset = 0))
         assertEquals(1 to 40, listPosition(block = 0, offset = 40))

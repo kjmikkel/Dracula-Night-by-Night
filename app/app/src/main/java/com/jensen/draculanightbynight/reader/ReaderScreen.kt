@@ -42,9 +42,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -235,9 +237,22 @@ private fun FollowSwitch(filterLabel: String, following: Following, onFollow: (F
 private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Boolean) {
     val (startItem, startOffset) = listPosition(reader.startBlock, reader.startOffset)
     val listState = rememberLazyListState(startItem, startOffset)
+    // The pixel offset is only a first guess: the block may be taller or shorter now (text size, font, screen). Once it
+    // is laid out, move to the same share of it, and only then save, so the guess never overwrites the place (#200).
+    var placed by remember(reader.entry.id) { mutableStateOf(reader.startPermille == null || startItem == 0) }
+    LaunchedEffect(reader.entry.id) {
+        if (placed) return@LaunchedEffect
+        val permille = reader.startPermille ?: 0
+        listState.scrollToItem(startItem)
+        val height = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == startItem }?.size ?: 0
+        listState.scrollToItem(startItem, offsetInto(height, permille))
+        placed = true
+    }
     fun save() {
-        val (block, offset) = savedPosition(listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
-        viewModel.savePosition(reader.entry.id, block, offset)
+        if (!placed) return
+        val index = listState.firstVisibleItemIndex
+        val height = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }?.size ?: 0
+        viewModel.savePosition(reader.entry.id, savedPosition(index, listState.firstVisibleItemScrollOffset, height))
     }
     // Save while reading (debounced), when the app goes to the background, and once more on leaving the page,
     // so a killed app still resumes where the reader was.
