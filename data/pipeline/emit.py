@@ -34,12 +34,12 @@ def _block_to_dict(b: Block) -> dict:
 
 def entries_json(entries: list[Entry]) -> str:
     data = [entry_to_dict(e) for e in sorted(entries, key=lambda e: e.order)]
-    return _dump(data)
+    return dump_json(data)
 
 
 def characters_json(chars: Characters) -> str:
-    return _dump(list(chars.records))
+    return dump_json(list(chars.records))
 
 
-def _dump(data) -> str:
+def dump_json(data) -> str:
     return json.dumps(data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
