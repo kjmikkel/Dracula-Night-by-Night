@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileNotFoundException
 import java.time.Clock
 
 /** Hand-wired dependencies; one per process. */
@@ -42,6 +43,12 @@ class AppContainer(context: Context) {
             decodeStory(
                 assets.open("entries.json").bufferedReader().use { it.readText() },
                 assets.open("characters.json").bufferedReader().use { it.readText() },
+                // An older dataset without one gives an empty page, not a crash.
+                try {
+                    assets.open("whos_who.json").bufferedReader().use { it.readText() }
+                } catch (_: FileNotFoundException) {
+                    null
+                },
             )
         }
     }

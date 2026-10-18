@@ -32,10 +32,28 @@ private data class EntryJson(
 @Serializable
 private data class CharacterJson(val id: String, val name: String, val short: String)
 
+@Serializable
+private data class TextTieJson(val from: String, val text: String)
+
+@Serializable
+private data class GroupTieJson(val from: String, val id: String)
+
+@Serializable
+private data class GroupJson(val id: String, val names: List<TextTieJson>)
+
+@Serializable
+private data class PersonJson(val id: String, val groups: List<GroupTieJson>, val names: List<TextTieJson>, val lines: List<TextTieJson>)
+
+@Serializable
+private data class WhosWhoJson(val groups: List<GroupJson>, val people: List<PersonJson>)
+
 private val json = Json { ignoreUnknownKeys = true }
 
-/** Decodes data/out/entries.json and characters.json (the dataset contract) into a [Story]. */
-fun decodeStory(entriesJson: String, charactersJson: String): Story {
+/**
+ * Decodes data/out/entries.json, characters.json and whos_who.json (the dataset contract) into a [Story]. Without a
+ * who's who, the page is simply empty.
+ */
+fun decodeStory(entriesJson: String, charactersJson: String, whosWhoJson: String? = null): Story {
     val characters = json.decodeFromString<List<CharacterJson>>(charactersJson)
         .associate { it.id to Character(it.id, it.name, it.short) }
     val entries = json.decodeFromString<List<EntryJson>>(entriesJson).map { e ->
@@ -58,5 +76,14 @@ fun decodeStory(entriesJson: String, charactersJson: String): Story {
             undated = e.undated,
         )
     }
-    return Story(entries, characters)
+    return Story(entries, characters, whosWhoJson?.let(::decodeWhosWho) ?: WhosWho.EMPTY)
+}
+
+private fun decodeWhosWho(text: String): WhosWho {
+    val data = json.decodeFromString<WhosWhoJson>(text)
+    fun List<TextTieJson>.ties() = map { Tie(it.from, it.text) }
+    return WhosWho(
+        groups = data.groups.map { WhosWhoGroup(it.id, it.names.ties()) },
+        people = data.people.map { p -> WhosWhoPerson(p.id, p.groups.map { Tie(it.from, it.id) }, p.names.ties(), p.lines.ties()) },
+    )
 }
