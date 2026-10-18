@@ -11,6 +11,7 @@ import com.jensen.draculanightbynight.domain.TimeSource
 import com.jensen.draculanightbynight.notify.Notifications
 import com.jensen.draculanightbynight.notify.Notifier
 import com.jensen.draculanightbynight.notify.scheduleKey
+import com.jensen.draculanightbynight.user.Backups
 import com.jensen.draculanightbynight.user.UserRepository
 import com.jensen.draculanightbynight.user.UserState
 import com.jensen.draculanightbynight.user.UserStateSerializer
@@ -56,6 +57,9 @@ class AppContainer(context: Context) {
     )
 
     val notifier = Notifier(context, stories, users, time)
+
+    /** Saving, sharing and loading backup files, and the copy kept up to date (#205). */
+    val backups = Backups(context, users, time, scope)
 
     init {
         Notifications.createChannel(context)

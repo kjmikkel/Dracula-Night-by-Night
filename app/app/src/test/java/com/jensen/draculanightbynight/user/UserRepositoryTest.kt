@@ -51,6 +51,16 @@ class UserRepositoryTest {
     )
 
     @Test
+    fun restoringABackupReplacesEverythingAndMovesTheBaselineToNow() = runTest {
+        val repo = repository()
+        repo.setTheme(ThemeChoice.DARK)
+        repo.markRead("here")
+        val backup = UserState(onboarded = true, progress = mapOf("there" to EntryProgress(readAtMillis = 1))).withMode(ReadingMode.Free)
+        repo.restore(backup)
+        assertEquals(backup.copy(lastNotifiedAt = clock.now.toEpochMilli()), repo.state.first())
+    }
+
+    @Test
     fun aNewReaderStartsInSameTempoFromToday() = runTest {
         val repo = repository()
         repo.ensureMode()

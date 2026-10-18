@@ -9,8 +9,12 @@ import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
 import com.jensen.draculanightbynight.user.UserState
 import java.time.Duration
+import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.user.CopyTarget
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 /** Everything the Settings screen shows. */
@@ -40,6 +44,15 @@ data class SettingsState(
     val calendarArrived: Int = 0,
     val total: Int = 0,
 )
+
+/** What the "Keep a copy up to date" row says (#205). */
+fun copySummary(target: CopyTarget?, zone: ZoneId): String {
+    if (target == null) return "Off. Choose a file, and it is updated as you read"
+    val name = target.name ?: "the file"
+    if (target.failed) return "Couldn't update $name. Choose the file again"
+    val saved = target.savedAtMillis?.let { " · last saved ${Instant.ofEpochMilli(it).atZone(zone).format(Dates.DAY_TIME)}" }.orEmpty()
+    return "Updating $name$saved"
+}
 
 fun modeLabel(mode: ReadingMode): String = when (mode) {
     is ReadingMode.Calendar -> "On the actual days (${mode.seasonYear})"

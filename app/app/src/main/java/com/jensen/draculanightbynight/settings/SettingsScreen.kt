@@ -5,7 +5,16 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.DisplayMode
 import com.jensen.draculanightbynight.ui.largeText
 import com.jensen.draculanightbynight.ui.BackButton
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import com.jensen.draculanightbynight.user.Backups
+import kotlinx.coroutines.launch
 import android.content.res.Configuration
 import android.provider.Settings
 import androidx.compose.foundation.clickable
@@ -73,7 +82,7 @@ import java.time.Instant
 import java.time.ZoneOffset
 import java.util.Locale
 
-private enum class Dialog { MODE, START_DATE, SKIP_DAY, START_OVER }
+private enum class Dialog { MODE, START_DATE, SKIP_DAY, START_OVER, COPY }
 
 private const val SAMPLE = "“I was not able to light on any map or work giving the exact locality of the Castle Dracula.”"
 
@@ -96,7 +105,20 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
         blocked = !Notifications.allowed(context)
     }
 
+    // Backup files (#205): Android's own pickers, so the reader can choose this phone or any cloud app.
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(viewModel) { viewModel.messages.collect { snackbar.showSnackbar(it) } }
+    val copy by viewModel.copy.collectAsStateWithLifecycle()
+    val pendingImport by viewModel.pendingImport.collectAsStateWithLifecycle()
+    val saveFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(Backups.MIME)) { it?.let(viewModel::saveTo) }
+    val keepFile = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(Backups.MIME)) { it?.let(viewModel::keepCopy) }
+    val loadFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(viewModel::load) }
+    // A phone without a file picker (rare, but possible) says so instead of crashing.
+    fun launching(start: () -> Unit) = try { start() } catch (_: ActivityNotFoundException) { viewModel.message("No app on this phone can choose files.") }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
         topBar = {
             TopAppBar(title = { Text("Settings", Modifier.semantics { heading() }) }, navigationIcon = { BackButton(onBack) })
         },
@@ -217,6 +239,31 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                 )
             }
 
+            item { Section("Your reading") }
+            item {
+                Setting("Save to a file", "Progress, bookmarks and settings, on this phone or in a cloud app such as Drive") {
+                    launching { saveFile.launch(viewModel.backupName()) }
+                }
+            }
+            item {
+                Setting("Share", "Send the file by email or message, or to a cloud app") {
+                    scope.launch {
+                        val share = viewModel.shareIntent()
+                        launching { context.startActivity(share) }
+                    }
+                }
+            }
+            item {
+                Setting("Load from a file", "Replace what this phone has with a saved file") {
+                    launching { loadFile.launch(BACKUP_TYPES) }
+                }
+            }
+            item {
+                Setting("Keep a copy up to date", copy.second) {
+                    if (copy.first == null) launching { keepFile.launch(viewModel.backupName()) } else dialog = Dialog.COPY
+                }
+            }
+
             item { HorizontalDivider(Modifier.padding(top = 16.dp)) }
             item {
                 ListItem(
@@ -289,10 +336,42 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                 viewModel.startOver(removeBookmarks, tempoStart)
                 dialog = null
             }
+            Dialog.COPY -> AlertDialog(
+                modifier = Modifier.focusRings(),
+                onDismissRequest = { dialog = null },
+                title = { Text("Keep a copy up to date") },
+                text = { Text(copy.second) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        dialog = null
+                        launching { keepFile.launch(viewModel.backupName()) }
+                    }) { Text("Choose another file") }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        viewModel.stopCopy()
+                        dialog = null
+                    }) { Text("Stop") }
+                },
+            )
             null -> Unit
+        }
+        // Loading over progress asks first; No leaves everything as it was (#205).
+        if (pendingImport != null) {
+            AlertDialog(
+                modifier = Modifier.focusRings(),
+                onDismissRequest = viewModel::cancelImport,
+                title = { Text("Replace your reading?") },
+                text = { Text("Everything on this phone (progress, bookmarks and settings) is replaced by what the file holds. This can't be undone.") },
+                confirmButton = { TextButton(onClick = viewModel::confirmImport) { Text("Replace") } },
+                dismissButton = { TextButton(onClick = viewModel::cancelImport) { Text("Cancel") } },
+            )
         }
     }
 }
+
+/** What the load picker offers: a saved backup, also as cloud apps and mail attachments may label it. */
+private val BACKUP_TYPES = arrayOf(Backups.MIME, "text/*", "application/octet-stream")
 
 @Composable
 private fun Section(title: String) {

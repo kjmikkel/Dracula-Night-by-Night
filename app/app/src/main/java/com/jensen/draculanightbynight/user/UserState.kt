@@ -109,12 +109,15 @@ data class UserState(
         copy(progress = progress + (id to change(progressOf(id))))
 }
 
+/** How the state is read and written, on the phone and in backup files ([encodeBackup]). */
+internal val userStateJson = Json {
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
+
 object UserStateSerializer : Serializer<UserState> {
     // Unknown fields (from a newer version) are skipped; an unknown choice such as "textSize": "huge" falls back to the default.
-    private val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-    }
+    private val json = userStateJson
 
     override val defaultValue: UserState = UserState()
 

@@ -23,6 +23,17 @@
             </intent-filter>
         </activity>
 
+        <!-- Hands a backup file to the app the reader shares it with (#205); nothing else is exposed. -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.backups"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/backup_paths" />
+        </provider>
+
         <receiver
             android:name=".notify.UnlockReceiver"
             android:exported="false" />

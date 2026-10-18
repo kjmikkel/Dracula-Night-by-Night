@@ -25,6 +25,9 @@ object Dates {
     /** "14 Oct" */
     val SHORT_DAY: DateTimeFormatter = english("d MMM")
 
+    /** "2026-10-18", for file names */
+    val ISO_DAY: DateTimeFormatter = english("yyyy-MM-dd")
+
     /** "22:00" */
     val TIME: DateTimeFormatter = english("HH:mm")
 }
