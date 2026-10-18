@@ -22,8 +22,20 @@ class NotificationPlanTest {
     fun oneArrivalNamesTheWriterAndOpensThatEntry() {
         val arrivals = plan(tempo("2026-10-15T12:00:00Z"), "2026-10-15T14:45:00Z").arrivals!!
         assertEquals("Jonathan Harker's journal has arrived", arrivals.title)
-        assertEquals("4 May, 14:45", arrivals.text)
         assertEquals("may04", arrivals.openEntryId)
+    }
+
+    @Test
+    fun oneArrivalShowsItsOpeningAndKeepsTheDateAside() {
+        // The preview says what is waiting; the in-story date moves to the small line at the top (#194).
+        val arrivals = plan(tempo("2026-10-15T12:00:00Z"), "2026-10-15T14:45:00Z").arrivals!!
+        assertEquals("Text of may04.", arrivals.text)
+        assertEquals("4 May, 14:45", arrivals.subText)
+    }
+
+    @Test
+    fun severalArrivalsHaveNoDateLine() {
+        assertNull(plan(tempo("2026-10-14T21:00:00Z"), "2026-10-15T14:45:00Z").arrivals!!.subText)
     }
 
     @Test
