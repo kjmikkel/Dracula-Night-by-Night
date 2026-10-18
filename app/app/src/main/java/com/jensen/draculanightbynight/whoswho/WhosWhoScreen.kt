@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.domain.ShownPerson
 import com.jensen.draculanightbynight.ui.BackButton
+import com.jensen.draculanightbynight.ui.notSpoken
 
 /** The who's who (#204): the people the reader has met, grouped, each profile only as far as they've read. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -102,7 +103,8 @@ private fun Profile(person: ShownPerson, expanded: Boolean, sources: Map<String,
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(person.name, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
             if (person.hasNew && !expanded) New()
-            Text(if (expanded) "▴" else "▾", Modifier.padding(start = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            // The state description says it; the arrow is only for the eye.
+            Text(if (expanded) "▴" else "▾", Modifier.padding(start = 8.dp).notSpoken(), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         if (expanded) {
             person.lines.forEach { line ->
