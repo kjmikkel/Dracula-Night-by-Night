@@ -18,6 +18,8 @@ class Block:
     role: str
     spans: tuple[Span, ...]
     chapter: int = 0
+    # The [start, end) characters of text that only repeat the entry's header (an opening dateline).
+    repeats: tuple[int, int] | None = None
 
     @property
     def text(self) -> str:
@@ -37,6 +39,8 @@ class Entry:
     time_estimated: bool = False
     place: str | None = None
     header: str | None = None
+    # The header names both the author and the recipient, as the source wrote them.
+    header_names_parties: bool = False
     blocks: list[Block] = field(default_factory=list)
 
     def text(self) -> str:

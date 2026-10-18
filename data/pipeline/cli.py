@@ -8,6 +8,7 @@ from .emit import characters_json, entries_json
 from .model import Entry
 from .overrides import apply_overrides, load_overrides
 from .parse import parse_book, reference_text
+from .repeats import mark_repeats
 from .review import review_html, review_rows
 from .source import load_source
 from .split import assign_ids, split_entries
@@ -30,6 +31,7 @@ def run_pipeline(data_dir: Path) -> PipelineRun:
     entries = split_entries(parse_book(html), chars, unmatched)
     assign_ids(entries)
     entries = apply_overrides(entries, load_overrides((data_dir / "overrides.yaml").read_text(encoding="utf-8")))
+    mark_repeats(entries, chars)
     problems = validate(entries, chars.ids, reference_text(html), _previous_fingerprints(data_dir))
     problems += unmatched_header_problems(unmatched)
     return PipelineRun(entries, problems, chars)

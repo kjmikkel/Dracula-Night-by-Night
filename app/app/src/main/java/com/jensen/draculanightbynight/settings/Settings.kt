@@ -32,6 +32,9 @@ data class SettingsState(
     val readingFont: ReadingFont,
     val theme: ThemeChoice,
     val highContrast: Boolean?,
+    val hidePartiesLine: Boolean,
+    /** null follows TalkBack. */
+    val skipRepeatedDates: Boolean?,
 )
 
 fun modeLabel(mode: ReadingMode): String = when (mode) {
@@ -61,5 +64,7 @@ fun buildSettings(story: Story, user: UserState, now: ZonedDateTime): SettingsSt
         readingFont = user.readingFont,
         theme = user.theme,
         highContrast = user.highContrast,
+        hidePartiesLine = user.hidePartiesLine,
+        skipRepeatedDates = user.skipRepeatedDates,
     )
 }

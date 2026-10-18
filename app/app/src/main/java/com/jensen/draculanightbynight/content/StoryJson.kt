@@ -9,7 +9,7 @@ import java.time.LocalTime
 private data class SpanJson(val text: String, val italic: Boolean)
 
 @Serializable
-private data class BlockJson(val role: String, val spans: List<SpanJson>)
+private data class BlockJson(val role: String, val spans: List<SpanJson>, val repeats: List<Int>? = null)
 
 @Serializable
 private data class EntryJson(
@@ -24,6 +24,7 @@ private data class EntryJson(
     val timeEstimated: Boolean,
     val place: String? = null,
     val header: String? = null,
+    val headerNamesParties: Boolean = false,
     val body: List<BlockJson>,
 )
 
@@ -49,7 +50,10 @@ fun decodeStory(entriesJson: String, charactersJson: String): Story {
             timeEstimated = e.timeEstimated,
             place = e.place,
             header = e.header,
-            body = e.body.map { b -> Block(BlockRole.valueOf(b.role.uppercase()), b.spans.map { Span(it.text, it.italic) }) },
+            body = e.body.map { b ->
+                Block(BlockRole.valueOf(b.role.uppercase()), b.spans.map { Span(it.text, it.italic) }, b.repeats?.let { (from, to) -> from until to })
+            },
+            headerNamesParties = e.headerNamesParties,
         )
     }
     return Story(entries, characters)

@@ -31,6 +31,9 @@ data class ReaderState(
     val startBlock: Int,
     val startOffset: Int,
     val bookmarked: Boolean,
+    /** The reader's choices for what repeats the header (#177); [skipRepeatedDates] null follows TalkBack. */
+    val hidePartiesLine: Boolean = false,
+    val skipRepeatedDates: Boolean? = null,
 )
 
 /** The reader for entry [id], or null if it does not exist or is not readable (locked and never read). */
@@ -48,6 +51,8 @@ fun readerFor(story: Story, user: UserState, entry: Entry): ReaderState {
         startBlock = progress.blockIndex.coerceIn(0, (entry.body.size - 1).coerceAtLeast(0)),
         startOffset = progress.blockOffset,
         bookmarked = progress.bookmarked,
+        hidePartiesLine = user.hidePartiesLine,
+        skipRepeatedDates = user.skipRepeatedDates,
     )
 }
 

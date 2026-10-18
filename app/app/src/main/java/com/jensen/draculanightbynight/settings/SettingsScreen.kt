@@ -65,6 +65,7 @@ import com.jensen.draculanightbynight.timeline.aheadLabel
 import com.jensen.draculanightbynight.ui.StartOverDialog
 import com.jensen.draculanightbynight.ui.family
 import com.jensen.draculanightbynight.ui.systemHighContrast
+import com.jensen.draculanightbynight.ui.talkBackOn
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
@@ -124,6 +125,28 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
                 if (!s.ahead.isZero) {
                     item { Setting("Back to real time", "Reading ${aheadLabel(s.ahead)} ahead") { viewModel.backToRealTime() } }
                 }
+            }
+
+            // What the text says that the header already shows (#177).
+            item {
+                val skip = s.skipRepeatedDates ?: talkBackOn()
+                ListItem(
+                    headlineContent = { Text("Skip repeated dates") },
+                    supportingContent = {
+                        Text(if (s.skipRepeatedDates == null) "Hide a dateline that only repeats the header. Follows TalkBack"
+                        else "Hide a dateline that only repeats the header")
+                    },
+                    trailingContent = { Switch(checked = skip, onCheckedChange = null) },
+                    modifier = Modifier.toggleable(value = skip, role = Role.Switch, onValueChange = viewModel::setSkipRepeatedDates),
+                )
+            }
+            item {
+                ListItem(
+                    headlineContent = { Text("Hide “From … to …” in letters") },
+                    supportingContent = { Text("When the letter's heading already names both") },
+                    trailingContent = { Switch(checked = s.hidePartiesLine, onCheckedChange = null) },
+                    modifier = Modifier.toggleable(value = s.hidePartiesLine, role = Role.Switch, onValueChange = viewModel::setHidePartiesLine),
+                )
             }
 
             item { Section("Notifications") }

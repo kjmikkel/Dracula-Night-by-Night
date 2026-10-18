@@ -63,11 +63,15 @@ The previous app ("Dracula Day by Day", `kjmikkel/DraculaDayByDay`, never publis
 | `timeEstimated` | bool | `true` | overrides |
 | `place` | string \| null | `Bistritz` | dateline |
 | `header` | string \| null | `Letter, Lucy Westenra to Mina Murray` | original header text |
+| `headerNamesParties` | bool | `true` | `header` names both `author` and `recipient` (#177) |
 | `body` | Block[] | see below | parsed markup |
 
 `type` values: `diary`, `phonograph`, `letter`, `telegram`, `newspaper`, `memo`, `log`.
 
-**Block**: `{ "role": "para" | "dateline" | "salutation" | "signoff" | "verse" | "note", "spans": [{ "text": string, "italic": bool }] }`.
+**Block**: `{ "role": "para" | "dateline" | "salutation" | "signoff" | "verse" | "note", "spans": [{ "text": string, "italic": bool }], "repeats"?: [start, end] }`.
+`repeats`, only on an entry's first non-note block, is the `[start, end)` character range of its text that says
+only the date (and place) the entry's fields already give, with what joins it on (`4 May.—`). The text is never
+cut; the app may skip the range (#177).
 Line breaks inside a block are represented as `\n` in span text.
 HTML class mapping (initial): `r` → `dateline`/`signoff` (by position), `nind`
 → `salutation`, `poem`/`stanza` → `verse`, `c` notes such as "(Kept in

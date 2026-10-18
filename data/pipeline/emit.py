@@ -1,7 +1,7 @@
 import json
 
 from .characters import Characters
-from .model import Entry
+from .model import Block, Entry
 
 
 def entry_to_dict(e: Entry) -> dict:
@@ -17,11 +17,16 @@ def entry_to_dict(e: Entry) -> dict:
         "timeEstimated": e.time_estimated,
         "place": e.place,
         "header": e.header,
-        "body": [
-            {"role": b.role, "spans": [{"text": s.text, "italic": s.italic} for s in b.spans]}
-            for b in e.blocks
-        ],
+        "headerNamesParties": e.header_names_parties,
+        "body": [_block_to_dict(b) for b in e.blocks],
     }
+
+
+def _block_to_dict(b: Block) -> dict:
+    d = {"role": b.role, "spans": [{"text": s.text, "italic": s.italic} for s in b.spans]}
+    if b.repeats is not None:
+        d["repeats"] = list(b.repeats)
+    return d
 
 
 def entries_json(entries: list[Entry]) -> str:

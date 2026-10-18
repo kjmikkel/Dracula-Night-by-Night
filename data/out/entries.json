@@ -15,6 +15,7 @@
     "chapter": 0,
     "date": "1893-05-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "undated-unknown-01",
     "order": 0,
     "place": null,
@@ -44,6 +45,10 @@
         ]
       },
       {
+        "repeats": [
+          0,
+          17
+        ],
         "role": "para",
         "spans": [
           {
@@ -165,6 +170,7 @@
     "chapter": 1,
     "date": "1893-05-03",
     "header": "JONATHAN HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-05-03-jonathan_harker-01",
     "order": 1,
     "place": "Bistritz",
@@ -177,6 +183,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          7
+        ],
         "role": "para",
         "spans": [
           {
@@ -238,6 +248,7 @@
     "chapter": 1,
     "date": "1893-05-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-04-jonathan_harker-01",
     "order": 2,
     "place": null,
@@ -250,6 +261,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          19
+        ],
         "role": "para",
         "spans": [
           {
@@ -454,6 +469,7 @@
     "chapter": 1,
     "date": "1893-05-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-05-jonathan_harker-01",
     "order": 3,
     "place": "The Castle",
@@ -466,6 +482,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          7
+        ],
         "role": "para",
         "spans": [
           {
@@ -698,6 +718,7 @@
     "chapter": 2,
     "date": "1893-05-05",
     "header": "JONATHAN HARKER’S JOURNAL—continued",
+    "headerNamesParties": false,
     "id": "1893-05-05-jonathan_harker-02",
     "order": 4,
     "place": null,
@@ -710,6 +731,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          7
+        ],
         "role": "para",
         "spans": [
           {
@@ -976,6 +1001,7 @@
     "chapter": 2,
     "date": "1893-05-07",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-07-jonathan_harker-01",
     "order": 5,
     "place": null,
@@ -988,6 +1014,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          7
+        ],
         "role": "para",
         "spans": [
           {
@@ -1049,6 +1079,7 @@
     "chapter": 2,
     "date": "1893-05-08",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-08-jonathan_harker-01",
     "order": 6,
     "place": null,
@@ -1082,6 +1113,7 @@
     "chapter": 3,
     "date": "1893-05-08",
     "header": "JONATHAN HARKER’S JOURNAL—continued",
+    "headerNamesParties": false,
     "id": "1893-05-08-jonathan_harker-02",
     "order": 7,
     "place": null,
@@ -1144,6 +1176,7 @@
     "chapter": 3,
     "date": "1893-05-08",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-08-jonathan_harker-03",
     "order": 8,
     "place": null,
@@ -1156,6 +1189,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1298,6 +1335,7 @@
     "chapter": 3,
     "date": "1893-05-12",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-12-jonathan_harker-01",
     "order": 9,
     "place": null,
@@ -1361,6 +1399,7 @@
     "chapter": 3,
     "date": "1893-05-12",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-12-jonathan_harker-02",
     "order": 10,
     "place": null,
@@ -1373,6 +1412,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1389,6 +1432,7 @@
     "chapter": 3,
     "date": "1893-05-15",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-15-jonathan_harker-01",
     "order": 11,
     "place": null,
@@ -1543,6 +1587,7 @@
     "chapter": 3,
     "date": "1893-05-16",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-16-jonathan_harker-01",
     "order": 12,
     "place": null,
@@ -1575,6 +1620,7 @@
     "chapter": 4,
     "date": "1893-05-16",
     "header": "JONATHAN HARKER’S JOURNAL—continued",
+    "headerNamesParties": false,
     "id": "1893-05-16-jonathan_harker-02",
     "order": 13,
     "place": null,
@@ -1587,6 +1633,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1611,6 +1661,7 @@
     "chapter": 4,
     "date": "1893-05-18",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-18-jonathan_harker-01",
     "order": 14,
     "place": null,
@@ -1623,6 +1674,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1657,6 +1712,7 @@
     "chapter": 4,
     "date": "1893-05-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-19-jonathan_harker-01",
     "order": 15,
     "place": null,
@@ -1669,6 +1725,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1765,6 +1825,7 @@
     "chapter": 4,
     "date": "1893-05-28",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-28-jonathan_harker-01",
     "order": 16,
     "place": null,
@@ -1777,6 +1838,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -1811,6 +1876,7 @@
     "chapter": 4,
     "date": "1893-05-31",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-31-jonathan_harker-01",
     "order": 17,
     "place": null,
@@ -1823,6 +1889,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -1848,6 +1918,7 @@
     "chapter": 4,
     "date": "1893-06-17",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-17-jonathan_harker-01",
     "order": 18,
     "place": null,
@@ -1984,6 +2055,7 @@
     "chapter": 4,
     "date": "1893-06-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-24-jonathan_harker-01",
     "order": 19,
     "place": null,
@@ -2039,6 +2111,7 @@
     "chapter": 4,
     "date": "1893-06-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-25-jonathan_harker-01",
     "order": 20,
     "place": null,
@@ -2085,6 +2158,7 @@
     "chapter": 4,
     "date": "1893-06-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-25-jonathan_harker-02",
     "order": 21,
     "place": null,
@@ -2097,6 +2171,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -2283,6 +2361,7 @@
     "chapter": 4,
     "date": "1893-06-29",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-29-jonathan_harker-01",
     "order": 22,
     "place": null,
@@ -2419,6 +2498,7 @@
     "chapter": 4,
     "date": "1893-06-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-30-jonathan_harker-01",
     "order": 23,
     "place": null,
@@ -2431,6 +2511,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          7
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -2483,6 +2567,7 @@
     "chapter": 5,
     "date": "1893-05-09",
     "header": "Letter from Miss Mina Murray to Miss Lucy Westenra.",
+    "headerNamesParties": true,
     "id": "1893-05-09-mina_harker-01",
     "order": 24,
     "place": null,
@@ -2648,6 +2733,7 @@
     "chapter": 5,
     "date": "1893-05-10",
     "header": "Letter, Lucy Westenra to Mina Murray.",
+    "headerNamesParties": true,
     "id": "1893-05-09-lucy_westenra-01",
     "order": 25,
     "place": null,
@@ -2660,6 +2746,10 @@
     "author": "lucy_westenra",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -2715,6 +2805,7 @@
     "chapter": 5,
     "date": "1893-05-24",
     "header": "Letter, Lucy Westenra to Mina Murray.",
+    "headerNamesParties": true,
     "id": "1893-05-24-lucy_westenra-01",
     "order": 26,
     "place": null,
@@ -2858,6 +2949,7 @@
     "chapter": 5,
     "date": "1893-05-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-05-24-lucy_westenra-02",
     "order": 27,
     "place": null,
@@ -2879,6 +2971,10 @@
         ]
       },
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -2962,6 +3058,7 @@
     "chapter": 5,
     "date": "1893-05-25",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-05-25-john_seward-01",
     "order": 28,
     "place": null,
@@ -2974,6 +3071,10 @@
     "author": "quincey_morris",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -3017,6 +3118,7 @@
     "chapter": 5,
     "date": "1893-05-25",
     "header": "Letter, Quincey P. Morris to Hon. Arthur Holmwood.",
+    "headerNamesParties": true,
     "id": "1893-05-25-quincey_morris-01",
     "order": 29,
     "place": null,
@@ -3029,6 +3131,10 @@
     "author": "arthur_holmwood",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -3063,6 +3169,7 @@
     "chapter": 5,
     "date": "1893-05-26",
     "header": "Telegram from Arthur Holmwood to Quincey P. Morris.",
+    "headerNamesParties": true,
     "id": "1893-05-26-arthur_holmwood-01",
     "order": 30,
     "place": null,
@@ -3075,6 +3182,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          17
+        ],
         "role": "para",
         "spans": [
           {
@@ -3145,6 +3256,7 @@
     "chapter": 6,
     "date": "1893-07-24",
     "header": "MINA MURRAY’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-07-24-mina_harker-01",
     "order": 31,
     "place": "Whitby",
@@ -3157,6 +3269,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -3325,6 +3441,7 @@
     "chapter": 6,
     "date": "1893-08-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-01-mina_harker-01",
     "order": 32,
     "place": null,
@@ -3353,6 +3470,7 @@
     "chapter": 6,
     "date": "1893-08-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-01-mina_harker-02",
     "order": 33,
     "place": null,
@@ -3365,6 +3483,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -3381,6 +3503,7 @@
     "chapter": 6,
     "date": "1893-06-05",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-06-05-john_seward-01",
     "order": 34,
     "place": null,
@@ -3393,6 +3516,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -3409,6 +3536,7 @@
     "chapter": 6,
     "date": "1893-06-18",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-06-18-john_seward-01",
     "order": 35,
     "place": null,
@@ -3421,6 +3549,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -3437,6 +3569,7 @@
     "chapter": 6,
     "date": "1893-07-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-01-john_seward-01",
     "order": 36,
     "place": null,
@@ -3449,6 +3582,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          8
+        ],
         "role": "para",
         "spans": [
           {
@@ -3465,6 +3602,7 @@
     "chapter": 6,
     "date": "1893-07-08",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-08-john_seward-01",
     "order": 37,
     "place": null,
@@ -3477,6 +3615,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -3511,6 +3653,7 @@
     "chapter": 6,
     "date": "1893-07-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-19-john_seward-01",
     "order": 38,
     "place": null,
@@ -3539,6 +3682,7 @@
     "chapter": 6,
     "date": "1893-07-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-19-john_seward-02",
     "order": 39,
     "place": null,
@@ -3551,6 +3695,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -3567,6 +3715,7 @@
     "chapter": 6,
     "date": "1893-07-20",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-20-john_seward-01",
     "order": 40,
     "place": null,
@@ -3595,6 +3744,7 @@
     "chapter": 6,
     "date": "1893-07-20",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-20-john_seward-02",
     "order": 41,
     "place": null,
@@ -3650,6 +3800,7 @@
     "chapter": 6,
     "date": "1893-07-20",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-20-john_seward-03",
     "order": 42,
     "place": null,
@@ -3662,6 +3813,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -3678,6 +3833,7 @@
     "chapter": 6,
     "date": "1893-07-26",
     "header": "Mina Murray’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-07-26-mina_harker-01",
     "order": 43,
     "place": null,
@@ -3690,6 +3846,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -3706,6 +3866,7 @@
     "chapter": 6,
     "date": "1893-07-27",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-27-mina_harker-01",
     "order": 44,
     "place": null,
@@ -3718,6 +3879,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -3734,6 +3899,7 @@
     "chapter": 6,
     "date": "1893-08-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-03-mina_harker-01",
     "order": 45,
     "place": null,
@@ -3746,6 +3912,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -3807,6 +3977,7 @@
     "chapter": 6,
     "date": "1893-08-06",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-06-mina_harker-01",
     "order": 46,
     "place": null,
@@ -3983,6 +4154,7 @@
     "chapter": 7,
     "date": "1893-08-08",
     "header": "CUTTING FROM “THE DAILYGRAPH,” 8 AUGUST",
+    "headerNamesParties": false,
     "id": "1893-08-08-dailygraph-01",
     "order": 47,
     "place": null,
@@ -3995,6 +4167,10 @@
     "author": "dailygraph",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -4019,6 +4195,7 @@
     "chapter": 7,
     "date": "1893-08-09",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-09-dailygraph-01",
     "order": 48,
     "place": null,
@@ -4063,6 +4240,7 @@
     "chapter": 7,
     "date": "1893-08-09",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-09-dailygraph-02",
     "order": 49,
     "place": null,
@@ -4087,6 +4265,7 @@
     "chapter": 7,
     "date": "1893-07-18",
     "header": "LOG OF THE “DEMETER.”\nVarna to Whitby.",
+    "headerNamesParties": false,
     "id": "1893-08-09-demeter_captain-01",
     "order": 50,
     "place": null,
@@ -4111,6 +4290,7 @@
     "chapter": 7,
     "date": "1893-07-06",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-06-demeter_captain-01",
     "order": 51,
     "place": null,
@@ -4135,6 +4315,7 @@
     "chapter": 7,
     "date": "1893-07-11",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-11-demeter_captain-01",
     "order": 52,
     "place": null,
@@ -4159,6 +4340,7 @@
     "chapter": 7,
     "date": "1893-07-12",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-12-demeter_captain-01",
     "order": 53,
     "place": null,
@@ -4183,6 +4365,7 @@
     "chapter": 7,
     "date": "1893-07-13",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-13-demeter_captain-01",
     "order": 54,
     "place": null,
@@ -4215,6 +4398,7 @@
     "chapter": 7,
     "date": "1893-07-14",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-14-demeter_captain-01",
     "order": 55,
     "place": null,
@@ -4247,6 +4431,7 @@
     "chapter": 7,
     "date": "1893-07-16",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-16-demeter_captain-01",
     "order": 56,
     "place": null,
@@ -4280,6 +4465,7 @@
     "chapter": 7,
     "date": "1893-07-17",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-17-demeter_captain-01",
     "order": 57,
     "place": null,
@@ -4292,6 +4478,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -4308,6 +4498,7 @@
     "chapter": 7,
     "date": "1893-07-22",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-22-demeter_captain-01",
     "order": 58,
     "place": null,
@@ -4320,6 +4511,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -4336,6 +4531,7 @@
     "chapter": 7,
     "date": "1893-07-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-24-demeter_captain-01",
     "order": 59,
     "place": null,
@@ -4348,6 +4544,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -4364,6 +4564,7 @@
     "chapter": 7,
     "date": "1893-07-28",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-28-demeter_captain-01",
     "order": 60,
     "place": null,
@@ -4376,6 +4577,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -4392,6 +4597,7 @@
     "chapter": 7,
     "date": "1893-07-29",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-29-demeter_captain-01",
     "order": 61,
     "place": null,
@@ -4404,6 +4610,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          9
+        ],
         "role": "para",
         "spans": [
           {
@@ -4420,6 +4630,7 @@
     "chapter": 7,
     "date": "1893-07-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-07-30-demeter_captain-01",
     "order": 62,
     "place": null,
@@ -4432,6 +4643,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -4448,6 +4663,7 @@
     "chapter": 7,
     "date": "1893-08-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-01-demeter_captain-01",
     "order": 63,
     "place": null,
@@ -4476,6 +4692,7 @@
     "chapter": 7,
     "date": "1893-08-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-02-demeter_captain-01",
     "order": 64,
     "place": null,
@@ -4488,6 +4705,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -4537,6 +4758,7 @@
     "chapter": 7,
     "date": "1893-08-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-03-demeter_captain-01",
     "order": 65,
     "place": null,
@@ -4549,6 +4771,10 @@
     "author": "demeter_captain",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -4565,6 +4791,7 @@
     "chapter": 7,
     "date": "1893-08-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-04-demeter_captain-01",
     "order": 66,
     "place": null,
@@ -4598,6 +4825,7 @@
     "chapter": 7,
     "date": "1893-08-09",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-04-demeter_captain-01-b",
     "order": 67,
     "place": null,
@@ -4610,6 +4838,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          10
+        ],
         "role": "para",
         "spans": [
           {
@@ -4635,6 +4867,7 @@
     "chapter": 7,
     "date": "1893-08-08",
     "header": "Mina Murray’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-08-08-mina_harker-01",
     "order": 68,
     "place": null,
@@ -4647,6 +4880,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4672,6 +4909,7 @@
     "chapter": 7,
     "date": "1893-08-10",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-10-mina_harker-01",
     "order": 69,
     "place": null,
@@ -4700,6 +4938,7 @@
     "chapter": 8,
     "date": "1893-08-10",
     "header": "MINA MURRAY’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-08-10-mina_harker-02",
     "order": 70,
     "place": null,
@@ -4746,6 +4985,7 @@
     "chapter": 8,
     "date": "1893-08-11",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-11-mina_harker-01",
     "order": 71,
     "place": null,
@@ -4774,6 +5014,7 @@
     "chapter": 8,
     "date": "1893-08-11",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-11-mina_harker-02",
     "order": 72,
     "place": null,
@@ -4810,6 +5051,7 @@
     "chapter": 8,
     "date": "1893-08-11",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-11-mina_harker-03",
     "order": 73,
     "place": null,
@@ -4822,6 +5064,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4838,6 +5084,7 @@
     "chapter": 8,
     "date": "1893-08-12",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-12-mina_harker-01",
     "order": 74,
     "place": null,
@@ -4850,6 +5097,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4866,6 +5117,7 @@
     "chapter": 8,
     "date": "1893-08-13",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-13-mina_harker-01",
     "order": 75,
     "place": null,
@@ -4878,6 +5130,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4929,6 +5185,7 @@
     "chapter": 8,
     "date": "1893-08-14",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-14-mina_harker-01",
     "order": 76,
     "place": null,
@@ -4941,6 +5198,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4957,6 +5218,7 @@
     "chapter": 8,
     "date": "1893-08-15",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-15-mina_harker-01",
     "order": 77,
     "place": null,
@@ -4969,6 +5231,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -4985,6 +5251,7 @@
     "chapter": 8,
     "date": "1893-08-17",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-17-mina_harker-01",
     "order": 78,
     "place": null,
@@ -4997,6 +5264,10 @@
     "author": "billington_and_son",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -5058,6 +5329,7 @@
     "chapter": 8,
     "date": "1893-08-17",
     "header": "Letter, Samuel F. Billington & Son, Solicitors, Whitby, to Messrs. Carter, Paterson & Co., London.",
+    "headerNamesParties": true,
     "id": "1893-08-17-billington_and_son-01",
     "order": 79,
     "place": null,
@@ -5070,6 +5342,10 @@
     "author": "carter_paterson",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -5121,6 +5397,7 @@
     "chapter": 8,
     "date": "1893-08-21",
     "header": "Letter, Messrs. Carter, Paterson & Co., London, to Messrs. Billington & Son, Whitby.",
+    "headerNamesParties": true,
     "id": "1893-08-21-carter_paterson-01",
     "order": 80,
     "place": null,
@@ -5133,6 +5410,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5184,6 +5465,7 @@
     "chapter": 8,
     "date": "1893-08-18",
     "header": "Mina Murray’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-08-18-mina_harker-01",
     "order": 81,
     "place": null,
@@ -5196,6 +5478,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5220,6 +5506,7 @@
     "chapter": 8,
     "date": "1893-08-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-19-mina_harker-01",
     "order": 82,
     "place": null,
@@ -5232,6 +5519,10 @@
     "author": "sister_agatha",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -5293,6 +5584,7 @@
     "chapter": 8,
     "date": "1893-08-12",
     "header": "Letter, Sister Agatha, Hospital of St. Joseph and Ste. Mary, Buda-Pesth, to Miss Wilhelmina Murray.",
+    "headerNamesParties": true,
     "id": "1893-08-12-sister_agatha-01",
     "order": 83,
     "place": null,
@@ -5305,6 +5597,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5393,6 +5689,7 @@
     "chapter": 8,
     "date": "1893-08-19",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-08-19-john_seward-01",
     "order": 84,
     "place": null,
@@ -5483,6 +5780,7 @@
     "chapter": 8,
     "date": "1893-08-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-19-john_seward-02",
     "order": 85,
     "place": null,
@@ -5632,6 +5930,7 @@
     "chapter": 9,
     "date": "1893-08-24",
     "header": "Letter, Mina Harker to Lucy Westenra.",
+    "headerNamesParties": true,
     "id": "1893-08-24-mina_harker-01",
     "order": 86,
     "place": "Buda-Pesth",
@@ -5713,6 +6012,7 @@
     "chapter": 9,
     "date": "1893-08-30",
     "header": "Letter, Lucy Westenra to Mina Harker.",
+    "headerNamesParties": true,
     "id": "1893-08-30-lucy_westenra-01",
     "order": 87,
     "place": "Whitby",
@@ -5725,6 +6025,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5793,6 +6097,7 @@
     "chapter": 9,
     "date": "1893-08-20",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-08-20-john_seward-01",
     "order": 88,
     "place": null,
@@ -5805,6 +6110,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5821,6 +6130,7 @@
     "chapter": 9,
     "date": "1893-08-23",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-23-john_seward-01",
     "order": 89,
     "place": null,
@@ -5858,6 +6168,7 @@
     "chapter": 9,
     "date": "1893-08-23",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-23-john_seward-02",
     "order": 90,
     "place": null,
@@ -5886,6 +6197,7 @@
     "chapter": 9,
     "date": "1893-08-24",
     "header": "Lucy Westenra’s Diary",
+    "headerNamesParties": false,
     "id": "1893-08-24-lucy_westenra-01",
     "order": 91,
     "place": "Hillingham",
@@ -5898,6 +6210,10 @@
     "author": "lucy_westenra",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -5914,6 +6230,7 @@
     "chapter": 9,
     "date": "1893-08-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-08-25-lucy_westenra-01",
     "order": 92,
     "place": null,
@@ -5977,6 +6294,7 @@
     "chapter": 9,
     "date": "1893-08-31",
     "header": "Letter, Arthur Holmwood to Dr. Seward.",
+    "headerNamesParties": true,
     "id": "1893-08-31-arthur_holmwood-01",
     "order": 93,
     "place": "Albemarle Hotel",
@@ -5989,6 +6307,10 @@
     "author": "arthur_holmwood",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -6014,6 +6336,7 @@
     "chapter": 9,
     "date": "1893-09-01",
     "header": "Telegram, Arthur Holmwood to Seward.",
+    "headerNamesParties": true,
     "id": "1893-09-01-arthur_holmwood-01",
     "order": 94,
     "place": null,
@@ -6026,6 +6349,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -6096,6 +6423,7 @@
     "chapter": 9,
     "date": "1893-09-02",
     "header": "Letter from Dr. Seward to Arthur Holmwood.",
+    "headerNamesParties": true,
     "id": "1893-09-02-john_seward-01",
     "order": 95,
     "place": null,
@@ -6108,6 +6436,10 @@
     "author": "van_helsing",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -6151,6 +6483,7 @@
     "chapter": 9,
     "date": "1893-09-02",
     "header": "Letter, Abraham Van Helsing, M. D., D. Ph., D. Lit., etc., etc., to Dr. Seward.",
+    "headerNamesParties": true,
     "id": "1893-09-02-van_helsing-01",
     "order": 96,
     "place": null,
@@ -6163,6 +6496,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -6232,6 +6569,7 @@
     "chapter": 9,
     "date": "1893-09-03",
     "header": "Letter, Dr. Seward to Hon. Arthur Holmwood.",
+    "headerNamesParties": true,
     "id": "1893-09-03-john_seward-01",
     "order": 97,
     "place": null,
@@ -6244,6 +6582,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "para",
         "spans": [
           {
@@ -6260,6 +6602,7 @@
     "chapter": 9,
     "date": "1893-09-04",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-04-john_seward-01",
     "order": 98,
     "place": null,
@@ -6315,6 +6658,7 @@
     "chapter": 9,
     "date": "1893-09-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-04-john_seward-02",
     "order": 99,
     "place": null,
@@ -6352,6 +6696,7 @@
     "chapter": 9,
     "date": "1893-09-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-04-john_seward-03",
     "order": 100,
     "place": null,
@@ -6364,6 +6709,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          1,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -6384,6 +6733,7 @@
     "chapter": 9,
     "date": "1893-09-04",
     "header": "Telegram, Seward, London, to Van Helsing, Amsterdam.",
+    "headerNamesParties": true,
     "id": "1893-09-04-john_seward-04",
     "order": 101,
     "place": null,
@@ -6396,6 +6746,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          1,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -6416,6 +6770,7 @@
     "chapter": 9,
     "date": "1893-09-05",
     "header": "Telegram, Seward, London, to Van Helsing, Amsterdam.",
+    "headerNamesParties": true,
     "id": "1893-09-05-john_seward-01",
     "order": 102,
     "place": null,
@@ -6428,6 +6783,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          1,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -6448,6 +6807,7 @@
     "chapter": 9,
     "date": "1893-09-06",
     "header": "Telegram, Seward, London, to Van Helsing, Amsterdam.",
+    "headerNamesParties": true,
     "id": "1893-09-06-john_seward-01",
     "order": 103,
     "place": null,
@@ -6460,6 +6820,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -6503,6 +6867,7 @@
     "chapter": 10,
     "date": "1893-09-06",
     "header": "Letter, Dr. Seward to Hon. Arthur Holmwood.",
+    "headerNamesParties": true,
     "id": "1893-09-06-john_seward-02",
     "order": 104,
     "place": null,
@@ -6515,6 +6880,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "para",
         "spans": [
           {
@@ -6881,6 +7250,7 @@
     "chapter": 10,
     "date": "1893-09-07",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-07-john_seward-01",
     "order": 105,
     "place": null,
@@ -6893,6 +7263,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "para",
         "spans": [
           {
@@ -7008,6 +7382,7 @@
     "chapter": 10,
     "date": "1893-09-08",
     "header": "Dr. Seward’s Diary—continued.",
+    "headerNamesParties": false,
     "id": "1893-09-08-john_seward-01",
     "order": 106,
     "place": null,
@@ -7020,6 +7395,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "para",
         "spans": [
           {
@@ -7045,6 +7424,7 @@
     "chapter": 10,
     "date": "1893-09-09",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-09-john_seward-01",
     "order": 107,
     "place": null,
@@ -7057,6 +7437,10 @@
     "author": "lucy_westenra",
     "body": [
       {
+        "repeats": [
+          0,
+          13
+        ],
         "role": "para",
         "spans": [
           {
@@ -7073,6 +7457,7 @@
     "chapter": 10,
     "date": "1893-09-09",
     "header": "Lucy Westenra’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-09-lucy_westenra-01",
     "order": 108,
     "place": null,
@@ -7085,6 +7470,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -7280,6 +7669,7 @@
     "chapter": 10,
     "date": "1893-09-10",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-10-john_seward-01",
     "order": 109,
     "place": null,
@@ -7292,6 +7682,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -7452,6 +7846,7 @@
     "chapter": 10,
     "date": "1893-09-11",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-11-john_seward-01",
     "order": 110,
     "place": null,
@@ -7464,6 +7859,10 @@
     "author": "lucy_westenra",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -7480,6 +7879,7 @@
     "chapter": 11,
     "date": "1893-09-12",
     "header": "Lucy Westenra’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-12-lucy_westenra-01",
     "order": 111,
     "place": null,
@@ -7492,6 +7892,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -7634,6 +8038,7 @@
     "chapter": 11,
     "date": "1893-09-13",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-13-john_seward-01",
     "order": 112,
     "place": null,
@@ -7646,6 +8051,10 @@
     "author": "lucy_westenra",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -7662,6 +8071,7 @@
     "chapter": 11,
     "date": "1893-09-17",
     "header": "Lucy Westenra’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-17-lucy_westenra-01",
     "order": 113,
     "place": null,
@@ -8001,6 +8411,7 @@
     "chapter": 11,
     "date": "1893-09-18",
     "header": "“The Pall Mall Gazette,” 18 September.\nTHE ESCAPED WOLF.\n\nPERILOUS ADVENTURE OF OUR INTERVIEWER.\nInterview with the Keeper in the Zoölogical Gardens.",
+    "headerNamesParties": false,
     "id": "1893-09-18-pall_mall_gazette-01",
     "order": 114,
     "place": null,
@@ -8013,6 +8424,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -8038,6 +8453,7 @@
     "chapter": 11,
     "date": "1893-09-17",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-17-john_seward-01",
     "order": 115,
     "place": null,
@@ -8050,6 +8466,10 @@
     "author": "van_helsing",
     "body": [
       {
+        "repeats": [
+          1,
+          15
+        ],
         "role": "para",
         "spans": [
           {
@@ -8070,6 +8490,7 @@
     "chapter": 11,
     "date": "1893-09-17",
     "header": "Telegram, Van Helsing, Antwerp, to Seward, Carfax.\n(Sent to Carfax, Sussex, as no county given; delivered late by twenty-two hours.)",
+    "headerNamesParties": true,
     "id": "1893-09-17-van_helsing-01",
     "order": 116,
     "place": null,
@@ -8082,6 +8503,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -8106,6 +8531,7 @@
     "chapter": 11,
     "date": "1893-09-18",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-18-john_seward-01",
     "order": 117,
     "place": null,
@@ -8197,6 +8623,7 @@
     "chapter": 11,
     "date": "1893-09-17",
     "header": "Memorandum left by Lucy Westenra.",
+    "headerNamesParties": false,
     "id": "1893-09-17-lucy_westenra-02",
     "order": 118,
     "place": null,
@@ -8209,6 +8636,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -8646,6 +9077,7 @@
     "chapter": 12,
     "date": "1893-09-18",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-09-18-john_seward-02",
     "order": 119,
     "place": null,
@@ -8658,6 +9090,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -8701,6 +9137,7 @@
     "chapter": 12,
     "date": "1893-09-19",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-19-john_seward-01",
     "order": 120,
     "place": null,
@@ -8713,6 +9150,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -8791,6 +9232,7 @@
     "chapter": 12,
     "date": "1893-09-17",
     "header": "Letter, Mina Harker to Lucy Westenra.\n(Unopened by her.)",
+    "headerNamesParties": true,
     "id": "1893-09-17-mina_harker-01",
     "order": 121,
     "place": null,
@@ -8803,6 +9245,10 @@
     "author": "patrick_hennessey",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -8864,6 +9310,7 @@
     "chapter": 12,
     "date": "1893-09-20",
     "header": "Report from Patrick Hennessey, M. D., M. R. C. S. L. K. Q. C. P. I., etc., etc., to John Seward, M. D.",
+    "headerNamesParties": true,
     "id": "1893-09-20-patrick_hennessey-01",
     "order": 122,
     "place": null,
@@ -8876,6 +9323,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -8935,6 +9386,7 @@
     "chapter": 12,
     "date": "1893-09-18",
     "header": "Letter, Mina Harker to Lucy Westenra.\n(Unopened by her.)",
+    "headerNamesParties": true,
     "id": "1893-09-18-mina_harker-01",
     "order": 123,
     "place": null,
@@ -8947,6 +9399,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -9233,6 +9689,7 @@
     "chapter": 12,
     "date": "1893-09-20",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-20-john_seward-01",
     "order": 124,
     "place": null,
@@ -9866,6 +10323,7 @@
     "chapter": 13,
     "date": "1893-09-20",
     "header": "DR. SEWARD’S DIARY—continued.",
+    "headerNamesParties": false,
     "id": "1893-09-20-john_seward-02",
     "order": 125,
     "place": null,
@@ -9878,6 +10336,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -9975,6 +10437,7 @@
     "chapter": 13,
     "date": "1893-09-22",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-22-mina_harker-01",
     "order": 126,
     "place": null,
@@ -10021,6 +10484,7 @@
     "chapter": 13,
     "date": "1893-09-22",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-22-mina_harker-02",
     "order": 127,
     "place": null,
@@ -10033,6 +10497,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -10175,6 +10643,7 @@
     "chapter": 13,
     "date": "1893-09-22",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-22-john_seward-01",
     "order": 128,
     "place": null,
@@ -10216,6 +10685,7 @@
     "chapter": 13,
     "date": "1893-09-25",
     "header": "“The Westminster Gazette,” 25 September.\nA HAMPSTEAD MYSTERY.",
+    "headerNamesParties": false,
     "id": "1893-09-25-westminster_gazette-01",
     "order": 129,
     "place": null,
@@ -10240,6 +10710,7 @@
     "chapter": 13,
     "date": "1893-09-25",
     "header": "“The Westminster Gazette,” 25 September.\n\nExtra Special.\n\nTHE HAMPSTEAD HORROR.\n\nANOTHER CHILD INJURED.\n\nThe “Bloofer Lady.”",
+    "headerNamesParties": false,
     "id": "1893-09-25-westminster_gazette-02",
     "order": 130,
     "place": null,
@@ -10252,6 +10723,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -10268,6 +10743,7 @@
     "chapter": 14,
     "date": "1893-09-23",
     "header": "MINA HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-09-23-mina_harker-01",
     "order": 131,
     "place": null,
@@ -10280,6 +10756,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -10296,6 +10776,7 @@
     "chapter": 14,
     "date": "1893-09-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-24-mina_harker-01",
     "order": 132,
     "place": null,
@@ -10308,6 +10789,10 @@
     "author": "van_helsing",
     "body": [
       {
+        "repeats": [
+          1,
+          15
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -10363,6 +10848,7 @@
     "chapter": 14,
     "date": "1893-09-24",
     "header": "Letter, Van Helsing to Mrs. Harker.",
+    "headerNamesParties": true,
     "id": "1893-09-24-van_helsing-01",
     "order": 133,
     "place": null,
@@ -10375,6 +10861,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          1,
+          15
+        ],
         "role": "para",
         "spans": [
           {
@@ -10404,6 +10894,7 @@
     "chapter": 14,
     "date": "1893-09-25",
     "header": "Telegram, Mrs. Harker to Van Helsing.",
+    "headerNamesParties": true,
     "id": "1893-09-25-mina_harker-01",
     "order": 134,
     "place": null,
@@ -10416,6 +10907,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -10441,6 +10936,7 @@
     "chapter": 14,
     "date": "1893-09-25",
     "header": "MINA HARKER’S JOURNAL.",
+    "headerNamesParties": false,
     "id": "1893-09-25-mina_harker-02",
     "order": 135,
     "place": null,
@@ -10816,6 +11312,7 @@
     "chapter": 14,
     "date": "1893-09-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-25-mina_harker-03",
     "order": 136,
     "place": null,
@@ -10879,6 +11376,7 @@
     "chapter": 14,
     "date": "1893-09-25",
     "header": "Letter (by hand), Van Helsing to Mrs. Harker.",
+    "headerNamesParties": true,
     "id": "1893-09-25-van_helsing-01",
     "order": 137,
     "place": null,
@@ -10934,6 +11432,7 @@
     "chapter": 14,
     "date": "1893-09-25",
     "header": "Letter, Mrs. Harker to Van Helsing.",
+    "headerNamesParties": true,
     "id": "1893-09-25-mina_harker-04",
     "order": 138,
     "place": null,
@@ -10946,6 +11445,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -11130,6 +11633,7 @@
     "chapter": 14,
     "date": "1893-09-26",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-26-jonathan_harker-01",
     "order": 139,
     "place": null,
@@ -11142,6 +11646,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -11392,6 +11900,7 @@
     "chapter": 14,
     "date": "1893-09-26",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-26-john_seward-01",
     "order": 140,
     "place": null,
@@ -11758,6 +12267,7 @@
     "chapter": 15,
     "date": "1893-09-26",
     "header": "DR. SEWARD’S DIARY—continued.",
+    "headerNamesParties": false,
     "id": "1893-09-26-john_seward-02",
     "order": 141,
     "place": null,
@@ -11770,6 +12280,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -11929,6 +12443,7 @@
     "chapter": 15,
     "date": "1893-09-27",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-27-john_seward-01",
     "order": 142,
     "place": null,
@@ -11950,6 +12465,10 @@
         ]
       },
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -12011,6 +12530,7 @@
     "chapter": 15,
     "date": "1893-09-27",
     "header": "Note left by Van Helsing in his portmanteau, Berkeley Hotel directed to John Seward, M. D.",
+    "headerNamesParties": false,
     "id": "1893-09-27-van_helsing-01",
     "order": 143,
     "place": null,
@@ -12023,6 +12543,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -12047,6 +12571,7 @@
     "chapter": 15,
     "date": "1893-09-28",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-28-john_seward-01",
     "order": 144,
     "place": null,
@@ -12407,6 +12932,7 @@
     "chapter": 15,
     "date": "1893-09-29",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-29-john_seward-01",
     "order": 145,
     "place": null,
@@ -12701,6 +13227,7 @@
     "chapter": 16,
     "date": "1893-09-29",
     "header": "DR. SEWARD’S DIARY—continued",
+    "headerNamesParties": false,
     "id": "1893-09-29-john_seward-02",
     "order": 146,
     "place": null,
@@ -12980,6 +13507,7 @@
     "chapter": 16,
     "date": "1893-09-29",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-29-john_seward-03",
     "order": 147,
     "place": null,
@@ -13093,6 +13621,7 @@
     "chapter": 17,
     "date": "1893-09-29",
     "header": "DR. SEWARD’S DIARY—continued",
+    "headerNamesParties": false,
     "id": "1893-09-29-john_seward-04",
     "order": 148,
     "place": null,
@@ -13105,6 +13634,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13292,6 +13825,7 @@
     "chapter": 17,
     "date": "1893-09-29",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-29-mina_harker-01",
     "order": 149,
     "place": null,
@@ -13304,6 +13838,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13374,6 +13912,7 @@
     "chapter": 17,
     "date": "1893-09-29",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-29-john_seward-05",
     "order": 150,
     "place": null,
@@ -13386,6 +13925,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13428,6 +13971,7 @@
     "chapter": 17,
     "date": "1893-09-29",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-29-mina_harker-02",
     "order": 151,
     "place": null,
@@ -13440,6 +13984,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13456,6 +14004,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-09-30-john_seward-01",
     "order": 152,
     "place": null,
@@ -13502,6 +14051,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-30-john_seward-02",
     "order": 153,
     "place": null,
@@ -13530,6 +14080,7 @@
     "chapter": 17,
     "date": "1893-09-29",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-29-jonathan_harker-01",
     "order": 154,
     "place": null,
@@ -13542,6 +14093,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13627,6 +14182,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-30-jonathan_harker-01",
     "order": 155,
     "place": null,
@@ -13655,6 +14211,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-30-jonathan_harker-02",
     "order": 156,
     "place": null,
@@ -13667,6 +14224,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -13683,6 +14244,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": "Mina Harker’s Journal",
+    "headerNamesParties": false,
     "id": "1893-09-30-mina_harker-01",
     "order": 157,
     "place": null,
@@ -13845,6 +14407,7 @@
     "chapter": 17,
     "date": "1893-09-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-09-30-mina_harker-02",
     "order": 158,
     "place": null,
@@ -13857,6 +14420,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -14149,6 +14716,7 @@
     "chapter": 18,
     "date": "1893-09-30",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-09-30-john_seward-03",
     "order": 159,
     "place": null,
@@ -14161,6 +14729,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          14
+        ],
         "role": "para",
         "spans": [
           {
@@ -14428,6 +15000,7 @@
     "chapter": 18,
     "date": "1893-09-30",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-09-30-mina_harker-03",
     "order": 160,
     "place": null,
@@ -14662,6 +15235,7 @@
     "chapter": 18,
     "date": "1893-10-01",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-01-john_seward-01",
     "order": 161,
     "place": null,
@@ -14921,6 +15495,7 @@
     "chapter": 19,
     "date": "1893-10-01",
     "header": "JONATHAN HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-10-01-jonathan_harker-01",
     "order": 162,
     "place": null,
@@ -14949,6 +15524,7 @@
     "chapter": 19,
     "date": "1893-10-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-01-jonathan_harker-02",
     "order": 163,
     "place": null,
@@ -14961,6 +15537,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -15057,6 +15637,7 @@
     "chapter": 19,
     "date": "1893-10-01",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-01-john_seward-02",
     "order": 164,
     "place": null,
@@ -15069,6 +15650,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -15129,6 +15714,7 @@
     "chapter": 19,
     "date": "1893-10-01",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-01-mina_harker-01",
     "order": 165,
     "place": null,
@@ -15157,6 +15743,7 @@
     "chapter": 19,
     "date": "1893-10-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-02-mina_harker-01",
     "order": 166,
     "place": null,
@@ -15221,6 +15808,7 @@
     "chapter": 20,
     "date": "1893-10-01",
     "header": "JONATHAN HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-10-01-jonathan_harker-03",
     "order": 167,
     "place": null,
@@ -15599,6 +16187,7 @@
     "chapter": 20,
     "date": "1893-10-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-02-jonathan_harker-01",
     "order": 168,
     "place": null,
@@ -15611,6 +16200,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -15987,6 +16580,7 @@
     "chapter": 20,
     "date": "1893-10-01",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-01-john_seward-03",
     "order": 169,
     "place": null,
@@ -16024,6 +16618,7 @@
     "chapter": 20,
     "date": "1893-10-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-01-john_seward-04",
     "order": 170,
     "place": null,
@@ -16036,6 +16631,10 @@
     "author": "mitchell_sons_candy",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "dateline",
         "spans": [
           {
@@ -16075,6 +16674,7 @@
     "chapter": 20,
     "date": "1893-10-01",
     "header": "Letter, Mitchell, Sons and Candy to Lord Godalming.",
+    "headerNamesParties": true,
     "id": "1893-10-01-mitchell_sons_candy-01",
     "order": 171,
     "place": null,
@@ -16087,6 +16687,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -16139,6 +16743,7 @@
     "chapter": 20,
     "date": "1893-10-02",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-02-john_seward-01",
     "order": 172,
     "place": null,
@@ -16176,6 +16781,7 @@
     "chapter": 20,
     "date": "1893-10-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-02-john_seward-02",
     "order": 173,
     "place": null,
@@ -16188,6 +16794,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -16814,6 +17424,7 @@
     "chapter": 21,
     "date": "1893-10-03",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-10-03-john_seward-01",
     "order": 174,
     "place": null,
@@ -16826,6 +17437,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -17360,6 +17975,7 @@
     "chapter": 22,
     "date": "1893-10-03",
     "header": "JONATHAN HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-10-03-jonathan_harker-01",
     "order": 175,
     "place": null,
@@ -17442,6 +18058,7 @@
     "chapter": 22,
     "date": "1893-10-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-03-jonathan_harker-02",
     "order": 176,
     "place": "Piccadilly",
@@ -17454,6 +18071,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -17810,6 +18431,7 @@
     "chapter": 23,
     "date": "1893-10-03",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-10-03-john_seward-02",
     "order": 177,
     "place": null,
@@ -17838,6 +18460,7 @@
     "chapter": 23,
     "date": "1893-10-03",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-03-jonathan_harker-03",
     "order": 178,
     "place": null,
@@ -17911,6 +18534,7 @@
     "chapter": 23,
     "date": "1893-10-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-03-jonathan_harker-04",
     "order": 179,
     "place": null,
@@ -18245,6 +18869,7 @@
     "chapter": 23,
     "date": "1893-10-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-04-jonathan_harker-01",
     "order": 180,
     "place": null,
@@ -18295,6 +18920,7 @@
     "chapter": 24,
     "date": "1893-10-04",
     "header": "DR. SEWARD’S PHONOGRAPH DIARY, SPOKEN BY VAN HELSING",
+    "headerNamesParties": false,
     "id": "1893-10-04-van_helsing-01",
     "order": 181,
     "place": null,
@@ -18307,6 +18933,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -18341,6 +18971,7 @@
     "chapter": 24,
     "date": "1893-10-04",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-04-jonathan_harker-02",
     "order": 182,
     "place": null,
@@ -18526,6 +19157,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-05-mina_harker-01",
     "order": 183,
     "place": null,
@@ -18538,6 +19170,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          11
+        ],
         "role": "para",
         "spans": [
           {
@@ -18580,6 +19216,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-05-john_seward-01",
     "order": 184,
     "place": null,
@@ -18653,6 +19290,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-05-john_seward-02",
     "order": 185,
     "place": null,
@@ -18743,6 +19381,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-05-john_seward-03",
     "order": 186,
     "place": null,
@@ -18771,6 +19410,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-05-jonathan_harker-01",
     "order": 187,
     "place": null,
@@ -18853,6 +19493,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-05-jonathan_harker-02",
     "order": 188,
     "place": null,
@@ -18881,6 +19522,7 @@
     "chapter": 24,
     "date": "1893-10-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-05-jonathan_harker-03",
     "order": 189,
     "place": null,
@@ -19044,6 +19686,7 @@
     "chapter": 24,
     "date": "1893-10-06",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-06-jonathan_harker-01",
     "order": 190,
     "place": null,
@@ -19090,6 +19733,7 @@
     "chapter": 24,
     "date": "1893-10-06",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-06-jonathan_harker-02",
     "order": 191,
     "place": null,
@@ -19351,6 +19995,7 @@
     "chapter": 25,
     "date": "1893-10-11",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-10-11-john_seward-01",
     "order": 192,
     "place": null,
@@ -19363,6 +20008,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          19
+        ],
         "role": "para",
         "spans": [
           {
@@ -19430,6 +20079,7 @@
     "chapter": 25,
     "date": "1893-10-15",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-15-jonathan_harker-01",
     "order": 193,
     "place": "Varna",
@@ -19442,6 +20092,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19475,6 +20129,7 @@
     "chapter": 25,
     "date": "1893-10-16",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-16-jonathan_harker-01",
     "order": 194,
     "place": null,
@@ -19487,6 +20142,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19511,6 +20170,7 @@
     "chapter": 25,
     "date": "1893-10-17",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-17-jonathan_harker-01",
     "order": 195,
     "place": null,
@@ -19523,6 +20183,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19539,6 +20203,7 @@
     "chapter": 25,
     "date": "1893-10-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-24-jonathan_harker-01",
     "order": 196,
     "place": null,
@@ -19572,6 +20237,7 @@
     "chapter": 25,
     "date": "1893-10-24",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-24-jonathan_harker-02",
     "order": 197,
     "place": null,
@@ -19584,6 +20250,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19617,6 +20287,7 @@
     "chapter": 25,
     "date": "1893-10-25",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-25-john_seward-01",
     "order": 198,
     "place": null,
@@ -19654,6 +20325,7 @@
     "chapter": 25,
     "date": "1893-10-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-25-john_seward-02",
     "order": 199,
     "place": null,
@@ -19682,6 +20354,7 @@
     "chapter": 25,
     "date": "1893-10-25",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-25-john_seward-03",
     "order": 200,
     "place": null,
@@ -19694,6 +20367,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19726,6 +20403,7 @@
     "chapter": 25,
     "date": "1893-10-26",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-26-john_seward-01",
     "order": 201,
     "place": null,
@@ -19763,6 +20441,7 @@
     "chapter": 25,
     "date": "1893-10-27",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-27-john_seward-01",
     "order": 202,
     "place": null,
@@ -19775,6 +20454,10 @@
     "author": "rufus_smith",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -19812,6 +20495,7 @@
     "chapter": 25,
     "date": "1893-10-28",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-28-john_seward-01",
     "order": 203,
     "place": null,
@@ -19824,6 +20508,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -20123,6 +20811,7 @@
     "chapter": 25,
     "date": "1893-10-28",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-10-28-john_seward-02",
     "order": 204,
     "place": null,
@@ -20135,6 +20824,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -20231,6 +20924,7 @@
     "chapter": 26,
     "date": "1893-10-29",
     "header": "DR. SEWARD’S DIARY",
+    "headerNamesParties": false,
     "id": "1893-10-29-john_seward-01",
     "order": 205,
     "place": null,
@@ -20268,6 +20962,7 @@
     "chapter": 26,
     "date": "1893-10-29",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-29-john_seward-02",
     "order": 206,
     "place": null,
@@ -20350,6 +21045,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-30-john_seward-01",
     "order": 207,
     "place": null,
@@ -20362,6 +21058,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -20386,6 +21086,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-01",
     "order": 208,
     "place": null,
@@ -20414,6 +21115,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-02",
     "order": 209,
     "place": null,
@@ -20426,6 +21128,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -20556,6 +21262,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-30-jonathan_harker-01",
     "order": 210,
     "place": null,
@@ -20620,6 +21327,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-03",
     "order": 211,
     "place": null,
@@ -20948,6 +21656,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Mina Harker’s Memorandum.",
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-04",
     "order": 212,
     "place": null,
@@ -21071,6 +21780,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Mina Harker’s Journal—continued.",
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-05",
     "order": 213,
     "place": null,
@@ -21099,6 +21809,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-06",
     "order": 214,
     "place": null,
@@ -21127,6 +21838,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-30-mina_harker-07",
     "order": 215,
     "place": null,
@@ -21164,6 +21876,7 @@
     "chapter": 26,
     "date": "1893-10-30",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-30-jonathan_harker-02",
     "order": 216,
     "place": null,
@@ -21176,6 +21889,10 @@
     "author": "jonathan_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21192,6 +21909,7 @@
     "chapter": 26,
     "date": "1893-10-31",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-31-jonathan_harker-01",
     "order": 217,
     "place": null,
@@ -21220,6 +21938,7 @@
     "chapter": 26,
     "date": "1893-11-01",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-01-jonathan_harker-01",
     "order": 218,
     "place": null,
@@ -21248,6 +21967,7 @@
     "chapter": 26,
     "date": "1893-11-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-02-jonathan_harker-01",
     "order": 219,
     "place": null,
@@ -21260,6 +21980,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21276,6 +22000,7 @@
     "chapter": 26,
     "date": "1893-11-02",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-11-02-john_seward-01",
     "order": 220,
     "place": null,
@@ -21288,6 +22013,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21304,6 +22033,7 @@
     "chapter": 26,
     "date": "1893-11-03",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-03-john_seward-01",
     "order": 221,
     "place": null,
@@ -21316,6 +22046,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21332,6 +22066,7 @@
     "chapter": 26,
     "date": "1893-11-04",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-04-john_seward-01",
     "order": 222,
     "place": null,
@@ -21344,6 +22079,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21360,6 +22099,7 @@
     "chapter": 26,
     "date": "1893-10-31",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-10-31-mina_harker-01",
     "order": 223,
     "place": null,
@@ -21406,6 +22146,7 @@
     "chapter": 26,
     "date": "1893-10-31",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-10-31-mina_harker-02",
     "order": 224,
     "place": null,
@@ -21418,6 +22159,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21442,6 +22187,7 @@
     "chapter": 27,
     "date": "1893-11-01",
     "header": "MINA HARKER’S JOURNAL",
+    "headerNamesParties": false,
     "id": "1893-11-01-mina_harker-01",
     "order": 225,
     "place": null,
@@ -21470,6 +22216,7 @@
     "chapter": 27,
     "date": "1893-11-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-02-mina_harker-01",
     "order": 226,
     "place": null,
@@ -21498,6 +22245,7 @@
     "chapter": 27,
     "date": "1893-11-02",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-02-mina_harker-02",
     "order": 227,
     "place": null,
@@ -21510,6 +22258,10 @@
     "author": "van_helsing",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21606,6 +22358,7 @@
     "chapter": 27,
     "date": "1893-11-04",
     "header": "Memorandum by Abraham Van Helsing.",
+    "headerNamesParties": false,
     "id": "1893-11-04-van_helsing-01",
     "order": 228,
     "place": null,
@@ -21759,6 +22512,7 @@
     "chapter": 27,
     "date": "1893-11-05",
     "header": null,
+    "headerNamesParties": false,
     "id": "1893-11-05-van_helsing-01",
     "order": 229,
     "place": null,
@@ -21787,6 +22541,7 @@
     "chapter": 27,
     "date": "1893-11-04",
     "header": "Jonathan Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-11-04-jonathan_harker-01",
     "order": 230,
     "place": null,
@@ -21799,6 +22554,10 @@
     "author": "john_seward",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -21815,6 +22574,7 @@
     "chapter": 27,
     "date": "1893-11-05",
     "header": "Dr. Seward’s Diary.",
+    "headerNamesParties": false,
     "id": "1893-11-05-john_seward-01",
     "order": 231,
     "place": null,
@@ -21967,6 +22727,7 @@
     "chapter": 27,
     "date": "1893-11-05",
     "header": "Dr. Van Helsing’s Memorandum.",
+    "headerNamesParties": false,
     "id": "1893-11-05-van_helsing-02",
     "order": 232,
     "place": null,
@@ -21979,6 +22740,10 @@
     "author": "mina_harker",
     "body": [
       {
+        "repeats": [
+          0,
+          12
+        ],
         "role": "para",
         "spans": [
           {
@@ -22218,6 +22983,7 @@
     "chapter": 27,
     "date": "1893-11-06",
     "header": "Mina Harker’s Journal.",
+    "headerNamesParties": false,
     "id": "1893-11-06-mina_harker-01",
     "order": 233,
     "place": null,
@@ -22278,6 +23044,7 @@
     "chapter": 27,
     "date": "1893-11-06",
     "header": "NOTE",
+    "headerNamesParties": false,
     "id": "1893-11-06-unknown-01",
     "order": 234,
     "place": null,

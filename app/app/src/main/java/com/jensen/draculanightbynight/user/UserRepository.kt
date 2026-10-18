@@ -121,6 +121,15 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { it.copy(highContrast = on) }
     }
 
+    suspend fun setHidePartiesLine(on: Boolean) {
+        store.updateData { it.copy(hidePartiesLine = on) }
+    }
+
+    /** The reader's own choice; from now on TalkBack no longer decides. */
+    suspend fun setSkipRepeatedDates(on: Boolean) {
+        store.updateData { it.copy(skipRepeatedDates = on) }
+    }
+
     /** Whether the timeline is hidden beside an open entry (two panes only). */
     suspend fun setTimelineHidden(hidden: Boolean) {
         store.updateData { it.copy(timelineHidden = hidden) }
