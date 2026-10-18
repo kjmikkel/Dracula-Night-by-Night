@@ -17,8 +17,9 @@ so contributors can fix errors via pull requests.
 - Source text: Project Gutenberg eBook #345, HTML edition (`pg345-images.html`).
   The EPUB edition is the same XHTML split per chapter and is used only for
   cross-checking. The `.txt` edition is not used (it loses the italic datelines).
-- *Dracula* is public domain. Project Gutenberg boilerplate is stripped and the
-  "Project Gutenberg" name is not used in the shipped product, per their license.
+- *Dracula* is public domain. Project Gutenberg boilerplate is stripped. The app
+  credits Project Gutenberg as the source on its About screen, which their
+  permission page allows without the licence; the app is free (#112).
 
 ## Success criteria
 
