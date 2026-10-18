@@ -25,6 +25,7 @@ private data class EntryJson(
     val place: String? = null,
     val header: String? = null,
     val headerNamesParties: Boolean = false,
+    val undated: Boolean = false,
     val body: List<BlockJson>,
 )
 
@@ -54,6 +55,7 @@ fun decodeStory(entriesJson: String, charactersJson: String): Story {
                 Block(BlockRole.valueOf(b.role.uppercase()), b.spans.map { Span(it.text, it.italic) }, b.repeats?.let { (from, to) -> from until to })
             },
             headerNamesParties = e.headerNamesParties,
+            undated = e.undated,
         )
     }
     return Story(entries, characters)

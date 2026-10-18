@@ -41,6 +41,8 @@ class Entry:
     header: str | None = None
     # The header names both the author and the recipient, as the source wrote them.
     header_names_parties: bool = False
+    # The book gives the entry no date; the one it has only places it in the schedule (the preface).
+    undated: bool = False
     blocks: list[Block] = field(default_factory=list)
 
     def text(self) -> str:

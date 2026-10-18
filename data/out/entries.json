@@ -22,7 +22,8 @@
     "recipient": null,
     "time": "00:00",
     "timeEstimated": true,
-    "type": "memo"
+    "type": "memo",
+    "undated": true
   },
   {
     "author": "jonathan_harker",

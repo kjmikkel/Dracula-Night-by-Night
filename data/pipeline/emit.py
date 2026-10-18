@@ -5,7 +5,7 @@ from .model import Block, Entry
 
 
 def entry_to_dict(e: Entry) -> dict:
-    return {
+    d = {
         "id": e.id,
         "chapter": e.chapter,
         "order": e.order,
@@ -20,6 +20,9 @@ def entry_to_dict(e: Entry) -> dict:
         "headerNamesParties": e.header_names_parties,
         "body": [_block_to_dict(b) for b in e.blocks],
     }
+    if e.undated:
+        d["undated"] = True
+    return d
 
 
 def _block_to_dict(b: Block) -> dict:

@@ -43,6 +43,8 @@ data class Entry(
     val body: List<Block>,
     /** The [header] names both the author and the recipient, as the source wrote them. */
     val headerNamesParties: Boolean = false,
+    /** The book gives no date (the preface): [date] and [time] only place it in the schedule, and are never shown. */
+    val undated: Boolean = false,
 ) {
     /** First line of real text, for list rows: skips notes, datelines and salutations when it can. */
     val preview: String
@@ -54,6 +56,21 @@ data class Entry(
         const val PREVIEW_LENGTH = 140
     }
 }
+
+/** The book's "midnight": the dataset stores it as 23:59, so it stays on its own day (#190). */
+private val MIDNIGHT_IN_BOOK: LocalTime = LocalTime.of(23, 59)
+
+/** The entry's time as shown: "midnight" where the book says so, or null when the book gives no date (#190). */
+val Entry.storyTime: String?
+    get() = when {
+        undated -> null
+        time == MIDNIGHT_IN_BOOK && !timeEstimated -> "midnight"
+        else -> time.format(Dates.TIME)
+    }
+
+/** "8 May, 22:00", or null when the book gives no date. */
+val Entry.storyDayTime: String?
+    get() = storyTime?.let { "${date.format(Dates.DAY)}, $it" }
 
 /** The whole novel: entries in story order (in-story date, time, then position in the book). */
 class Story(entries: List<Entry>, val characters: Map<String, Character>) {

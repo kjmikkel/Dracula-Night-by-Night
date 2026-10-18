@@ -68,6 +68,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jensen.draculanightbynight.content.Block
 import com.jensen.draculanightbynight.content.BlockRole
 import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.storyTime
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.ui.DisplayCapsFamily
 import com.jensen.draculanightbynight.ui.LocalReadingStyle
@@ -273,7 +274,9 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
 @Composable
 private fun Header(reader: ReaderState) {
     val e = reader.entry
-    val time = if (e.timeEstimated) "about ${e.time}" else "${e.time}"
+    // The book's own date and time; an undated entry (the preface) shows neither (#190).
+    val time = e.storyTime?.let { if (e.timeEstimated) "about $it" else it }
+    val dateLine = listOfNotNull(e.date.format(Dates.DAY_YEAR).takeUnless { e.undated }, time, e.place).joinToString(" · ")
     Column(Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
         val fromTo = "From ${reader.authorName}${reader.recipientName?.let { " to $it" } ?: ""}"
         // Unless the reader chose to drop it when Stoker's heading already names both (#177).
@@ -306,9 +309,10 @@ private fun Header(reader: ReaderState) {
                 if (reader.style == HeaderStyle.LETTER && showFromTo) Text(fromTo, style = MaterialTheme.typography.bodyMedium)
             }
         }
-        Row(Modifier.padding(top = 4.dp)) {
-            Text("${e.date.format(Dates.DAY_YEAR)} · $time${e.place?.let { " · $it" } ?: ""}",
-                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        if (dateLine.isNotEmpty()) {
+            Row(Modifier.padding(top = 4.dp)) {
+                Text(dateLine, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
         Ornament(Modifier.padding(top = 8.dp))
     }

@@ -91,6 +91,7 @@ class StoryJsonTest {
         val story = decodeStory(File(out, "entries.json").readText(), File(out, "characters.json").readText())
         assertEquals(story.entries.size, story.entries.map { it.id }.toSet().size)
         assertEquals("bram_stoker", story.entries[0].author) // the preface, 3 May 00:00
+        assertEquals(listOf(story.entries[0].id), story.entries.filter { it.undated }.map { it.id }) // only the preface (#190)
         assertEquals("1893-05-03-jonathan_harker-01", story.entries[1].id)
         assertEquals("NOTE", story.entries.last().header)
         assertEquals(true, story.entries.all { story.characters.containsKey(it.author) })

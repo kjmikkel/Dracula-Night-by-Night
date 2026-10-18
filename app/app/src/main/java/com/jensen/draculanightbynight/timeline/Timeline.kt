@@ -1,6 +1,6 @@
 package com.jensen.draculanightbynight.timeline
 
-import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.storyTime
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
@@ -66,8 +66,8 @@ fun timelineRow(story: Story, user: UserState, entry: Entry): TimelineRow {
         id = entry.id,
         authorName = story.nameOf(entry.author) ?: entry.author,
         type = entry.type,
-        timeLabel = entry.time.format(Dates.TIME),
-        timeEstimated = entry.timeEstimated,
+        timeLabel = entry.storyTime.orEmpty(),
+        timeEstimated = entry.timeEstimated && !entry.undated,
         place = entry.place,
         preview = entry.preview,
         unread = progress.readAtMillis == null,

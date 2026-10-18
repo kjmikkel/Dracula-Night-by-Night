@@ -1,6 +1,6 @@
 package com.jensen.draculanightbynight.notify
 
-import com.jensen.draculanightbynight.content.Dates
+import com.jensen.draculanightbynight.content.storyDayTime
 import com.jensen.draculanightbynight.content.DocumentType
 import com.jensen.draculanightbynight.content.Entry
 import com.jensen.draculanightbynight.content.Story
@@ -39,7 +39,7 @@ fun planNotifications(story: Story, user: UserState, now: Instant, zone: ZoneId)
 private fun arrivalsContent(story: Story, arrived: List<Entry>): NotificationContent? = when (arrived.size) {
     0 -> null
     1 -> arrived.single().let { e ->
-        NotificationContent(arrivalTitle(e.type, story.nameOf(e.author) ?: e.author), e.date.atTime(e.time).format(Dates.DAY_TIME), openEntryId = e.id)
+        NotificationContent(arrivalTitle(e.type, story.nameOf(e.author) ?: e.author), e.storyDayTime ?: e.preview, openEntryId = e.id)
     }
     else -> NotificationContent(
         title = "${arrived.size} new entries",

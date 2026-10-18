@@ -2,6 +2,7 @@ package com.jensen.draculanightbynight.timeline
 
 import com.jensen.draculanightbynight.TestStory
 import com.jensen.draculanightbynight.content.DocumentType
+import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.Voice
 import com.jensen.draculanightbynight.domain.ReadingMode
@@ -93,6 +94,14 @@ class TimelineTest {
     fun unreadCountsTheWholeStoryNotTheFilter() {
         val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)
         assertEquals(4, t.unreadCount)
+    }
+
+    @Test
+    fun anUndatedEntrysRowShowsNoTime() {
+        val preface = TestStory.entry("preface", 5, 3, "00:00").copy(undated = true)
+        val row = timelineRow(Story(listOf(preface), TestStory.characters), UserState(), preface)
+        assertEquals("", row.timeLabel)
+        assertFalse(row.timeEstimated)
     }
 
     @Test

@@ -18,6 +18,13 @@ def test_sets_fields():
     assert (e.time, e.time_estimated, e.place, e.date) == (time(21, 30), True, "Whitby", date(1893, 10, 1))
 
 
+def test_a_date_given_to_an_undated_entry_marks_it_undated():
+    # The book gives the preface no date; the override only places it in the schedule (#190).
+    undated = Entry(id="u", author="bram_stoker", blocks=[Block("para", (Span("x"),), 0)])
+    [u, d] = apply_overrides([undated, entry("d", "x")], {"u": {"date": "1893-05-03"}, "d": {"date": "1893-10-01"}})
+    assert (u.undated, d.undated) == (True, False)
+
+
 def test_unknown_id_is_an_error():
     with pytest.raises(OverrideError, match="unknown entry id: gone"):
         apply_overrides([entry("a", "x")], {"gone": {"time": "10:00"}})

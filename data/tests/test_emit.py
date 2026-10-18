@@ -23,6 +23,13 @@ def test_entry_to_dict_matches_schema():
     }
 
 
+def test_undated_is_emitted_only_where_true():
+    e = sample()
+    assert "undated" not in entry_to_dict(e)
+    e.undated = True
+    assert entry_to_dict(e)["undated"] is True
+
+
 def test_repeats_are_emitted_only_where_marked():
     e = sample()
     e.blocks.append(Block("para", (Span("More."),), 1))
