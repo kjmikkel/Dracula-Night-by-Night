@@ -7,10 +7,10 @@
 # longer happens: when you fix something, delete its lines. Add a line only with an issue link and a reason.
 
 # role — #139
-filter-sheet | DARK | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | DARK_HC | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | DARK_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material's bottom sheet control has no role
-filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material's bottom sheet control has no role
+filter-sheet | DARK | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
+filter-sheet | DARK_HC | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
+filter-sheet | DARK_LARGE | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
+filter-sheet | LIGHT | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
+filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
+filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 
