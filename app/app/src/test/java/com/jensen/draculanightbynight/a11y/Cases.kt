@@ -235,6 +235,21 @@ val cases: List<Case> = listOf(
     ) { Settings(it) },
     Case("whos-who-empty", setOf("WhosWhoScreen"), ready = "People appear here") { WhosWho(it) },
     Case(
+        "whos-who-open", setOf("WhosWhoScreen"), ready = "Proposed to three times",
+        // Everything up to Lucy's letters of 24 May read, opened from one of them.
+        seed = {
+            tempo()
+            listOf(
+                "1893-05-03-jonathan_harker-01", "1893-05-05-jonathan_harker-02", "1893-05-09-mina_harker-01",
+                "1893-05-09-lucy_westenra-01", "1893-05-24-lucy_westenra-01", "1893-05-24-lucy_westenra-02",
+            ).forEach { users.markRead(it) }
+        },
+        expect = Expectations(
+            headings = listOf("Who's who", "Jonathan and Mina", "Lucy and her suitors"),
+            toggles = listOf("Jonathan Harker", "Mina Murray", "Lucy Westenra", "Arthur Holmwood", "Dr John Seward", "Quincey P. Morris"),
+        ),
+    ) { WhosWho(it, open = "lucy_westenra") },
+    Case(
         "about", setOf("AboutScreen"), ready = "The text", seed = {},
         expect = Expectations(headings = listOf("About", "The text", "The app", "Fonts")),
     ) { AboutScreen(onBack = {}) },

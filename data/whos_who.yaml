@@ -1,0 +1,83 @@
+# The who's who (#204): who people are and how they connect, growing with what the reader has read.
+#
+# Every name, group move and line is tied (`from`) to the entry that reveals it, and the app shows it only once
+# that entry is read. Rules for the text:
+# - Say nothing beyond that entry and the entries before it in story order. No hints of what's coming.
+# - Say how the person connects to people the reader already knows.
+# - One short sentence or two, present tense, as of that point in the story. Each line must make sense on its own:
+#   a reader in Free mode may read a later entry without an earlier one.
+# - No judgements the text doesn't make itself.
+# Check the result with `python -m pipeline review` (out/whos-who-review.html).
+
+groups:
+  jonathan_mina:
+    names:
+      - {from: 1893-05-03-jonathan_harker-01, text: Jonathan and Mina}
+  lucy:
+    names:
+      - {from: 1893-05-09-mina_harker-01, text: Lucy and her friends}
+      - {from: 1893-05-24-lucy_westenra-02, text: Lucy and her suitors}
+
+people:
+  jonathan_harker:
+    group:
+      - {from: 1893-05-03-jonathan_harker-01, id: jonathan_mina}
+    names:
+      - {from: 1893-05-03-jonathan_harker-01, text: Jonathan Harker}
+    lines:
+      - {from: 1893-05-03-jonathan_harker-01, text: "An Englishman travelling to Transylvania on business with a Count Dracula. He keeps notes of the journey to tell Mina about."}
+      - {from: 1893-05-05-jonathan_harker-02, text: "Newly qualified as a solicitor, sent out to explain the purchase of a London estate to the Count."}
+      - {from: 1893-05-09-mina_harker-01, text: "Mina's fiancé."}
+      - {from: 1893-08-24-mina_harker-01, text: "Married to Mina, in Buda-Pesth."}
+
+  mina_harker:
+    group:
+      - {from: 1893-05-03-jonathan_harker-01, id: jonathan_mina}
+    names:
+      - {from: 1893-05-03-jonathan_harker-01, text: Mina}
+      - {from: 1893-05-09-mina_harker-01, text: Mina Murray}
+      - {from: 1893-08-24-mina_harker-01, text: Mina Harker}
+    lines:
+      - {from: 1893-05-03-jonathan_harker-01, text: "Someone at home in England whom Jonathan means to tell all about his travels."}
+      - {from: 1893-05-09-mina_harker-01, text: "An assistant schoolmistress, engaged to Jonathan. She is learning shorthand and typing so she can help him in his work."}
+      - {from: 1893-05-09-lucy_westenra-01, text: "Lucy's closest friend: they have shared their secrets since they were children."}
+      - {from: 1893-08-24-mina_harker-01, text: "Married to Jonathan, in Buda-Pesth."}
+
+  lucy_westenra:
+    group:
+      - {from: 1893-05-09-mina_harker-01, id: lucy}
+    names:
+      - {from: 1893-05-09-mina_harker-01, text: Lucy Westenra}
+    lines:
+      - {from: 1893-05-09-mina_harker-01, text: "Mina's dearest friend, to whom she writes."}
+      - {from: 1893-05-09-lucy_westenra-01, text: "In love with Arthur Holmwood."}
+      - {from: 1893-05-24-lucy_westenra-02, text: "Proposed to three times in one day. She accepts Arthur."}
+
+  arthur_holmwood:
+    group:
+      - {from: 1893-05-09-lucy_westenra-01, id: lucy}
+    names:
+      - {from: 1893-05-09-lucy_westenra-01, text: Arthur Holmwood}
+    lines:
+      - {from: 1893-05-09-lucy_westenra-01, text: "A friend who often calls on Lucy and her mother. Lucy is in love with him."}
+      - {from: 1893-05-24-lucy_westenra-02, text: "Lucy's fiancé. He proposed the same day as Dr Seward and Quincey Morris."}
+      - {from: 1893-05-25-quincey_morris-01, text: "An old friend of Quincey's and Seward's from their travels."}
+
+  john_seward:
+    group:
+      - {from: 1893-05-24-lucy_westenra-01, id: lucy}
+    names:
+      - {from: 1893-05-24-lucy_westenra-01, text: Dr John Seward}
+    lines:
+      - {from: 1893-05-24-lucy_westenra-01, text: "A young doctor who runs a lunatic asylum, introduced to Lucy by Arthur. He proposes to her, and she tells him there is someone else."}
+      - {from: 1893-05-25-john_seward-01, text: "Keeps his diary on a phonograph. After Lucy turns him down, he buries himself in his work at the asylum."}
+      - {from: 1893-05-25-quincey_morris-01, text: "An old friend of Quincey's and Arthur's, who call him Jack."}
+
+  quincey_morris:
+    group:
+      - {from: 1893-05-24-lucy_westenra-02, id: lucy}
+    names:
+      - {from: 1893-05-24-lucy_westenra-02, text: Quincey P. Morris}
+    lines:
+      - {from: 1893-05-24-lucy_westenra-02, text: "An American from Texas who has travelled widely. He proposes to Lucy the same day as Seward, and offers to stay her friend when she says no."}
+      - {from: 1893-05-25-quincey_morris-01, text: "An old friend of Arthur's and Seward's from their travels."}
