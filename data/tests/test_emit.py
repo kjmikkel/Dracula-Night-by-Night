@@ -18,9 +18,18 @@ def test_entry_to_dict_matches_schema():
         "id": "1893-05-03-jonathan_harker-01", "chapter": 1, "order": 0, "type": "diary",
         "author": "jonathan_harker", "recipient": None, "date": "1893-05-03", "time": "20:35",
         "timeEstimated": False, "place": "Bistritz", "header": "JONATHAN HARKER’S JOURNAL",
-        "body": [{"role": "para", "spans": [{"text": "3 May. Bistritz.", "italic": True},
+        "headerNamesParties": False, "body": [{"role": "para", "spans": [{"text": "3 May. Bistritz.", "italic": True},
                                             {"text": "—Left Munich", "italic": False}]}],
     }
+
+
+def test_repeats_are_emitted_only_where_marked():
+    e = sample()
+    e.blocks.append(Block("para", (Span("More."),), 1))
+    e.blocks[0] = Block("para", e.blocks[0].spans, 1, repeats=(0, 17))
+    body = entry_to_dict(e)["body"]
+    assert body[0]["repeats"] == [0, 17]
+    assert "repeats" not in body[1]
 
 
 def test_entries_json_is_sorted_by_order_and_stable():

@@ -71,6 +71,7 @@ import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.content.typeLabel
 import com.jensen.draculanightbynight.ui.DisplayCapsFamily
 import com.jensen.draculanightbynight.ui.LocalReadingStyle
+import com.jensen.draculanightbynight.ui.talkBackOn
 import com.jensen.draculanightbynight.ui.Ornament
 import androidx.compose.ui.platform.testTag
 import com.jensen.draculanightbynight.ui.TelegramStyle
@@ -250,6 +251,10 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
     }
     // A newspaper is set in a narrower column, as in print.
     val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
+    // An opening dateline that only repeats the header can be skipped; TalkBack users skip it unless they choose (#177).
+    // A skipped block stays as an empty item, so saved positions keep their blocks.
+    val skip = reader.skipRepeatedDates ?: talkBackOn()
+    val body = if (skip) reader.entry.body.map { it.withoutRepeat() } else reader.entry.body
     // The text takes keyboard focus and scrolls with the arrow and page keys (#114).
     LazyColumn(Modifier.fillMaxSize().keyboardScroll(listState).wrapContentWidth().then(column).padding(horizontal = 20.dp), state = listState) {
         // One item with the header, so saved positions (item 0 is the header) mean the same at any text size.
@@ -259,8 +264,7 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
                 Header(reader)
             }
         }
-        itemsIndexed(reader.entry.body) { i, block ->
-            val body = reader.entry.body
+        itemsIndexed(body) { i, block ->
             BlockText(block, atEdge = i == 0 || i == body.lastIndex, indent = indentsFirstLine(body, i), closeBelow = indentsFirstLine(body, i + 1))
         }
     }
@@ -295,7 +299,10 @@ private fun Header(reader: ReaderState) {
             else -> {
                 Text(e.header ?: typeLabel(e.type), Modifier.semantics { heading() },
                     style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-                if (reader.style == HeaderStyle.LETTER) Text(fromTo, style = MaterialTheme.typography.bodyMedium)
+                // Unless the reader chose to drop it when Stoker's heading already names both (#177).
+                if (reader.style == HeaderStyle.LETTER && !(reader.hidePartiesLine && e.headerNamesParties)) {
+                    Text(fromTo, style = MaterialTheme.typography.bodyMedium)
+                }
             }
         }
         Row(Modifier.padding(top = 4.dp)) {
@@ -322,6 +329,8 @@ private fun annotated(block: Block): AnnotatedString = buildAnnotatedString {
  */
 @Composable
 private fun BlockText(block: Block, atEdge: Boolean, indent: Boolean, closeBelow: Boolean) {
+    // A dateline skipped as a repeat of the header (#177).
+    if (block.spans.isEmpty()) return
     // The story text uses the reader's font and size; headers keep the theme's.
     val reading = LocalReadingStyle.current
     val body = reading.applyTo(MaterialTheme.typography.bodyLarge)

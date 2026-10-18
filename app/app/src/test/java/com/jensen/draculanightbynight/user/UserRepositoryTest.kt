@@ -152,9 +152,11 @@ class UserRepositoryTest {
         repo.setReadingFont(ReadingFont.ATKINSON)
         repo.setTheme(ThemeChoice.DARK)
         repo.setHighContrast(true)
+        repo.setHidePartiesLine(true)
+        repo.setSkipRepeatedDates(false)
         val state = repo.state.first()
-        assertEquals(listOf(TextSize.LARGE, ReadingFont.ATKINSON, ThemeChoice.DARK, true),
-            listOf(state.textSize, state.readingFont, state.theme, state.highContrast))
+        assertEquals(listOf(TextSize.LARGE, ReadingFont.ATKINSON, ThemeChoice.DARK, true, true, false),
+            listOf(state.textSize, state.readingFont, state.theme, state.highContrast, state.hidePartiesLine, state.skipRepeatedDates))
     }
 
     @Test

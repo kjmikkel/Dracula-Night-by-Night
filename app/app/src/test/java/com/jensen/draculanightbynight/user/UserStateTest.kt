@@ -33,6 +33,8 @@ class UserStateTest {
         assertEquals(ReadingFont.SERIF, state.readingFont)
         assertEquals(ThemeChoice.SYSTEM, state.theme)
         assertNull(state.highContrast)
+        assertEquals(false, state.hidePartiesLine)
+        assertNull(state.skipRepeatedDates)
         assertNull(state.seasonPromptYear)
         assertEquals(5L, state.progressOf("a").readAtMillis)
     }
@@ -50,7 +52,7 @@ class UserStateTest {
     fun displayChoicesAreStoredByName() {
         val state = UserState(
             onboarded = true, textSize = TextSize.XLARGE, readingFont = ReadingFont.OPEN_DYSLEXIC,
-            theme = ThemeChoice.DARK, highContrast = true,
+            theme = ThemeChoice.DARK, highContrast = true, hidePartiesLine = true, skipRepeatedDates = false,
         )
         val json = write(state)
         assertTrue(json, json.contains("\"opendyslexic\"") && json.contains("\"xlarge\"") && json.contains("\"dark\""))

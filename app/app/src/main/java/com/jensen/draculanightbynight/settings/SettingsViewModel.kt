@@ -56,6 +56,10 @@ class SettingsViewModel(private val app: AppContainer) : ViewModel() {
 
     fun setHighContrast(on: Boolean) = update { app.users.setHighContrast(on) }
 
+    fun setHidePartiesLine(on: Boolean) = update { app.users.setHidePartiesLine(on) }
+
+    fun setSkipRepeatedDates(on: Boolean) = update { app.users.setSkipRepeatedDates(on) }
+
     fun startOver(removeBookmarks: Boolean, tempoStart: LocalDate) = update { app.users.startOver(removeBookmarks, tempoStart) }
 
     /** The notification baseline may need a fresh alarm after Android's settings changed (blocked or allowed). */

@@ -60,6 +60,32 @@ class StoryJsonTest {
     }
 
     @Test
+    fun decodesWhatRepeatsTheHeader() {
+        val json = """[{"id": "a", "order": 0, "chapter": 5, "type": "letter", "author": "mina_harker",
+            "date": "1893-05-09", "time": "10:00", "timeEstimated": true, "headerNamesParties": true,
+            "body": [{"role": "para", "spans": [{"text": "9 May.", "italic": true}, {"text": "—Text", "italic": false}],
+                      "repeats": [0, 7]}, {"role": "para", "spans": [{"text": "More", "italic": false}]}]}]"""
+        val e = decodeStory(json, characters).entries.single()
+        assertEquals(true, e.headerNamesParties)
+        assertEquals(0 until 7, e.body[0].repeats)
+        assertNull(e.body[1].repeats)
+        // Data from before #177 has neither field.
+        assertEquals(false, decodeStory("[${entry("b", 0, "1893-05-09", "10:00")}]", characters).entries.single().headerNamesParties)
+    }
+
+    @Test
+    fun withoutRepeatCutsOnlyTheRepeatedCharacters() {
+        val diary = Block(BlockRole.PARA, listOf(Span("4 May.", true), Span("—I found", false)), repeats = 0 until 7)
+        assertEquals(listOf(Span("I found", false)), diary.withoutRepeat().spans)
+        val telegram = Block(BlockRole.PARA, listOf(Span("“", false), Span("4 September.", true), Span("—Patient.”", false)), repeats = 1 until 14)
+        assertEquals("“Patient.”", telegram.withoutRepeat().text)
+        val letter = Block(BlockRole.DATELINE, listOf(Span("“", false), Span("24 May.", true)), repeats = 0 until 8)
+        assertEquals(Block(BlockRole.DATELINE, emptyList()), letter.withoutRepeat())
+        val plain = Block(BlockRole.PARA, listOf(Span("Text", false)))
+        assertEquals(plain, plain.withoutRepeat())
+    }
+
+    @Test
     fun theRealDatasetDecodes() {
         val out = File("../../data/out")
         val story = decodeStory(File(out, "entries.json").readText(), File(out, "characters.json").readText())
@@ -68,5 +94,6 @@ class StoryJsonTest {
         assertEquals("1893-05-03-jonathan_harker-01", story.entries[1].id)
         assertEquals("NOTE", story.entries.last().header)
         assertEquals(true, story.entries.all { story.characters.containsKey(it.author) })
+        assertEquals("I found that my landlord", story.entry("1893-05-04-jonathan_harker-01")!!.body[0].withoutRepeat().text.take(24))
     }
 }
