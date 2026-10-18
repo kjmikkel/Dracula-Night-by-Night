@@ -95,7 +95,7 @@ fun WelcomeScreen(viewModel: WelcomeViewModel, onBegun: () -> Unit) {
                     choice == Choice.CALENDAR,
                     "On the actual days",
                     "Each entry arrives on its own date, 3 May – 6 November ${welcome.seasonYear}." +
-                        if (welcome.calendarWaits) " Nothing unlocks until 3 May." else "",
+                        if (welcome.calendarWaits) " Nothing unlocks until 3 May." else calendarBacklog(welcome)?.let { " $it" }.orEmpty(),
                 ) { choice = Choice.CALENDAR }
                 ModeCard(choice == Choice.FREE, "Read freely", "Every entry, now.") { choice = Choice.FREE }
             }
