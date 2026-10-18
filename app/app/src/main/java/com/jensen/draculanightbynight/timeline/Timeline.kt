@@ -52,7 +52,12 @@ data class TimelineState(
     val hiddenCount: Int = 0,
     /** The card that leads straight into what has arrived; null when nothing unread is waiting. */
     val tonight: TonightCard? = null,
-)
+    /** Entries in the whole story not yet read, whatever the filter shows. */
+    val unreadCount: Int = 0,
+) {
+    /** Every entry has been read: the only time the end card says so (#189). */
+    val allRead: Boolean get() = unreadCount == 0
+}
 
 /** One entry as a list row; the timeline and the bookmarks list build rows the same way. */
 fun timelineRow(story: Story, user: UserState, entry: Entry): TimelineRow {
@@ -102,6 +107,7 @@ fun buildTimeline(
         filter = filter,
         hiddenCount = unlocked.size - shown.size,
         tonight = tonightCard(story, user, settings, now, zone, filter),
+        unreadCount = story.entries.count { user.progressOf(it.id).readAtMillis == null },
     )
 }
 

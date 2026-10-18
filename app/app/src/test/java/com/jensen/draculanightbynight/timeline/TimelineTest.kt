@@ -79,6 +79,23 @@ class TimelineTest {
     }
 
     @Test
+    fun theEndIsReadOnlyOnceEveryEntryHasBeenRead() {
+        // Nothing left to arrive is not the same as having read it all (#189).
+        val everything = timeline("2026-10-21T00:00:00Z")
+        assertEquals(4, everything.unreadCount)
+        assertFalse(everything.allRead)
+        assertFalse(timeline("2000-01-01T00:00:00Z", settings = ReadingSettings(ReadingMode.Free)).allRead)
+        val read = UserState(progress = TestStory.small.entries.associate { it.id to EntryProgress(readAtMillis = 1) })
+        assertTrue(timeline("2026-10-21T00:00:00Z", read).allRead)
+    }
+
+    @Test
+    fun unreadCountsTheWholeStoryNotTheFilter() {
+        val t = buildTimeline(TestStory.small, UserState(), free, Instant.parse("2026-10-16T12:00:00Z"), utc, mina)
+        assertEquals(4, t.unreadCount)
+    }
+
+    @Test
     fun theSeasonCardShowsWhenThePromptIsDue() {
         val calendar = UserState().withMode(ReadingMode.Calendar(2026))
         val settings = calendar.settings!!
