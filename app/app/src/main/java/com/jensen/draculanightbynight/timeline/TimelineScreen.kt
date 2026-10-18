@@ -353,7 +353,15 @@ private fun TimelineList(
                 HorizontalDivider()
             }
         }
-        item(key = "next") { if (state.finished) EndCard(onStartOver) else NextCard(state, canSkip, onReadItNow) }
+        // Nothing left to arrive is not the end until it has all been read (#189). In Read freely nothing ever
+        // arrives, so only the end itself shows there.
+        item(key = "next") {
+            when {
+                state.finished && state.allRead -> EndCard(onStartOver)
+                state.finished -> if (canSkip) AllArrivedCard(state.unreadCount)
+                else -> NextCard(state, canSkip, onReadItNow)
+            }
+        }
     }
 }
 
@@ -415,6 +423,17 @@ private fun EndCard(onStartOver: () -> Unit) {
             Text("The end.", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
             Text("You have read Dracula night by night.", style = MaterialTheme.typography.bodyLarge)
             TextButton(onClick = onStartOver) { Text("Start over") }
+        }
+    }
+}
+
+/** Every entry has arrived, but not every one has been read. */
+@Composable
+private fun AllArrivedCard(unread: Int) {
+    Card(Modifier.fillMaxWidth().padding(16.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            Text("Everything has arrived", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+            Text(if (unread == 1) "1 entry is still unread." else "$unread entries are still unread.", style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
