@@ -30,6 +30,8 @@ data class ReaderState(
     val style: HeaderStyle,
     val startBlock: Int,
     val startOffset: Int,
+    /** The share of the block to open at, in thousandths of its height; null for a place saved only in pixels. */
+    val startPermille: Int? = null,
     val bookmarked: Boolean,
     /** The reader's choices for what repeats the header (#177); [skipRepeatedDates] null follows TalkBack. */
     val hidePartiesLine: Boolean = false,
@@ -50,6 +52,7 @@ fun readerFor(story: Story, user: UserState, entry: Entry): ReaderState {
         style = headerStyle(entry.type),
         startBlock = progress.blockIndex.coerceIn(0, (entry.body.size - 1).coerceAtLeast(0)),
         startOffset = progress.blockOffset,
+        startPermille = progress.blockPermille,
         bookmarked = progress.bookmarked,
         hidePartiesLine = user.hidePartiesLine,
         skipRepeatedDates = user.skipRepeatedDates,
@@ -65,12 +68,21 @@ fun mastheadOf(entry: Entry): Pair<String, String?> {
 
 // The reader's list shows the header as item 0 and body block i as item i + 1.
 
+/** A place in an entry: [block], [offset] pixels into it, and the same as [permille] thousandths of its height (#200). */
+data class SavedPlace(val block: Int, val offset: Int, val permille: Int)
+
 /**
- * The (block, offset) to store for a list scrolled to [firstVisibleItem] at [offset] pixels.
+ * The place to store for a list scrolled to [firstVisibleItem] at [offset] pixels, that item being [itemHeight] tall.
  * Anywhere in the header is the top of the entry: (0, 0), which [listPosition] opens at the header.
  */
-fun savedPosition(firstVisibleItem: Int, offset: Int): Pair<Int, Int> =
-    if (firstVisibleItem == 0) 0 to 0 else (firstVisibleItem - 1) to offset
+fun savedPosition(firstVisibleItem: Int, offset: Int, itemHeight: Int): SavedPlace = when {
+    firstVisibleItem == 0 -> SavedPlace(0, 0, 0)
+    itemHeight <= 0 -> SavedPlace(firstVisibleItem - 1, offset, 0)
+    else -> SavedPlace(firstVisibleItem - 1, offset, (offset.toLong() * 1000 / itemHeight).toInt().coerceIn(0, 999))
+}
+
+/** The pixels into an item [itemHeight] tall that a saved [permille] stands for. */
+fun offsetInto(itemHeight: Int, permille: Int): Int = (itemHeight.toLong() * permille / 1000).toInt()
 
 /** The list item and offset to open at for a stored (block, offset). */
 fun listPosition(block: Int, offset: Int): Pair<Int, Int> = (block + if (block > 0 || offset > 0) 1 else 0) to offset

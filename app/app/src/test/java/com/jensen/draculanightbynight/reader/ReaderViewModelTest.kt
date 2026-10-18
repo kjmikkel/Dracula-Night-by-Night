@@ -126,8 +126,8 @@ class ReaderViewModelTest {
         users.setMode(ReadingMode.SameTempo(LocalDate.of(2026, 10, 14)))
         val dispatcher = NewestFirstDispatcher()
         val viewModel = ReaderViewModel(StoryRepository { TestStory.small }, users, flowOf(dayThreeNoon), CoroutineScope(dispatcher), "may04", false, SavedStateHandle())
-        viewModel.savePosition("may04", 1, 10) // e.g. the debounced save while scrolling
-        viewModel.savePosition("may04", 2, 20) // the save as the screen closes
+        viewModel.savePosition("may04", SavedPlace(1, 10, 100)) // e.g. the debounced save while scrolling
+        viewModel.savePosition("may04", SavedPlace(2, 20, 200)) // the save as the screen closes
         while (dispatcher.runAll()) advanceUntilIdle()
         val saved = users.state.first().progressOf("may04")
         assertEquals(2 to 20, saved.blockIndex to saved.blockOffset)

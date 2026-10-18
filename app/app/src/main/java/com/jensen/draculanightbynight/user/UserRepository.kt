@@ -55,8 +55,8 @@ class UserRepository(private val store: DataStore<UserState>, private val time: 
         store.updateData { s -> s.updateProgress(id) { p -> if (p.readAtMillis != null) p else p.copy(readAtMillis = time.millis()) } }
     }
 
-    suspend fun savePosition(id: String, blockIndex: Int, blockOffset: Int) {
-        store.updateData { s -> s.updateProgress(id) { it.copy(blockIndex = blockIndex, blockOffset = blockOffset) } }
+    suspend fun savePosition(id: String, blockIndex: Int, blockOffset: Int, blockPermille: Int? = null) {
+        store.updateData { s -> s.updateProgress(id) { it.copy(blockIndex = blockIndex, blockOffset = blockOffset, blockPermille = blockPermille) } }
     }
 
     /** Bookmarking stamps the time (for Recently bookmarked); removing clears it. */

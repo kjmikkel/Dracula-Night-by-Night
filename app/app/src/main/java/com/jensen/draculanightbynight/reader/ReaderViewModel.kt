@@ -101,9 +101,9 @@ class ReaderViewModel(
      * Saves are written in the order they are made: each takes its place in line before the first suspension,
      * so a debounced save can never overwrite the later one made as the screen closes.
      */
-    fun savePosition(id: String, blockIndex: Int, blockOffset: Int) {
+    fun savePosition(id: String, place: SavedPlace) {
         appScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            saveOrder.withLock { users.savePosition(id, blockIndex, blockOffset) }
+            saveOrder.withLock { users.savePosition(id, place.block, place.offset, place.permille) }
         }
     }
 
