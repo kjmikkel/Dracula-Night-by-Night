@@ -176,6 +176,7 @@ internal fun AppNavigation(
                 onToggleTimeline = { app.scope.launch { app.users.setTimelineHidden(!timelineHidden) } },
                 onBookmarks = { if (entry.isResumed()) nav.navigate("bookmarks") { launchSingleTop = true } },
                 onSettings = { if (entry.isResumed()) nav.navigate("settings") { launchSingleTop = true } },
+                onWhosWho = { author -> if (entry.isResumed()) nav.navigate("whos-who?open=$author") { launchSingleTop = true } },
             )
         }
         composable("bookmarks") { entry ->
@@ -218,7 +219,11 @@ internal fun AppNavigation(
             val vm = viewModel { ReaderViewModel(app.stories, app.users, app.time.ticks(), app.scope, id, filtered, createSavedStateHandle(), all) }
             // Wide enough again: the reader closes itself into the split, dropping anything between it and the timeline.
             LaunchedEffect(wide) { if (wide) nav.openEntry(vm.openEntry(), wide = true) }
-            ReaderScreen(vm, onBack = { if (entry.isResumed()) nav.popBackStack() })
+            ReaderScreen(
+                vm,
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+                onWhosWho = { author -> if (entry.isResumed()) nav.navigate("whos-who?open=$author") { launchSingleTop = true } },
+            )
         }
     }
 }
