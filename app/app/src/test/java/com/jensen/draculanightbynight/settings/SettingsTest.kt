@@ -20,6 +20,13 @@ class SettingsTest {
     private fun settings(user: UserState, now: String) = buildSettings(TestStory.small, user, ZonedDateTime.parse(now))
 
     @Test
+    fun theModeDialogKnowsHowManyEntriesCalendarWouldUnlockAtOnce() {
+        val s = settings(UserState().withMode(ReadingMode.SameTempo(october14)), "2026-05-04T15:00Z")
+        assertEquals(2, s.calendarArrived)
+        assertEquals(4, s.total)
+    }
+
+    @Test
     fun skipToADayOffersTheStoryDaysThatHaveEntries() {
         val s = settings(UserState().withMode(ReadingMode.SameTempo(october14)), "2026-10-15T12:00Z")
         assertEquals(listOf(3, 4, 5, 9).map { LocalDate.of(1893, 5, it) }, s.storyDays)

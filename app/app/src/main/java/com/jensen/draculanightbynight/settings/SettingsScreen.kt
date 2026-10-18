@@ -229,7 +229,7 @@ fun SettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit, onAbout: ()
         }
 
         when (dialog) {
-            Dialog.MODE -> ModeDialog(current = s.mode, today = s.today, onDismiss = { dialog = null }) {
+            Dialog.MODE -> ModeDialog(current = s.mode, today = s.today, calendarArrived = s.calendarArrived, total = s.total, onDismiss = { dialog = null }) {
                 viewModel.setMode(it)
                 dialog = null
             }

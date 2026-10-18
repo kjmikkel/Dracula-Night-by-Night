@@ -23,11 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.jensen.draculanightbynight.content.Dates
 import com.jensen.draculanightbynight.domain.ReadingMode
 import com.jensen.draculanightbynight.domain.UnlockSchedule
+import com.jensen.draculanightbynight.domain.calendarBacklog
 import java.time.LocalDate
 
 /** Minimal mode picker; plan 2 replaces it with onboarding and a settings screen. */
 @Composable
-fun ModeDialog(current: ReadingMode, today: LocalDate, onDismiss: () -> Unit, onChoose: (ReadingMode) -> Unit) {
+fun ModeDialog(current: ReadingMode, today: LocalDate, calendarArrived: Int, total: Int, onDismiss: () -> Unit, onChoose: (ReadingMode) -> Unit) {
     val options = listOf(
         "On the actual days" to ReadingMode.Calendar(UnlockSchedule.seasonYearFor(today)),
         (if (current is ReadingMode.SameTempo) "In the same tempo, since ${current.startDate.format(Dates.DAY)}" else "In the same tempo, starting today")
@@ -52,8 +53,11 @@ fun ModeDialog(current: ReadingMode, today: LocalDate, onDismiss: () -> Unit, on
                 }
                 // The confirmation the spec asks for: say what switching does before "Choose" is pressed.
                 val switching = options[selected].second::class != current::class
+                // Switching to On the actual days mid-season unlocks most of the book at once: say how much (#193).
+                val backlog = calendarBacklog(today, calendarArrived, total)?.takeIf { switching && options[selected].second is ReadingMode.Calendar }
                 Text(
-                    if (switching) "Switching mode keeps what you have read, but entries may lock or unlock." else "This is your current mode.",
+                    if (switching) "Switching mode keeps what you have read, but entries may lock or unlock.${backlog?.let { " $it" }.orEmpty()}"
+                    else "This is your current mode.",
                     style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
             }
         },

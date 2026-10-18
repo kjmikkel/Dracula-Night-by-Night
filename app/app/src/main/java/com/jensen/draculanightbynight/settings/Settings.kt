@@ -2,6 +2,7 @@ package com.jensen.draculanightbynight.settings
 
 import com.jensen.draculanightbynight.content.Story
 import com.jensen.draculanightbynight.domain.ReadingMode
+import com.jensen.draculanightbynight.domain.calendarArrivals
 import com.jensen.draculanightbynight.domain.firstEntryIsClose
 import com.jensen.draculanightbynight.user.ReadingFont
 import com.jensen.draculanightbynight.user.TextSize
@@ -35,6 +36,9 @@ data class SettingsState(
     val hidePartiesLine: Boolean,
     /** null follows TalkBack. */
     val skipRepeatedDates: Boolean?,
+    /** Entries On the actual days would unlock at once today, out of [total], for the mode dialog (#193). */
+    val calendarArrived: Int = 0,
+    val total: Int = 0,
 )
 
 fun modeLabel(mode: ReadingMode): String = when (mode) {
@@ -66,5 +70,7 @@ fun buildSettings(story: Story, user: UserState, now: ZonedDateTime): SettingsSt
         highContrast = user.highContrast,
         hidePartiesLine = user.hidePartiesLine,
         skipRepeatedDates = user.skipRepeatedDates,
+        calendarArrived = calendarArrivals(story.entries, now.toInstant(), now.zone),
+        total = story.entries.size,
     )
 }
