@@ -1,6 +1,6 @@
 # Privacy policy — Dracula Night by Night
 
-*Last updated: 16 October 2026*
+*Last updated: 18 October 2026*
 
 Dracula Night by Night is a free, open-source Android app for reading Bram Stoker's *Dracula* at the pace it was
 written. This policy describes what the app does with information about you. In short: the app collects nothing and sends
@@ -29,8 +29,9 @@ your phone; nothing is sent from or to a server.
 
 ## Links
 
-The About page has links to the app's source code and to this policy on GitHub. Following a link opens your
-browser; what happens there is covered by GitHub's privacy policy, not this one.
+The About page has links to the app's source code and to this policy on GitHub, and to the book on Project
+Gutenberg. Following a link opens your browser; what happens there is covered by GitHub's or Project Gutenberg's
+privacy policy, not this one.
 
 ## Children
 
