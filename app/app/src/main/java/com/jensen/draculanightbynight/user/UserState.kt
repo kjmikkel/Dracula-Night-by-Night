@@ -53,7 +53,7 @@ data class UserState(
     val theme: ThemeChoice = ThemeChoice.SYSTEM,
     /** null follows Android's contrast setting; true or false once the reader has chosen. */
     val highContrast: Boolean? = null,
-    /** Leave out the "From … to …" line under a letter's heading when the heading already names both (#177). */
+    /** Leave out the "From … to …" line under a letter's or telegram's heading when the heading already names both (#177). */
     val hidePartiesLine: Boolean = false,
     /** Skip an opening dateline that only repeats the header. null follows TalkBack; true or false once chosen. */
     val skipRepeatedDates: Boolean? = null,

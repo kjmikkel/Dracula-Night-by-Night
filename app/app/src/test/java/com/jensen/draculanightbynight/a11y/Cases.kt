@@ -216,7 +216,7 @@ val cases: List<Case> = listOf(
                 listOf("Serif", "Sans-serif", "Atkinson Hyperlegible", "OpenDyslexic"),
                 listOf("System", "Light", "Dark"),
             ),
-            toggles = listOf("Skip repeated dates", "Hide “From … to …” in letters"),
+            toggles = listOf("Skip repeated dates", "Hide “From … to …” in letters and telegrams"),
         ),
     ) { Settings(it) },
     Case("settings-mode", setOf("ModeDialog"), ready = "How to read", open = { tap("Mode") }) { Settings(it) },

@@ -276,6 +276,8 @@ private fun Header(reader: ReaderState) {
     val time = if (e.timeEstimated) "about ${e.time}" else "${e.time}"
     Column(Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
         val fromTo = "From ${reader.authorName}${reader.recipientName?.let { " to $it" } ?: ""}"
+        // Unless the reader chose to drop it when Stoker's heading already names both (#177).
+        val showFromTo = !(reader.hidePartiesLine && e.headerNamesParties)
         when (reader.style) {
             // A telegram form: typewritten strip and addresses.
             HeaderStyle.TELEGRAM -> {
@@ -285,7 +287,9 @@ private fun Header(reader: ReaderState) {
                     style = TelegramStyle,
                     textAlign = TextAlign.Center,
                 )
-                Text(fromTo, Modifier.padding(top = 6.dp), style = TelegramStyle)
+                // Stoker's own heading, typed on the form like the rest, notes on its delivery and all.
+                e.header?.let { Text(it, Modifier.padding(top = 6.dp), style = TelegramStyle) }
+                if (showFromTo) Text(fromTo, Modifier.padding(top = 6.dp), style = TelegramStyle)
             }
             // A cutting: the masthead between rules, the headline below.
             HeaderStyle.NEWSPAPER -> {
@@ -299,10 +303,7 @@ private fun Header(reader: ReaderState) {
             else -> {
                 Text(e.header ?: typeLabel(e.type), Modifier.semantics { heading() },
                     style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-                // Unless the reader chose to drop it when Stoker's heading already names both (#177).
-                if (reader.style == HeaderStyle.LETTER && !(reader.hidePartiesLine && e.headerNamesParties)) {
-                    Text(fromTo, style = MaterialTheme.typography.bodyMedium)
-                }
+                if (reader.style == HeaderStyle.LETTER && showFromTo) Text(fromTo, style = MaterialTheme.typography.bodyMedium)
             }
         }
         Row(Modifier.padding(top = 4.dp)) {
