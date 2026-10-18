@@ -146,3 +146,99 @@ def test_review_page_lists_each_line_with_its_entry():
     assert "1893-09-30" in page
     assert "Mina Harker" in page
     assert "Lucy came to stay." in page
+
+
+def owners(text):
+    return [(p.level, p.entry_id) for p in problems(text)]
+
+
+def test_tie_without_from_is_an_error_naming_the_person():
+    found = problems(person().replace("{from: a, text: Arthur}", "{text: Arthur}"))
+    assert [p.entry_id for p in found] == ["arthur_holmwood"]
+    assert "from" in found[0].message
+
+
+def test_line_without_text_is_an_error_naming_the_person():
+    found = problems(person().replace('{from: a, text: "A line."}', "{from: a}"))
+    assert [p.entry_id for p in found] == ["arthur_holmwood"]
+    assert "text" in found[0].message
+
+
+def test_group_tie_without_id_is_an_error_naming_the_person():
+    found = problems(person().replace("{from: a, id: lucy}", "{from: a}"))
+    assert [p.entry_id for p in found] == ["arthur_holmwood"]
+    assert "id" in found[0].message
+
+
+def test_group_name_without_from_is_an_error_naming_the_group():
+    found = problems(person().replace("{from: a, text: Lucy}", "{text: Lucy}"))
+    assert [p.entry_id for p in found] == ["lucy"]
+
+
+def test_list_written_without_dashes_is_an_error_naming_the_person():
+    text = person().replace('    lines:\n      - {from: a, text: "A line."}\n',
+                            '    lines:\n      from: a\n      text: "A line."\n')
+    found = problems(text)
+    assert [p.entry_id for p in found] == ["arthur_holmwood"]
+    assert "list" in found[0].message
+
+
+def test_group_names_written_without_dashes_is_an_error_naming_the_group():
+    text = person().replace("    names:\n      - {from: a, text: Lucy}\n",
+                            "    names:\n      from: a\n      text: Lucy\n")
+    assert [p.entry_id for p in problems(text)] == ["lucy"]
+
+
+def test_unknown_top_level_key_is_an_error():
+    found = problems(person().replace("people:", "peoples:"))
+    assert ("error", "peoples") in [(p.level, p.entry_id) for p in found]
+
+
+def test_unknown_key_in_a_person_is_an_error_naming_the_person():
+    found = problems(person().replace("    lines:", "    line:"))
+    assert ("error", "arthur_holmwood") in [(p.level, p.entry_id) for p in found]
+    assert any("unknown key line" in p.message for p in found)
+
+
+def test_person_that_is_not_a_mapping_is_an_error_naming_the_person():
+    found = problems("groups: {}\npeople:\n  renfield: A patient.\n")
+    assert [p.entry_id for p in found] == ["renfield"]
+
+
+def test_duplicate_person_is_an_error_naming_the_person():
+    arthur = person().split("people:\n")[1]
+    found = problems(person() + arthur)
+    assert [p.entry_id for p in found] == ["arthur_holmwood"]
+    assert "twice" in found[0].message
+
+
+def test_duplicate_group_is_an_error_naming_the_group():
+    text = person().replace("people:", "  lucy:\n    names:\n      - {from: a, text: Lucy}\npeople:")
+    found = problems(text)
+    assert [p.entry_id for p in found] == ["lucy"]
+    assert "twice" in found[0].message
+
+
+def test_yaml_that_does_not_parse_is_an_error():
+    found = problems("people:\n  arthur: [unclosed\n")
+    assert len(found) == 1
+    assert found[0].level == "error"
+
+
+def test_first_name_and_group_are_the_earliest_in_story_order_not_in_the_file():
+    # The file lists the later name and group first; the earliest by story order is from "a", so all is well.
+    text = (
+        "groups:\n  lucy:\n    names:\n      - {from: c, text: Lucy's suitors}\n      - {from: a, text: Lucy}\n"
+        "people:\n  arthur_holmwood:\n"
+        "    group:\n      - {from: c, id: lucy}\n      - {from: a, id: lucy}\n"
+        "    names:\n      - {from: c, text: Lord Godalming}\n      - {from: a, text: Arthur}\n"
+        "    lines:\n      - {from: a, text: \"A line.\"}\n"
+    )
+    assert problems(text) == []
+
+
+def test_late_first_name_is_caught_even_when_listed_after_a_later_one():
+    text = person(name="c").replace("{from: c, text: Arthur}", "{from: c, text: Arthur}\n      - {from: b, text: Art}")
+    found = problems(text)
+    assert len(found) == 1
+    assert "b" in found[0].message

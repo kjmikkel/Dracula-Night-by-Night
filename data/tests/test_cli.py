@@ -65,5 +65,6 @@ def test_build_fails_on_a_who_s_who_tie_to_a_missing_entry(tmp_path, capsys):
         encoding="utf-8",
     )
     assert main(["build", "--data-dir", str(d)]) == 1
-    assert "gone" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "jonathan_harker: line tied to unknown entry gone" in out
     assert not (d / "out" / "entries.json").exists()
