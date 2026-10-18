@@ -4,7 +4,6 @@ import com.jensen.draculanightbynight.content.Story
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneId
 
 private val CLOSE: Duration = Duration.ofHours(1)
@@ -15,7 +14,7 @@ private val CLOSE: Duration = Duration.ofHours(1)
  * past: the moment to offer "Start tomorrow?".
  */
 fun firstEntryIsClose(story: Story, today: LocalDate, now: Instant, zone: ZoneId): Boolean {
-    val first = story.entries.firstOrNull { it.time != LocalTime.MIDNIGHT } ?: return false
+    val first = story.entries.firstOrNull { !it.undated } ?: return false
     val at = UnlockSchedule.unlockInstant(first, ReadingMode.SameTempo(today), zone) ?: return false
     return Duration.between(now, at) < CLOSE
 }

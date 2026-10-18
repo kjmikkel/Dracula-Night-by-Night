@@ -75,6 +75,7 @@ def apply_overrides(entries: list[Entry], overrides: dict[str, dict]) -> list[En
         if "estimated" in o:
             e.time_estimated = bool(o["estimated"])
         if "date" in o:
+            e.undated = e.date is None
             e.date = date.fromisoformat(str(o["date"]))
         for key in ("type", "author", "recipient", "place"):
             if key in o:

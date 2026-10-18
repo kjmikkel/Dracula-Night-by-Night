@@ -15,9 +15,9 @@ class StartTomorrowTest {
     private val today = LocalDate.of(2026, 10, 15)
     private val utc = ZoneOffset.UTC
 
-    /** The real book's opening: the preface at 00:00 (readable at once), then Jonathan Harker at 22:00. */
+    /** The real book's opening: the undated preface at 00:00 (readable at once), then Jonathan Harker at 22:00. */
     private fun story(firstTimed: String = "22:00") = Story(
-        listOf(entry("preface", 5, 3, "00:00", order = 0), entry("harker", 5, 3, firstTimed, order = 1)),
+        listOf(entry("preface", 5, 3, "00:00", order = 0).copy(undated = true), entry("harker", 5, 3, firstTimed, order = 1)),
         TestStory.characters,
     )
 
