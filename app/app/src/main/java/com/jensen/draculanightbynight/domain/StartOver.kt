@@ -8,7 +8,7 @@ import java.time.LocalDate
  * The reader's state after Start over: reading progress cleared (bookmarks kept unless [removeBookmarks]),
  * skip ahead reset, Calendar moved to the season that [today] belongs to, Same tempo restarted from
  * [tempoStart]. Mode kind and display settings are kept. [nowMillis] becomes the notification baseline, so
- * restarting never produces a burst of notifications.
+ * restarting never produces a burst of notifications. The who's who starts again as if never opened.
  */
 fun UserState.startedOver(removeBookmarks: Boolean, today: LocalDate, tempoStart: LocalDate, nowMillis: Long): UserState {
     val kept = if (removeBookmarks) emptyMap() else progress.filterValues { it.bookmarked }.mapValues { EntryProgress(bookmarked = true, bookmarkedAtMillis = it.value.bookmarkedAtMillis) }
@@ -17,5 +17,5 @@ fun UserState.startedOver(removeBookmarks: Boolean, today: LocalDate, tempoStart
         is ReadingMode.SameTempo -> withMode(ReadingMode.SameTempo(tempoStart))
         ReadingMode.Free, null -> this
     }
-    return restarted.copy(progress = kept, skipAheadMinutes = 0, lastNotifiedAt = nowMillis)
+    return restarted.copy(progress = kept, skipAheadMinutes = 0, lastNotifiedAt = nowMillis, whosWhoSeenAt = null)
 }

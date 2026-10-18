@@ -4,6 +4,7 @@ import com.jensen.draculanightbynight.user.EntryProgress
 import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.UserState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
@@ -25,6 +26,12 @@ class StartOverTest {
         assertEquals(7L, state.lastNotifiedAt)
         assertEquals(TextSize.LARGE, state.textSize)
         assertTrue(state.onboarded)
+    }
+
+    @Test
+    fun startingOverForgetsWhenTheWhosWhoWasSeen() {
+        val state = reader(ReadingMode.Free).copy(whosWhoSeenAt = 5).startedOver(removeBookmarks = false, today, tempoStart = today, nowMillis = 7)
+        assertNull(state.whosWhoSeenAt)
     }
 
     @Test

@@ -43,6 +43,8 @@ import com.jensen.draculanightbynight.user.TextSize
 import com.jensen.draculanightbynight.user.ThemeChoice
 import com.jensen.draculanightbynight.welcome.WelcomeScreen
 import com.jensen.draculanightbynight.welcome.WelcomeViewModel
+import com.jensen.draculanightbynight.whoswho.WhosWhoScreen
+import com.jensen.draculanightbynight.whoswho.WhosWhoViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -192,6 +194,16 @@ internal fun AppNavigation(
         }
         composable("about") { entry ->
             AboutScreen(onBack = { if (entry.isResumed()) nav.popBackStack() })
+        }
+        composable(
+            "whos-who?open={open}",
+            arguments = listOf(navArgument("open") { type = NavType.StringType; nullable = true; defaultValue = null }),
+        ) { entry ->
+            val open = entry.arguments?.getString("open")
+            WhosWhoScreen(
+                viewModel { WhosWhoViewModel(app.stories, app.users, open, createSavedStateHandle()) },
+                onBack = { if (entry.isResumed()) nav.popBackStack() },
+            )
         }
         composable(
             "reader/{id}?filtered={filtered}&all={all}",
