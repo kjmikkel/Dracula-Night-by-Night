@@ -6,6 +6,19 @@
         {
           "from": "1893-05-03-jonathan_harker-01",
           "text": "Jonathan and Mina"
+        },
+        {
+          "from": "1893-08-24-mina_harker-01",
+          "text": "The Harkers and their friends"
+        }
+      ]
+    },
+    {
+      "id": "castle",
+      "names": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Castle Dracula"
         }
       ]
     },
@@ -21,6 +34,41 @@
           "text": "Lucy and her suitors"
         }
       ]
+    },
+    {
+      "id": "asylum",
+      "names": [
+        {
+          "from": "1893-05-25-john_seward-01",
+          "text": "Seward's asylum"
+        }
+      ]
+    },
+    {
+      "id": "whitby",
+      "names": [
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "At Whitby"
+        }
+      ]
+    },
+    {
+      "id": "band",
+      "names": [
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Van Helsing's band"
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "text": "The band against the Count"
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Our little band"
+        }
+      ]
     }
   ],
   "people": [
@@ -28,7 +76,92 @@
       "groups": [
         {
           "from": "1893-05-03-jonathan_harker-01",
+          "id": "castle"
+        }
+      ],
+      "id": "count_dracula",
+      "lines": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "A nobleman in the far east of Transylvania whom Jonathan is travelling to see on business."
+        },
+        {
+          "from": "1893-05-04-jonathan_harker-01",
+          "text": "When Jonathan asks about him at the inn, the landlord and his wife cross themselves and say nothing."
+        },
+        {
+          "from": "1893-05-05-jonathan_harker-02",
+          "text": "A tall old man with a long white moustache who welcomes Jonathan to his castle."
+        },
+        {
+          "from": "1893-05-07-jonathan_harker-01",
+          "text": "Buying Carfax, an old estate at Purfleet, near London, through Jonathan's employer Mr Hawkins."
+        },
+        {
+          "from": "1893-05-08-jonathan_harker-01",
+          "text": "Keeps Jonathan a prisoner in his castle."
+        },
+        {
+          "from": "1893-05-12-jonathan_harker-02",
+          "text": "Crawls face down the castle wall."
+        },
+        {
+          "from": "1893-05-16-jonathan_harker-01",
+          "text": "Drives three women away from Jonathan."
+        },
+        {
+          "from": "1893-06-25-jonathan_harker-02",
+          "text": "Lies in a great box of earth, one of fifty, in an old chapel at the castle."
+        },
+        {
+          "from": "1893-06-30-jonathan_harker-01",
+          "text": "Looks younger, as if gorged with blood. Jonathan's shovel gashes his forehead."
+        },
+        {
+          "from": "1893-09-22-mina_harker-01",
+          "text": "Jonathan believes he sees him in Piccadilly, grown young."
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "text": "A vampire, says Van Helsing, perhaps the Voivode Dracula who won his name against the Turk. Fifty boxes of his earth came to Carfax."
+        },
+        {
+          "from": "1893-10-03-john_seward-01",
+          "text": "Comes to Mina's room at night and makes her drink his blood."
+        },
+        {
+          "from": "1893-10-03-john_seward-02",
+          "text": "Gets away from the friends at his house in Piccadilly with a handful of money, saying that his revenge has just begun."
+        },
+        {
+          "from": "1893-10-05-mina_harker-01",
+          "text": "Has left England on the Czarina Catherine, bound for Varna."
+        },
+        {
+          "from": "1893-10-28-john_seward-02",
+          "text": "His ship lands at Galatz, not Varna."
+        },
+        {
+          "from": "1893-11-06-mina_harker-01",
+          "text": "Crumbles to dust at sunset, under Jonathan's and Quincey's knives."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
+          "text": "Count Dracula"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-03-jonathan_harker-01",
           "id": "jonathan_mina"
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "id": "band"
         }
       ],
       "id": "jonathan_harker",
@@ -42,12 +175,84 @@
           "text": "Newly qualified as a solicitor, sent out to explain the purchase of a London estate to the Count."
         },
         {
+          "from": "1893-05-08-jonathan_harker-01",
+          "text": "Finds that the castle is a prison and he is the Count's prisoner."
+        },
+        {
+          "from": "1893-05-16-jonathan_harker-01",
+          "text": "Falls asleep in a part of the castle he was warned off. Three women come to him, and the Count drives them away."
+        },
+        {
+          "from": "1893-05-19-jonathan_harker-01",
+          "text": "Made by the Count to write three letters home, dated weeks ahead."
+        },
+        {
+          "from": "1893-06-25-jonathan_harker-02",
+          "text": "Climbs down the castle wall and finds the Count lying in a box of earth in an old chapel."
+        },
+        {
+          "from": "1893-06-30-jonathan_harker-01",
+          "text": "Strikes at the Count with a shovel, and means to climb down the castle wall to get away."
+        },
+        {
           "from": "1893-05-09-mina_harker-01",
           "text": "Mina's fiancé."
         },
         {
+          "from": "1893-08-19-mina_harker-01",
+          "text": "Has been ill abroad, which is why he hasn't written to Mina. She leaves to go to him."
+        },
+        {
+          "from": "1893-08-12-sister_agatha-01",
+          "text": "In a hospital in Buda-Pesth, where he has been for nearly six weeks with brain fever."
+        },
+        {
           "from": "1893-08-24-mina_harker-01",
           "text": "Married to Mina, in Buda-Pesth."
+        },
+        {
+          "from": "1893-09-17-mina_harker-01",
+          "text": "Back in Exeter with Mina, now a partner in Mr Hawkins's firm."
+        },
+        {
+          "from": "1893-09-18-mina_harker-01",
+          "text": "Mr Hawkins, who has been like a father to him, dies and leaves him a fortune."
+        },
+        {
+          "from": "1893-09-22-mina_harker-01",
+          "text": "Sees a man in Piccadilly whom he believes is the Count, grown young."
+        },
+        {
+          "from": "1893-09-26-jonathan_harker-01",
+          "text": "Gets his nerve back when Van Helsing tells him that all he wrote in his journal is true."
+        },
+        {
+          "from": "1893-09-29-jonathan_harker-01",
+          "text": "Goes to Whitby to trace the boxes of earth sent on to Carfax."
+        },
+        {
+          "from": "1893-10-02-jonathan_harker-01",
+          "text": "Tracks some of the Count's boxes from Carfax to a house in Piccadilly."
+        },
+        {
+          "from": "1893-10-03-john_seward-02",
+          "text": "Slashes at the Count with his great Kukri knife at the house in Piccadilly. The Count gets away."
+        },
+        {
+          "from": "1893-10-06-jonathan_harker-02",
+          "text": "Makes his will before setting out after the Count."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Goes up the river after the Count with Lord Godalming in a steam launch."
+        },
+        {
+          "from": "1893-11-06-mina_harker-01",
+          "text": "Cuts through the Count's throat with his Kukri knife as the sun sets."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Seven years on, he and Mina have a son, named Quincey."
         }
       ],
       "names": [
@@ -62,6 +267,10 @@
         {
           "from": "1893-05-03-jonathan_harker-01",
           "id": "jonathan_mina"
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "id": "band"
         }
       ],
       "id": "mina_harker",
@@ -79,8 +288,60 @@
           "text": "Lucy's closest friend: they have shared their secrets since they were children."
         },
         {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "Staying with Lucy and her mother at Whitby."
+        },
+        {
+          "from": "1893-08-11-mina_harker-01",
+          "text": "Finds Lucy asleep at night on their seat in the churchyard, with something dark bending over her."
+        },
+        {
           "from": "1893-08-24-mina_harker-01",
           "text": "Married to Jonathan, in Buda-Pesth."
+        },
+        {
+          "from": "1893-09-25-mina_harker-03",
+          "text": "Meets Van Helsing, who comes to ask about Lucy, and gives him Jonathan's journal to read."
+        },
+        {
+          "from": "1893-09-29-mina_harker-02",
+          "text": "At Seward's asylum, typing out his phonograph diary so that all their records can be put in date order."
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "text": "Sits in the meeting in Seward's study where the friends plan against the Count. The men then ask her to keep out of the danger."
+        },
+        {
+          "from": "1893-10-03-john_seward-01",
+          "text": "The Count comes to her room at night and makes her drink his blood."
+        },
+        {
+          "from": "1893-10-03-jonathan_harker-01",
+          "text": "Van Helsing's Sacred Wafer burns a red scar into her forehead."
+        },
+        {
+          "from": "1893-10-04-jonathan_harker-01",
+          "text": "Asks Van Helsing to hypnotise her before dawn, so that she can tell them where the Count is."
+        },
+        {
+          "from": "1893-10-06-jonathan_harker-01",
+          "text": "Insists on going with the men after the Count: when he wills her to come, she must go."
+        },
+        {
+          "from": "1893-10-30-mina_harker-04",
+          "text": "Works out from the papers which way the Count is likely to take back to his castle."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Leaves with Van Helsing by train and carriage for the Borgo Pass."
+        },
+        {
+          "from": "1893-11-06-mina_harker-01",
+          "text": "The scar is gone from her forehead once the Count is destroyed."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Seven years on, she and Jonathan have a son, named Quincey."
         }
       ],
       "names": [
@@ -95,6 +356,109 @@
         {
           "from": "1893-08-24-mina_harker-01",
           "text": "Mina Harker"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-05-jonathan_harker-02",
+          "id": "jonathan_mina"
+        }
+      ],
+      "id": "mr_hawkins",
+      "lines": [
+        {
+          "from": "1893-05-05-jonathan_harker-02",
+          "text": "Jonathan's employer, who sent him to the Count with a sealed letter."
+        },
+        {
+          "from": "1893-05-07-jonathan_harker-01",
+          "text": "A solicitor of Exeter, Jonathan's employer, whom the Count calls his friend."
+        },
+        {
+          "from": "1893-08-19-mina_harker-01",
+          "text": "Writes kindly to Mina, and thinks she and Jonathan might be married out in Buda-Pesth."
+        },
+        {
+          "from": "1893-09-17-mina_harker-01",
+          "text": "Makes Jonathan a partner, and takes him and Mina into his house in Exeter."
+        },
+        {
+          "from": "1893-09-18-mina_harker-01",
+          "text": "Dies suddenly, leaving Jonathan a fortune. He was like a father to Jonathan and Mina."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-05-jonathan_harker-02",
+          "text": "Mr Hawkins"
+        },
+        {
+          "from": "1893-05-07-jonathan_harker-01",
+          "text": "Peter Hawkins"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-16-jonathan_harker-01",
+          "id": "castle"
+        }
+      ],
+      "id": "three_women",
+      "lines": [
+        {
+          "from": "1893-05-16-jonathan_harker-01",
+          "text": "Three young women who come to Jonathan at night in the castle. The Count drives them away."
+        },
+        {
+          "from": "1893-06-24-jonathan_harker-01",
+          "text": "Take shape from the moonbeams in front of Jonathan as he watches at a window."
+        },
+        {
+          "from": "1893-11-05-van_helsing-01",
+          "text": "The same three women Jonathan saw at the castle. They come through the snow to Van Helsing's camp and call to Mina."
+        },
+        {
+          "from": "1893-11-05-van_helsing-02",
+          "text": "Destroyed by Van Helsing in their tombs in the castle chapel."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-16-jonathan_harker-01",
+          "text": "The three women"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-28-jonathan_harker-01",
+          "id": "castle"
+        }
+      ],
+      "id": "szgany",
+      "lines": [
+        {
+          "from": "1893-05-28-jonathan_harker-01",
+          "text": "A band of gipsies camped in the castle courtyard. Such bands attach themselves to some great noble."
+        },
+        {
+          "from": "1893-06-30-jonathan_harker-01",
+          "text": "Drive away from the castle with their wagons, singing."
+        },
+        {
+          "from": "1893-11-06-mina_harker-01",
+          "text": "Guard the cart carrying the Count's box to the castle, and fight the friends at sunset."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-28-jonathan_harker-01",
+          "text": "The Szgany"
         }
       ]
     },
@@ -118,6 +482,66 @@
         {
           "from": "1893-05-24-lucy_westenra-02",
           "text": "Proposed to three times in one day. She accepts Arthur."
+        },
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "Staying at Whitby with her mother, where Mina joins them."
+        },
+        {
+          "from": "1893-07-26-mina_harker-01",
+          "text": "Has gone back to her old habit of walking in her sleep, so Mina locks their door at night."
+        },
+        {
+          "from": "1893-08-11-mina_harker-01",
+          "text": "Found by Mina at night, asleep on their seat in the churchyard, with something dark bending over her."
+        },
+        {
+          "from": "1893-08-11-mina_harker-02",
+          "text": "Has two little red marks like pin-pricks on her throat. Mina thinks she pricked her with a pin."
+        },
+        {
+          "from": "1893-08-30-lucy_westenra-01",
+          "text": "To marry Arthur on 28 September."
+        },
+        {
+          "from": "1893-08-31-arthur_holmwood-01",
+          "text": "Ill and getting worse every day, though she has no special disease that Arthur knows of."
+        },
+        {
+          "from": "1893-09-07-john_seward-01",
+          "text": "Dying for want of blood. Arthur gives her his in a transfusion, and Seward finds two punctures on her throat."
+        },
+        {
+          "from": "1893-09-11-john_seward-01",
+          "text": "Van Helsing fills her room with garlic flowers and hangs a wreath of them round her neck."
+        },
+        {
+          "from": "1893-09-17-lucy_westenra-02",
+          "text": "A wolf breaks her bedroom window, and her mother dies of the fright beside her."
+        },
+        {
+          "from": "1893-09-18-john_seward-02",
+          "text": "Has had the blood of four men put into her veins."
+        },
+        {
+          "from": "1893-09-20-john_seward-01",
+          "text": "Dies with Arthur, Van Helsing and Seward beside her."
+        },
+        {
+          "from": "1893-09-26-john_seward-01",
+          "text": "Van Helsing tells Seward that she made the wounds in the throats of children at Hampstead."
+        },
+        {
+          "from": "1893-09-26-john_seward-02",
+          "text": "Her coffin is empty when Van Helsing and Seward open it at night."
+        },
+        {
+          "from": "1893-09-29-john_seward-02",
+          "text": "Seen by her friends at night outside her tomb, her lips red with fresh blood."
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Arthur drives a stake through her heart in her tomb, and she is herself again."
         }
       ],
       "names": [
@@ -132,6 +556,10 @@
         {
           "from": "1893-05-09-lucy_westenra-01",
           "id": "lucy"
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "id": "band"
         }
       ],
       "id": "arthur_holmwood",
@@ -147,12 +575,105 @@
         {
           "from": "1893-05-25-quincey_morris-01",
           "text": "An old friend of Quincey's and Seward's from their travels."
+        },
+        {
+          "from": "1893-07-26-mina_harker-01",
+          "text": "The only son of Lord Godalming, who is unwell. Lucy is waiting for him to come to Whitby."
+        },
+        {
+          "from": "1893-08-31-arthur_holmwood-01",
+          "text": "Asks his old friend Seward to see Lucy, who is ill."
+        },
+        {
+          "from": "1893-09-01-arthur_holmwood-01",
+          "text": "Called away to his father, who is worse."
+        },
+        {
+          "from": "1893-09-07-john_seward-01",
+          "text": "Gives his blood to Lucy in a transfusion."
+        },
+        {
+          "from": "1893-09-20-john_seward-01",
+          "text": "At Lucy's side when she dies."
+        },
+        {
+          "from": "1893-09-20-john_seward-02",
+          "text": "Now Lord Godalming: his father has died. Mrs Westenra's will leaves him everything."
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Drives a stake through Lucy's heart in her tomb, and promises with the others to go on to the end."
+        },
+        {
+          "from": "1893-09-30-mina_harker-02",
+          "text": "Breaks down in grief for Lucy in front of Mina."
+        },
+        {
+          "from": "1893-10-05-mina_harker-01",
+          "text": "Suggests searching Lloyd's lists, which leads to the ship carrying the Count."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Rich, and spends freely: he gets a steam launch to follow the Count up the river with Jonathan."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Happily married, seven years on."
         }
       ],
       "names": [
         {
           "from": "1893-05-09-lucy_westenra-01",
           "text": "Arthur Holmwood"
+        },
+        {
+          "from": "1893-09-20-john_seward-02",
+          "text": "Lord Godalming"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "id": "lucy"
+        }
+      ],
+      "id": "mrs_westenra",
+      "lines": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "Lucy's mother, who gets on very well with Arthur Holmwood."
+        },
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "Lucy's mother, at Whitby with Lucy and Mina."
+        },
+        {
+          "from": "1893-07-26-mina_harker-01",
+          "text": "Lucy's mother. She is anxious about Lucy's sleepwalking: Lucy's father had the same habit."
+        },
+        {
+          "from": "1893-08-15-mina_harker-01",
+          "text": "Her doctor has told her she must die within a few months, for her heart is weakening. She keeps it from Lucy."
+        },
+        {
+          "from": "1893-09-17-lucy_westenra-02",
+          "text": "Dies of fright beside Lucy when a wolf breaks the bedroom window."
+        },
+        {
+          "from": "1893-09-20-john_seward-02",
+          "text": "Her will leaves everything to Arthur Holmwood."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-09-lucy_westenra-01",
+          "text": "Lucy's mother"
+        },
+        {
+          "from": "1893-07-26-mina_harker-01",
+          "text": "Mrs Westenra"
         }
       ]
     },
@@ -161,6 +682,10 @@
         {
           "from": "1893-05-24-lucy_westenra-01",
           "id": "lucy"
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "id": "band"
         }
       ],
       "id": "john_seward",
@@ -176,6 +701,50 @@
         {
           "from": "1893-05-25-quincey_morris-01",
           "text": "An old friend of Quincey's and Arthur's, who call him Jack."
+        },
+        {
+          "from": "1893-07-20-john_seward-03",
+          "text": "Studies his patient Renfield, and names him a 'zoöphagous' (life-eating) maniac."
+        },
+        {
+          "from": "1893-08-31-arthur_holmwood-01",
+          "text": "Asked by Arthur to see Lucy, who is ill."
+        },
+        {
+          "from": "1893-09-02-john_seward-01",
+          "text": "Sends for his old master, Professor Van Helsing of Amsterdam, about Lucy."
+        },
+        {
+          "from": "1893-09-10-john_seward-01",
+          "text": "Gives his own blood to Lucy, whom he still loves."
+        },
+        {
+          "from": "1893-09-20-john_seward-01",
+          "text": "At Lucy's side when she dies."
+        },
+        {
+          "from": "1893-09-26-john_seward-01",
+          "text": "Told by Van Helsing that Lucy herself made the wounds in the throats of children at Hampstead."
+        },
+        {
+          "from": "1893-09-26-john_seward-02",
+          "text": "Angry at first, he goes with Van Helsing to Lucy's tomb at night and finds her coffin empty."
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Promises with the others to find the author of all their sorrow, and to go on to the end."
+        },
+        {
+          "from": "1893-09-29-mina_harker-02",
+          "text": "Lets Mina hear his phonograph diary, and she types it out."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Rides along the river bank with Quincey, after the Count."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Happily married, seven years on."
         }
       ],
       "names": [
@@ -190,6 +759,10 @@
         {
           "from": "1893-05-24-lucy_westenra-02",
           "id": "lucy"
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "id": "band"
         }
       ],
       "id": "quincey_morris",
@@ -201,12 +774,351 @@
         {
           "from": "1893-05-25-quincey_morris-01",
           "text": "An old friend of Arthur's and Seward's from their travels."
+        },
+        {
+          "from": "1893-09-18-john_seward-02",
+          "text": "Gives his blood to Lucy: the fourth man to do so."
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Promises with the others to go on to the end."
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "text": "Fires at a big bat on the window-sill while the friends are meeting."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Rides along the river bank with Seward, after the Count."
+        },
+        {
+          "from": "1893-11-06-mina_harker-01",
+          "text": "Wounded forcing his way through the gipsies, he plunges his bowie knife into the Count's heart, and dies soon after."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "The Harkers' son, born on the day he died, is named after him."
         }
       ],
       "names": [
         {
           "from": "1893-05-24-lucy_westenra-02",
           "text": "Quincey P. Morris"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-05-25-john_seward-01",
+          "id": "asylum"
+        }
+      ],
+      "id": "renfield",
+      "lines": [
+        {
+          "from": "1893-05-25-john_seward-01",
+          "text": "A patient of Seward's, aged 59: very strong, easily excited, with some fixed idea Seward cannot make out."
+        },
+        {
+          "from": "1893-06-05-john_seward-01",
+          "text": "Catches flies, and keeps a great many of them in his room."
+        },
+        {
+          "from": "1893-07-08-john_seward-01",
+          "text": "Has tamed a sparrow, and feeds his spiders on flies."
+        },
+        {
+          "from": "1893-07-20-john_seward-02",
+          "text": "Has eaten his birds raw."
+        },
+        {
+          "from": "1893-07-20-john_seward-03",
+          "text": "Seward calls him a 'zoöphagous' (life-eating) maniac: he feeds flies to spiders and spiders to birds, and wants a cat."
+        },
+        {
+          "from": "1893-08-19-john_seward-01",
+          "text": "Tells Seward he doesn't count now: 'the Master is at hand'."
+        },
+        {
+          "from": "1893-08-19-john_seward-02",
+          "text": "Escapes to the chapel door of Carfax, the empty house next to the asylum, and speaks to his 'Master'."
+        },
+        {
+          "from": "1893-09-20-patrick_hennessey-01",
+          "text": "Breaks out and attacks two carters taking boxes from the empty house next door."
+        },
+        {
+          "from": "1893-10-01-john_seward-01",
+          "text": "Begs Seward to let him go home at once, and is refused."
+        },
+        {
+          "from": "1893-10-03-john_seward-01",
+          "text": "Found dying in his room. Before he dies, he tells how the Count came in at his window."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-05-25-john_seward-01",
+          "text": "Renfield"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "id": "whitby"
+        }
+      ],
+      "id": "mr_swales",
+      "lines": [
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "A funny old man Mina meets in the churchyard at Whitby. He says he is nearly a hundred, and was a sailor in the Greenland fishing fleet."
+        },
+        {
+          "from": "1893-08-01-mina_harker-01",
+          "text": "Scoffs at the tombstones in the churchyard: many of the men they name were lost at sea."
+        },
+        {
+          "from": "1893-08-06-mina_harker-01",
+          "text": "Tells Mina that his death is near, and keeps watching a strange ship out at sea."
+        },
+        {
+          "from": "1893-08-10-mina_harker-01",
+          "text": "Found dead on Mina and Lucy's seat in the churchyard, his neck broken."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-07-24-mina_harker-01",
+          "text": "The old sailor"
+        },
+        {
+          "from": "1893-08-01-mina_harker-01",
+          "text": "Mr Swales"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-08-08-dailygraph-01",
+          "id": "whitby"
+        }
+      ],
+      "id": "demeter_captain",
+      "lines": [
+        {
+          "from": "1893-08-08-dailygraph-01",
+          "text": "Found dead and lashed to the wheel of a foreign schooner that ran into Whitby harbour in a storm, with a crucifix tied to his hands."
+        },
+        {
+          "from": "1893-08-09-dailygraph-01",
+          "text": "Was lashed to the wheel of the Demeter, a Russian schooner from Varna."
+        },
+        {
+          "from": "1893-08-09-dailygraph-02",
+          "text": "His log, says the newspaper, reads as if he went mad soon after sailing."
+        },
+        {
+          "from": "1893-07-06-demeter_captain-01",
+          "text": "Sets sail with five hands, two mates and a cook, carrying silver sand and boxes of earth."
+        },
+        {
+          "from": "1893-07-16-demeter_captain-01",
+          "text": "One of his crew, Petrofsky, has gone missing."
+        },
+        {
+          "from": "1893-07-17-demeter_captain-01",
+          "text": "Told by a seaman that a tall, thin man who is not one of the crew is aboard. They search the ship and find no one."
+        },
+        {
+          "from": "1893-07-24-demeter_captain-01",
+          "text": "Another man lost. The crew are afraid."
+        },
+        {
+          "from": "1893-08-03-demeter_captain-01",
+          "text": "His mate throws himself into the sea."
+        },
+        {
+          "from": "1893-08-04-demeter_captain-01",
+          "text": "Means to tie his hands to the wheel, with something the monster aboard dare not touch, and stay true to his trust."
+        },
+        {
+          "from": "1893-08-10-mina_harker-01",
+          "text": "Buried at Whitby; the harbour's captains carry his coffin."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-08-08-dailygraph-01",
+          "text": "The dead man at the wheel"
+        },
+        {
+          "from": "1893-08-09-dailygraph-02",
+          "text": "The captain of the Demeter"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-08-09-dailygraph-01",
+          "id": "whitby"
+        }
+      ],
+      "id": "billington_and_son",
+      "lines": [
+        {
+          "from": "1893-08-09-dailygraph-01",
+          "text": "A Whitby solicitor who takes charge of the goods on the Demeter, consigned to him."
+        },
+        {
+          "from": "1893-08-17-billington_and_son-01",
+          "text": "Sends fifty boxes on by rail from Whitby to Carfax, near Purfleet."
+        },
+        {
+          "from": "1893-09-29-jonathan_harker-01",
+          "text": "Puts Jonathan up at Whitby and shows him all his papers about the boxes."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-08-09-dailygraph-01",
+          "text": "Mr S. F. Billington"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-08-12-sister_agatha-01",
+          "id": "jonathan_mina"
+        }
+      ],
+      "id": "sister_agatha",
+      "lines": [
+        {
+          "from": "1893-08-12-sister_agatha-01",
+          "text": "A sister at a hospital in Buda-Pesth who writes to Mina that Jonathan is there, ill with brain fever."
+        },
+        {
+          "from": "1893-08-24-mina_harker-01",
+          "text": "Nurses Jonathan, and helps Mina arrange their wedding there."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-08-12-sister_agatha-01",
+          "text": "Sister Agatha"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-09-02-john_seward-01",
+          "id": "lucy"
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "id": "band"
+        }
+      ],
+      "id": "van_helsing",
+      "lines": [
+        {
+          "from": "1893-09-02-john_seward-01",
+          "text": "Seward's old friend and master from Amsterdam, who knows as much about obscure diseases as anyone. Seward asks him to see Lucy."
+        },
+        {
+          "from": "1893-09-02-van_helsing-01",
+          "text": "Owes Seward a debt: Seward once sucked the poison of gangrene from a knife wound of his."
+        },
+        {
+          "from": "1893-09-07-john_seward-01",
+          "text": "Orders a blood transfusion for Lucy, from Arthur."
+        },
+        {
+          "from": "1893-09-11-john_seward-01",
+          "text": "Fills Lucy's room with garlic flowers and hangs a wreath of them round her neck."
+        },
+        {
+          "from": "1893-09-20-john_seward-01",
+          "text": "At Lucy's side when she dies."
+        },
+        {
+          "from": "1893-09-25-mina_harker-03",
+          "text": "Visits Mina to ask about Lucy, and takes away Jonathan's journal to read."
+        },
+        {
+          "from": "1893-09-26-john_seward-01",
+          "text": "Tells Seward that Lucy made the wounds in the children's throats at Hampstead."
+        },
+        {
+          "from": "1893-09-29-john_seward-03",
+          "text": "Has Arthur drive a stake through Lucy's heart, then asks the friends to promise to find the author of all their sorrow and stamp him out."
+        },
+        {
+          "from": "1893-09-30-mina_harker-03",
+          "text": "Tells the friends what a vampire is, and that the one among them is the Count."
+        },
+        {
+          "from": "1893-10-03-jonathan_harker-01",
+          "text": "Touches the Sacred Wafer to Mina's forehead, and it burns her."
+        },
+        {
+          "from": "1893-10-04-jonathan_harker-01",
+          "text": "Asked by Mina to hypnotise her before dawn, so that she can tell where the Count is."
+        },
+        {
+          "from": "1893-10-30-mina_harker-06",
+          "text": "Takes Mina by train and carriage towards the Borgo Pass."
+        },
+        {
+          "from": "1893-11-05-van_helsing-01",
+          "text": "Keeps Mina inside a holy circle in the snow as three women come for her."
+        },
+        {
+          "from": "1893-11-05-van_helsing-02",
+          "text": "Destroys the three women in their tombs at the castle, and lays the Wafer in the Count's tomb."
+        },
+        {
+          "from": "1893-11-06-unknown-01",
+          "text": "Seven years on, holds the Harkers' son on his knee."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-09-02-john_seward-01",
+          "text": "Professor Van Helsing"
+        },
+        {
+          "from": "1893-09-25-van_helsing-01",
+          "text": "Professor Abraham Van Helsing"
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "from": "1893-09-20-patrick_hennessey-01",
+          "id": "asylum"
+        }
+      ],
+      "id": "patrick_hennessey",
+      "lines": [
+        {
+          "from": "1893-09-20-patrick_hennessey-01",
+          "text": "Looks after Seward's asylum while Seward is away, and writes to him about Renfield."
+        }
+      ],
+      "names": [
+        {
+          "from": "1893-09-20-patrick_hennessey-01",
+          "text": "Dr Patrick Hennessey"
         }
       ]
     }
