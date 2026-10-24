@@ -13,29 +13,3 @@ filter-sheet | DARK_LARGE | role | Close sheet | #139 | Material 3 builds the sc
 filter-sheet | LIGHT | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
-
-# heading-truncated — #222 (UI/UX pass, 2026-10-24)
-reader-diary | DARK | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-diary | DARK_HC | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-diary | LIGHT | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-diary | LIGHT_HC | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-log | DARK | heading-truncated | Captain of the Demeter | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-log | DARK_HC | heading-truncated | Captain of the Demeter | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-log | LIGHT | heading-truncated | Captain of the Demeter | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-log | LIGHT_HC | heading-truncated | Captain of the Demeter | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-newspaper | DARK | heading-truncated | The Dailygraph | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-newspaper | DARK_HC | heading-truncated | The Dailygraph | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-newspaper | LIGHT | heading-truncated | The Dailygraph | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-newspaper | LIGHT_HC | heading-truncated | The Dailygraph | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-phonograph | DARK | heading-truncated | Dr. John Seward | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-phonograph | DARK_HC | heading-truncated | Dr. John Seward | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-phonograph | LIGHT | heading-truncated | Dr. John Seward | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-phonograph | LIGHT_HC | heading-truncated | Dr. John Seward | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-telegram | DARK | heading-truncated | Arthur Holmwood | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-telegram | DARK_HC | heading-truncated | Arthur Holmwood | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-telegram | LIGHT | heading-truncated | Arthur Holmwood | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-reader-telegram | LIGHT_HC | heading-truncated | Arthur Holmwood | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-two-pane-portrait | DARK | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-two-pane-portrait | DARK_HC | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-two-pane-portrait | LIGHT | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
-two-pane-portrait | LIGHT_HC | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line

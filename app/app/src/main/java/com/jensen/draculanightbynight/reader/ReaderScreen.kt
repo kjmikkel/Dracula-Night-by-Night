@@ -39,6 +39,8 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -174,22 +176,29 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = { NavigationControls(onBack, pane) },
-                actions = {
-                    TextButton(onClick = { onWhosWho(reader.entry.author) }) { Text("Who's who") }
-                    // A switch for TalkBack: "Bookmark, on/off", without the star.
-                    TextButton(
-                        onClick = viewModel::toggleBookmark,
-                        modifier = Modifier.semantics {
-                            contentDescription = "Bookmark"
-                            role = Role.Switch
-                            toggleableState = ToggleableState(reader.bookmarked)
-                        },
-                    ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
-                },
-            )
+            val actions: @Composable RowScope.() -> Unit = {
+                TextButton(onClick = { onWhosWho(reader.entry.author) }) { Text("Who's who") }
+                // A switch for TalkBack: "Bookmark, on/off", without the star.
+                TextButton(
+                    onClick = viewModel::toggleBookmark,
+                    modifier = Modifier.semantics {
+                        contentDescription = "Bookmark"
+                        role = Role.Switch
+                        toggleableState = ToggleableState(reader.bookmarked)
+                    },
+                ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
+            }
+            // The author gets a row of its own under Back and the actions, which left it a word or two (#222). It
+            // stays open: the bar doesn't collapse on scroll, for the same reason it doesn't hide.
+            if (large) {
+                TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }, actions = actions)
+            } else {
+                MediumTopAppBar(
+                    title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                    navigationIcon = { NavigationControls(onBack, pane) },
+                    actions = actions,
+                )
+            }
         },
     ) { padding ->
         // The bottom bar comes after the text, not in Scaffold's bottomBar: Tab follows composition order, and
