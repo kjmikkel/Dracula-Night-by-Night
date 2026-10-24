@@ -5,6 +5,9 @@ import androidx.test.core.app.ApplicationProvider
 import com.jensen.draculanightbynight.AppContainer
 import com.jensen.draculanightbynight.a11y.free
 import com.jensen.draculanightbynight.a11y.testApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.job
@@ -93,9 +96,12 @@ class BackupsTest {
 
     @Test
     fun theChoiceIsRememberedAcrossRestarts() = runBlocking {
-        backups.keepCopy(Uri.fromFile(tmp.newFile("copy.json")))
-        val again = Backups(ApplicationProvider.getApplicationContext(), app.users, app.time, app.scope)
-        assertEquals(backups.target.value, again.target.value)
+        // A scope that never runs: the kept-copy collector would otherwise store a newer time between the two reads.
+        val stopped = CoroutineScope(Job().apply { cancel() })
+        val before = Backups(ApplicationProvider.getApplicationContext(), app.users, app.time, stopped)
+        before.keepCopy(Uri.fromFile(tmp.newFile("copy.json")))
+        val again = Backups(ApplicationProvider.getApplicationContext(), app.users, app.time, stopped)
+        assertEquals(before.target.value, again.target.value)
     }
 
     @Test
