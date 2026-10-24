@@ -2,6 +2,7 @@ package com.jensen.draculanightbynight.reader
 
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.jensen.draculanightbynight.ui.keyboardScroll
 import com.jensen.draculanightbynight.ui.largeText
@@ -38,6 +39,8 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -84,6 +87,11 @@ import kotlinx.coroutines.launch
 
 private const val SAVE_DEBOUNCE_MILLIS = 500L
 private val NEWSPAPER_COLUMN = 520.dp
+/**
+ * The widest the text column runs, in ems of the story text, so it holds at any text size: well under 80 characters
+ * a line (WCAG 1.4.8), where a landscape phone or a tablet would otherwise give 140 (#221).
+ */
+private const val TEXT_MEASURE_EM = 32f
 
 /** The split view's controls for the reader on the right: close the entry, and show or hide the timeline. */
 data class PaneControls(val timelineShown: Boolean, val onToggleTimeline: () -> Unit, val onClose: () -> Unit)
@@ -168,22 +176,29 @@ private fun Pages(ready: ReaderUi.Ready, viewModel: ReaderViewModel, onBack: () 
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { if (!large) Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = { NavigationControls(onBack, pane) },
-                actions = {
-                    TextButton(onClick = { onWhosWho(reader.entry.author) }) { Text("Who's who") }
-                    // A switch for TalkBack: "Bookmark, on/off", without the star.
-                    TextButton(
-                        onClick = viewModel::toggleBookmark,
-                        modifier = Modifier.semantics {
-                            contentDescription = "Bookmark"
-                            role = Role.Switch
-                            toggleableState = ToggleableState(reader.bookmarked)
-                        },
-                    ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
-                },
-            )
+            val actions: @Composable RowScope.() -> Unit = {
+                TextButton(onClick = { onWhosWho(reader.entry.author) }) { Text("Who's who") }
+                // A switch for TalkBack: "Bookmark, on/off", without the star.
+                TextButton(
+                    onClick = viewModel::toggleBookmark,
+                    modifier = Modifier.semantics {
+                        contentDescription = "Bookmark"
+                        role = Role.Switch
+                        toggleableState = ToggleableState(reader.bookmarked)
+                    },
+                ) { Text(if (reader.bookmarked) "★ Bookmarked" else "☆ Bookmark", Modifier.notSpoken()) }
+            }
+            // The author gets a row of its own under Back and the actions, which left it a word or two (#222). It
+            // stays open: the bar doesn't collapse on scroll, for the same reason it doesn't hide.
+            if (large) {
+                TopAppBar(title = {}, navigationIcon = { NavigationControls(onBack, pane) }, actions = actions)
+            } else {
+                MediumTopAppBar(
+                    title = { Text(reader.authorName, Modifier.semantics { heading() }, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                    navigationIcon = { NavigationControls(onBack, pane) },
+                    actions = actions,
+                )
+            }
         },
     ) { padding ->
         // The bottom bar comes after the text, not in Scaffold's bottomBar: Tab follows composition order, and
@@ -283,8 +298,9 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
     DisposableEffect(reader.entry.id) {
         onDispose { save() }
     }
-    // A newspaper is set in a narrower column, as in print.
-    val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
+    // A newspaper is set in a narrower column, as in print; everything else in a column a reader can follow.
+    val measure = with(LocalDensity.current) { (MaterialTheme.typography.bodyLarge.fontSize * LocalReadingStyle.current.scale * TEXT_MEASURE_EM).toDp() }
+    val column = Modifier.widthIn(max = if (reader.style == HeaderStyle.NEWSPAPER) NEWSPAPER_COLUMN else measure)
     // An opening dateline that only repeats the header can be skipped; TalkBack users skip it unless they choose (#177).
     // A skipped block stays as an empty item, so saved positions keep their blocks.
     val skip = reader.skipRepeatedDates ?: talkBackOn()

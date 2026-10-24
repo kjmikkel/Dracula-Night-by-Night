@@ -98,6 +98,17 @@ private const val JONATHAN_8_MAY = "1893-05-08-jonathan_harker-01"
 
 private val LANDSCAPE_TABLET = DpSize(1280.dp, 800.dp)
 private val PORTRAIT_TABLET = DpSize(800.dp, 1280.dp)
+/** The spike's phone turned sideways: too short for two panes, so the reader runs the full width (#221). */
+private val LANDSCAPE_PHONE = DpSize(914.dp, 411.dp)
+
+/** What the filter-sheet case has read: Jonathan's first entry, so one voice is met and the rest are not. */
+val filterSheetRead = listOf("1893-05-03-jonathan_harker-01")
+
+/**
+ * The voices with no entry in [filterSheetRead]: their filter chips would tell a first-time reader who is still to
+ * come (#220). `SpoilerCasesTest` keeps this list true.
+ */
+val unmetVoicesInTempo = listOf("Mina", "Seward", "Lucy", "Van Helsing", "Demeter")
 
 /**
  * Taps the first control showing [label]. Screens load their state in the background, so it waits for the control
@@ -182,14 +193,21 @@ val cases: List<Case> = listOf(
     ) { Timeline(it) },
     Case(
         "filter-sheet", setOf("FilterSheet"), ready = "Voices",
+        seed = { tempo(); filterSheetRead.forEach { users.markRead(it) } },
         open = { tap("Filter") },
-        expect = Expectations(headings = listOf("Voices", "Documents")),
+        expect = Expectations(headings = listOf("Voices", "Documents"), unmet = unmetVoicesInTempo),
     ) { Timeline(it) },
 ) + readerTypes.map { (type, id) ->
     Case(
         "reader-$type", setOf("ReaderScreen"), ready = "Next", seed = { free() },
         fonts = if (type == "letter") ReadingFont.entries else emptyList(),
         expect = Expectations(headings = listOf(readerAuthors.getValue(type)), toggles = listOf("Bookmark")),
+    ) { Reader(it, id) }
+} + readerTypes.map { (type, id) ->
+    // Line length only: the palette doesn't change it, and large text only makes lines shorter.
+    Case(
+        "reader-$type-landscape", setOf("ReaderScreen"), ready = "Next", seed = { free() },
+        looks = listOf(Look.LIGHT), window = LANDSCAPE_PHONE,
     ) { Reader(it, id) }
 } + listOf(
     // A break inside the entry, drawn as the ornament (#178).
@@ -233,7 +251,10 @@ val cases: List<Case> = listOf(
         open = { tap("Start over") },
         expect = Expectations(toggles = listOf("Also remove")),
     ) { Settings(it) },
-    Case("whos-who-empty", setOf("WhosWhoScreen"), ready = "People appear here") { WhosWho(it) },
+    Case(
+        "whos-who-empty", setOf("WhosWhoScreen"), ready = "People appear here",
+        expect = Expectations(unmet = listOf("Jonathan Harker", "Mina Murray", "Lucy Westenra")),
+    ) { WhosWho(it) },
     Case(
         "whos-who-open", setOf("WhosWhoScreen"), ready = "Proposed to three times",
         // Everything up to Lucy's letters of 24 May read, opened from one of them.

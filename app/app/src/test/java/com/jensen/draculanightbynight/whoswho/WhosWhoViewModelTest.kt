@@ -100,6 +100,16 @@ class WhosWhoViewModelTest {
     }
 
     @Test
+    fun anEmptyPageIsNotTheFirstVisit() = runTest {
+        val store = store(null)
+        assertEquals(emptyList<Any>(), viewModel(store, openOn = null).ready().groups)
+        assertNull(store.state.value.whosWhoSeenAt)
+        // Read on, then open again: this is the first visit that shows anyone, so nothing is new.
+        store.state.value = store.state.value.copy(progress = mapOf("may03" to EntryProgress(readAtMillis = 1)))
+        assertTrue(viewModel(store, openOn = null).ready().groups.single().people.none { it.hasNew })
+    }
+
+    @Test
     fun marksStayForTheWholeVisit() = runTest {
         val store = store(100, "may03" to 200)
         val saved = SavedStateHandle()

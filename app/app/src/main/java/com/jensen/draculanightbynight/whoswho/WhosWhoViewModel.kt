@@ -35,7 +35,7 @@ sealed interface WhosWhoUi {
 /**
  * The who's who page (#204), opened on [openOn] (the author of the entry it was opened from) when that person is
  * shown. A visit is one view model and its saved state: lines read since the previous visit stay marked new for the
- * whole visit, through rotation, even though the visit is recorded as soon as the page opens.
+ * whole visit, through rotation, even though the visit is recorded as soon as the page opens showing someone.
  */
 class WhosWhoViewModel(
     private val stories: StoryRepository,
@@ -45,7 +45,7 @@ class WhosWhoViewModel(
 ) : ViewModel() {
     val ui: StateFlow<WhosWhoUi> = flow {
         val story = stories.story()
-        val before = seenBefore()
+        val before = seenBefore(story)
         if (!saved.contains(KEY_SCROLL_TO)) {
             val shown = visibleWhosWho(story.whosWho, users.state.first().progress, before)
             // Never reveal someone by opening on them: only a person already shown is unfolded.
@@ -68,10 +68,15 @@ class WhosWhoViewModel(
         saved[KEY_EXPANDED] = ArrayList(if (personId in now) now - personId else now + personId)
     }
 
-    /** When the page was last opened before this visit (null: never), recording this visit the first time it's asked. */
-    private suspend fun seenBefore(): Long? {
+    /**
+     * When the page was last opened before this visit (null: never), recording this visit the first time it's asked.
+     * A page that shows no one isn't a visit, so the first one that shows someone still marks nothing new.
+     */
+    private suspend fun seenBefore(story: Story): Long? {
         if (saved.contains(KEY_SEEN_BEFORE)) return saved.get<Long>(KEY_SEEN_BEFORE)?.takeIf { it >= 0 }
-        val before = users.state.first().whosWhoSeenAt
+        val user = users.state.first()
+        val before = user.whosWhoSeenAt
+        if (visibleWhosWho(story.whosWho, user.progress, before).isEmpty()) return before
         saved[KEY_SEEN_BEFORE] = before ?: NEVER
         users.markWhosWhoSeen()
         return before

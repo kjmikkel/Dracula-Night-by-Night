@@ -8,6 +8,8 @@ import com.jensen.draculanightbynight.domain.Arrivals
 import com.jensen.draculanightbynight.domain.EntryFilter
 import com.jensen.draculanightbynight.domain.ReadingSettings
 import com.jensen.draculanightbynight.domain.SeasonPrompt
+import com.jensen.draculanightbynight.domain.Voice
+import com.jensen.draculanightbynight.domain.metVoices
 import com.jensen.draculanightbynight.domain.readingOrder
 import com.jensen.draculanightbynight.domain.isReadable
 import com.jensen.draculanightbynight.user.UserState
@@ -54,6 +56,8 @@ data class TimelineState(
     val tonight: TonightCard? = null,
     /** Entries in the whole story not yet read, whatever the filter shows. */
     val unreadCount: Int = 0,
+    /** The voices the filter sheet offers: only those the reader has met (#220). */
+    val voices: List<Voice> = listOf(Voice.OTHERS),
 ) {
     /** Every entry has been read: the only time the end card says so (#189). */
     val allRead: Boolean get() = unreadCount == 0
@@ -108,6 +112,7 @@ fun buildTimeline(
         hiddenCount = unlocked.size - shown.size,
         tonight = tonightCard(story, user, settings, now, zone, filter),
         unreadCount = story.entries.count { user.progressOf(it.id).readAtMillis == null },
+        voices = metVoices(story, user),
     )
 }
 
