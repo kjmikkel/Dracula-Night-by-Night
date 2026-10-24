@@ -34,6 +34,8 @@ import com.jensen.draculanightbynight.domain.typeChipLabel
 @Composable
 fun FilterSheet(
     filter: EntryFilter,
+    /** The voices to offer: those the reader has met, so no chip names someone still to come (#220). */
+    voices: List<Voice>,
     onToggleVoice: (Voice) -> Unit,
     onToggleType: (DocumentType) -> Unit,
     onClear: () -> Unit,
@@ -51,7 +53,7 @@ fun FilterSheet(
         BottomSheetDefaults.DragHandle(Modifier.align(Alignment.CenterHorizontally).clearAndSetSemantics {})
         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 16.dp).padding(bottom = 24.dp)) {
             Heading("Voices")
-            Chips(Voice.entries, { it.label }, filter.voices, onToggleVoice)
+            Chips(voices, { it.label }, filter.voices, onToggleVoice)
             Heading("Documents")
             Chips(DocumentType.entries, ::typeChipLabel, filter.types, onToggleType)
             TextButton(onClick = onClear, enabled = filter.isActive, modifier = Modifier.align(Alignment.End)) {

@@ -14,38 +14,6 @@ filter-sheet | LIGHT | role | Close sheet | #139 | Material 3 builds the scrim p
 filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 
-# spoiler — #220 (UI/UX pass, 2026-10-24)
-filter-sheet | DARK | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_HC | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_HC | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_HC | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_HC | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_HC | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_LARGE | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_LARGE | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_LARGE | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_LARGE | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | DARK_LARGE | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_HC | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_HC | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_HC | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_HC | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_HC | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_LARGE | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_LARGE | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_LARGE | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_LARGE | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
-filter-sheet | LIGHT_LARGE | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-
 # heading-truncated — #222 (UI/UX pass, 2026-10-24)
 reader-diary | DARK | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
 reader-diary | DARK_HC | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line

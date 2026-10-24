@@ -101,9 +101,12 @@ private val PORTRAIT_TABLET = DpSize(800.dp, 1280.dp)
 /** The spike's phone turned sideways: too short for two panes, so the reader runs the full width (#221). */
 private val LANDSCAPE_PHONE = DpSize(914.dp, 411.dp)
 
+/** What the filter-sheet case has read: Jonathan's first entry, so one voice is met and the rest are not. */
+val filterSheetRead = listOf("1893-05-03-jonathan_harker-01")
+
 /**
- * The voices with no entry arrived at [FIXED_NOW] in [tempo] (only Jonathan's and the memo's have): their filter
- * chips would tell a first-time reader who is still to come (#220). `SpoilerCasesTest` keeps this list true.
+ * The voices with no entry in [filterSheetRead]: their filter chips would tell a first-time reader who is still to
+ * come (#220). `SpoilerCasesTest` keeps this list true.
  */
 val unmetVoicesInTempo = listOf("Mina", "Seward", "Lucy", "Van Helsing", "Demeter")
 
@@ -190,6 +193,7 @@ val cases: List<Case> = listOf(
     ) { Timeline(it) },
     Case(
         "filter-sheet", setOf("FilterSheet"), ready = "Voices",
+        seed = { tempo(); filterSheetRead.forEach { users.markRead(it) } },
         open = { tap("Filter") },
         expect = Expectations(headings = listOf("Voices", "Documents"), unmet = unmetVoicesInTempo),
     ) { Timeline(it) },

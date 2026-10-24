@@ -138,7 +138,7 @@ fun TimelineScreen(
                     )
                 }
                 if (filtering) {
-                    FilterSheet(state.timeline.filter, viewModel::toggleVoice, viewModel::toggleType, viewModel::clearFilter) { filtering = false }
+                    FilterSheet(state.timeline.filter, state.timeline.voices, viewModel::toggleVoice, viewModel::toggleType, viewModel::clearFilter) { filtering = false }
                 }
                 if (startingOver) {
                     StartOverDialog(
