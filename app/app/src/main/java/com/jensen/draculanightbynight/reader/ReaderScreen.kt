@@ -2,6 +2,7 @@ package com.jensen.draculanightbynight.reader
 
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import com.jensen.draculanightbynight.ui.keyboardScroll
 import com.jensen.draculanightbynight.ui.largeText
@@ -84,6 +85,11 @@ import kotlinx.coroutines.launch
 
 private const val SAVE_DEBOUNCE_MILLIS = 500L
 private val NEWSPAPER_COLUMN = 520.dp
+/**
+ * The widest the text column runs, in ems of the story text, so it holds at any text size: well under 80 characters
+ * a line (WCAG 1.4.8), where a landscape phone or a tablet would otherwise give 140 (#221).
+ */
+private const val TEXT_MEASURE_EM = 32f
 
 /** The split view's controls for the reader on the right: close the entry, and show or hide the timeline. */
 data class PaneControls(val timelineShown: Boolean, val onToggleTimeline: () -> Unit, val onClose: () -> Unit)
@@ -283,8 +289,9 @@ private fun Body(reader: ReaderState, viewModel: ReaderViewModel, authorLine: Bo
     DisposableEffect(reader.entry.id) {
         onDispose { save() }
     }
-    // A newspaper is set in a narrower column, as in print.
-    val column = if (reader.style == HeaderStyle.NEWSPAPER) Modifier.widthIn(max = NEWSPAPER_COLUMN) else Modifier
+    // A newspaper is set in a narrower column, as in print; everything else in a column a reader can follow.
+    val measure = with(LocalDensity.current) { (MaterialTheme.typography.bodyLarge.fontSize * LocalReadingStyle.current.scale * TEXT_MEASURE_EM).toDp() }
+    val column = Modifier.widthIn(max = if (reader.style == HeaderStyle.NEWSPAPER) NEWSPAPER_COLUMN else measure)
     // An opening dateline that only repeats the header can be skipped; TalkBack users skip it unless they choose (#177).
     // A skipped block stays as an empty item, so saved positions keep their blocks.
     val skip = reader.skipRepeatedDates ?: talkBackOn()

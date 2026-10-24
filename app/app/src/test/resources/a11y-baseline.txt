@@ -14,7 +14,6 @@ filter-sheet | LIGHT | role | Close sheet | #139 | Material 3 builds the scrim p
 filter-sheet | LIGHT_HC | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 filter-sheet | LIGHT_LARGE | role | Close sheet | #139 | Material 3 builds the scrim privately with no role or slot (checked through 1.5.0-beta01)
 
-
 # spoiler — #220 (UI/UX pass, 2026-10-24)
 filter-sheet | DARK | spoiler | Demeter | #220 | The filter sheet lists every voice (Voice.entries), met or not
 filter-sheet | DARK | spoiler | Lucy | #220 | The filter sheet lists every voice (Voice.entries), met or not
@@ -46,25 +45,6 @@ filter-sheet | LIGHT_LARGE | spoiler | Lucy | #220 | The filter sheet lists ever
 filter-sheet | LIGHT_LARGE | spoiler | Mina | #220 | The filter sheet lists every voice (Voice.entries), met or not
 filter-sheet | LIGHT_LARGE | spoiler | Seward | #220 | The filter sheet lists every voice (Voice.entries), met or not
 filter-sheet | LIGHT_LARGE | spoiler | Van Helsing | #220 | The filter sheet lists every voice (Voice.entries), met or not
-
-# line-length — #221 (UI/UX pass, 2026-10-24)
-reader-diary-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-reader-letter-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-reader-log-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-reader-memo-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-reader-phonograph-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-landscape | DARK | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-landscape | DARK_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-landscape | LIGHT_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-portrait | DARK | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-portrait | DARK_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-portrait | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-hidden-portrait | LIGHT_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-landscape | DARK | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-landscape | DARK_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-landscape | LIGHT | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
-two-pane-landscape | LIGHT_HC | line-length | text over 80 characters a line | #221 | Only newspapers have a column width (NEWSPAPER_COLUMN); other text runs the full window
 
 # heading-truncated — #222 (UI/UX pass, 2026-10-24)
 reader-diary | DARK | heading-truncated | Jonathan Harker | #222 | The reader app bar holds Back, the author, Who's who and Bookmark; the author is cut to one line
