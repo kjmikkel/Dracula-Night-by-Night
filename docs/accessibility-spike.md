@@ -110,9 +110,11 @@ What a machine can check now runs on every PR, inside `app-tests`, as the access
   - The reader also runs in each reading font.
 - **Rules** (`Rules.kt`):
   - per node: labels, roles, touch targets, labels read twice, labels that say "button", controls stacked on top of
-    each other, and text or icons cut off;
-  - per screen: the headings, toggles, option groups and spoken words it should have, and the Tonight card's
-    TalkBack stops.
+    each other, text or icons cut off, and headings cut short by "…" (#222);
+  - per screen: the headings, toggles, option groups and spoken words it should have, the Tonight card's
+    TalkBack stops, text over 80 characters a line (#221), and names of people or voices not met yet (#220).
+    These three were added after the UI/UX pass of 24 October (`docs/ui-ux/reports/2026-10-24-whole-app.md`).
+  - The reader also runs on a phone turned sideways (914 × 411 dp), for line length.
 - **Every scroll position:** each case scrolls every list to its end, so rows below the fold are checked too.
 
 **Not checked:** Google's Accessibility Test Framework can't see Compose's nodes under Robolectric, so it isn't

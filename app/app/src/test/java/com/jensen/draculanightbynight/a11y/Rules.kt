@@ -23,12 +23,17 @@ data class Expectations(
     val words: List<Pair<String, String>> = emptyList(),
     /** Test tag of the Tonight card, whose TalkBack stops are counted. */
     val cardTag: String? = null,
+    /** Texts that must not show anywhere on the screen: people or voices the reader hasn't met yet (#220). */
+    val unmet: List<String> = emptyList(),
 )
 
 /** One rule broken by one node, named by what TalkBack would read, never by position. */
 data class Finding(val rule: String, val node: String)
 
 private const val MAX_CARD_STOPS = 3
+
+/** The widest a line of text may run, in characters (WCAG 1.4.8, #221). */
+private const val MAX_LINE_CHARS = 80
 
 /** Test tag of the screen a large look draws on, narrower than the window (see [InLook]). */
 const val SCREEN_TAG = "a11y-screen"
@@ -91,7 +96,21 @@ fun checkRules(merged: SemanticsNode, unmerged: SemanticsNode, expect: Expectati
         // Over the unmerged tree: a clickable row merges its children, but its ★ can be cut off on its own (#118).
         for (n in own.values) {
             if (n.label().isNotBlank() && n.isClippedAcrossItsScroll(window)) add(Finding("clipped", n.name()))
-            if (n.isCollapsedToEllipsis(density)) add(Finding("clipped", n.name()))
+            val layout = n.textLayout()
+            if (layout != null && layout.wouldEllipsize()) {
+                val fontPx = with(density) { layout.layoutInput.style.fontSize.toPx() }
+                // Collapsed to a few characters, anything is clipped; a heading may not lose even its last letters
+                // (Material: "Don't truncate the headline text", #222).
+                if (n.size.width < 3 * fontPx) add(Finding("clipped", n.name()))
+                else if (n.config.contains(SemanticsProperties.Heading)) add(Finding("heading-truncated", n.name()))
+            }
+        }
+        // Once per window, however many paragraphs run long: the measure is the screen's text column (#221).
+        if (own.values.any { it.textLayout()?.longestLine()?.let { chars -> chars > MAX_LINE_CHARS } == true }) {
+            add(Finding("line-length", "text over $MAX_LINE_CHARS characters a line"))
+        }
+        for (name in expect.unmet) {
+            if (nodes.any { node -> node.texts().any { it == name } }) add(Finding("spoiler", name))
         }
         expect.cardTag?.let { tag ->
             val card = nodes.firstOrNull { it.config.getOrNull(SemanticsProperties.TestTag) == tag }
@@ -122,18 +141,23 @@ private fun SemanticsNode.isClippedAcrossItsScroll(window: Rect): Boolean {
     return (cutWidth && !scrollsHorizontally) || (cutHeight && !scrollsVertically)
 }
 
-/** One line ending in "…" with room for fewer than about three characters: the text is effectively gone. */
-private fun SemanticsNode.isCollapsedToEllipsis(density: Density): Boolean {
+private fun SemanticsNode.textLayout(): TextLayoutResult? {
     val results = mutableListOf<TextLayoutResult>()
-    config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(results) ?: return false
-    val layout = results.firstOrNull() ?: return false
-    val fontPx = with(density) { layout.layoutInput.style.fontSize.toPx() }
-    // Decided from the layout's inputs rather than isLineEllipsized, which Robolectric's text measuring never sets.
-    val input = layout.layoutInput
-    val wouldEllipsize = input.maxLines == 1 && input.overflow == TextOverflow.Ellipsis &&
-        layout.multiParagraph.intrinsics.maxIntrinsicWidth > layout.size.width
-    return wouldEllipsize && size.width < 3 * fontPx
+    config.getOrNull(SemanticsActions.GetTextLayoutResult)?.action?.invoke(results) ?: return null
+    return results.firstOrNull()
 }
+
+/**
+ * One line that ends in "…" because the text doesn't fit. Decided from the layout's inputs rather than
+ * isLineEllipsized, which Robolectric's text measuring never sets.
+ */
+private fun TextLayoutResult.wouldEllipsize(): Boolean =
+    layoutInput.maxLines == 1 && layoutInput.overflow == TextOverflow.Ellipsis &&
+        multiParagraph.intrinsics.maxIntrinsicWidth > size.width
+
+/** Characters on the longest line, not counting the space a line breaks after. */
+private fun TextLayoutResult.longestLine(): Int =
+    (0 until lineCount).maxOfOrNull { getLineEnd(it, visibleEnd = true) - getLineStart(it) } ?: 0
 
 private fun SemanticsNode.descendants(): List<SemanticsNode> = children.flatMap { listOf(it) + it.descendants() }
 
