@@ -46,6 +46,10 @@ class Backups(
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val _target = MutableStateFlow(readTarget())
 
+    // keepCopy and the kept-copy collector can finish at once; each check-and-store happens whole under this, so the
+    // prefs and [target] never end up holding different writers' values, and a stopped copy is never stored again.
+    private val lock = Any()
+
     /** The file kept up to date, or null when none is. */
     val target: StateFlow<CopyTarget?> = _target.asStateFlow()
 
@@ -108,8 +112,10 @@ class Backups(
     private suspend fun updateCopy(target: CopyTarget, text: String) {
         val ok = write(Uri.parse(target.uri), text)
         // The reader may have stopped or chosen another file while this was writing.
-        if (_target.value?.uri == target.uri) {
-            storeTarget(target.copy(savedAtMillis = if (ok) time.millis() else target.savedAtMillis, failed = !ok))
+        synchronized(lock) {
+            if (_target.value?.uri == target.uri) {
+                storeTarget(target.copy(savedAtMillis = if (ok) time.millis() else target.savedAtMillis, failed = !ok))
+            }
         }
     }
 
@@ -145,7 +151,7 @@ class Backups(
         )
     }
 
-    private fun storeTarget(target: CopyTarget?) {
+    private fun storeTarget(target: CopyTarget?) = synchronized(lock) {
         prefs.edit().apply {
             if (target == null) {
                 clear()
